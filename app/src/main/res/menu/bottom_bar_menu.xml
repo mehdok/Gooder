@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/friends_item"
+        android:icon="@drawable/ic_home_grey600_24dp"
+        android:title="@string/bottom_bar_home" />
+
+    <item
+        android:id="@+id/comments_view"
+        android:icon="@drawable/ic_insert_comment_grey600_24dp"
+        android:title="@string/bottom_bar_comment"/>
+
+    <item
+        android:id="@+id/stared_item"
+        android:icon="@drawable/ic_star_grey600_24dp"
+        android:title="@string/bottom_bar_star"/>
+
+    <item
+        android:id="@+id/notification"
+        android:icon="@drawable/ic_notifications_grey600_24dp"
+        android:title="@string/bottom_bar_notification"/>
+</menu>
