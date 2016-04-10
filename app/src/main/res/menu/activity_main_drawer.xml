@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/menu1"
+        android:checkableBehavior="none">
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
+            android:id="@+id/nav_people_you_follow"
+            android:icon="@drawable/ic_people_grey600_24dp"
+            android:title="@string/people_you_follow" />
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_special_item"
+            android:icon="@drawable/ic_folder_special_grey600_24dp"
+            android:title="@string/recommended_item" />
     </group>
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
-        </menu>
-    </item>
+    <group
+        android:id="@+id/menu2"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_bug_report"
+            android:icon="@drawable/ic_bug_report_grey600_24dp"
+            android:title="@string/bug_report" />
+        <item
+            android:id="@+id/nav_about_app"
+            android:icon="@drawable/ic_info_grey600_24dp"
+            android:title="@string/about" />
+    </group>
+
+    <group
+        android:id="@+id/menu3"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_log_out"
+            android:icon="@drawable/ic_exit_to_app_grey600_24dp"
+            android:title="@string/log_out" />
+    </group>
 
 </menu>

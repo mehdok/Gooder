@@ -11,4 +11,10 @@
     <string name="bottom_bar_star">Stared</string>
     <string name="bottom_bar_notification">Notifications</string>
 
+    <string name="people_you_follow">People You Follow</string>
+    <string name="recommended_item">Recommended Items</string>
+    <string name="bug_report">Send Bug Report</string>
+    <string name="about">About</string>
+    <string name="log_out">Log Out</string>
+
 </resources>
