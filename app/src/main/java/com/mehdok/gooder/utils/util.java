@@ -5,17 +5,38 @@
 package com.mehdok.gooder.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
+
+import com.mehdok.gooder.R;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by mehdok on 4/10/2016.
  */
-public class util
+public class Util
 {
+    private static final String SUPPORT_EMAIL = "mehdok@ymail.com";
+    private static String appVersionName;
+
     public static String getDeviceName()
     {
         String manufacturer = Build.MANUFACTURER;
@@ -28,7 +49,6 @@ public class util
             return capitalize(manufacturer) + " " + model;
         }
     }
-
 
     private static String capitalize(String s)
     {
@@ -54,13 +74,6 @@ public class util
         return softwareInfo;
     }
 
-    public static boolean isNetworkAvailable(Context context)
-    {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
-
     private static String getAppCurrentVersion(Context lContext)
     {
         PackageInfo pInfo = null;
@@ -78,4 +91,184 @@ public class util
 
         return ("App versionCode: " + cVersion + "\nApp versionName: " + nVersion);
     }
+
+    public static void sendBugReport(Context ctx)
+    {
+        String BASE_OUT_ADDRESS = ctx.getExternalFilesDir(null).getAbsolutePath();
+        String LOG_LOCATION = BASE_OUT_ADDRESS + "/Logs";
+        String ZIP_LOG = BASE_OUT_ADDRESS + "/log.zip";
+
+        extractLog("end - no crash", ctx, LOG_LOCATION);
+        boolean zipResult = zipFileAtPath(LOG_LOCATION, ZIP_LOG);
+        final Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("message/rfc822");
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{SUPPORT_EMAIL});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, ctx.getString(R.string.bug_email_subject) + " -- version: " + getAppVersionName(ctx));
+        emailIntent.putExtra(Intent.EXTRA_TEXT, ctx.getString(R.string.bug_email_context));
+        if (zipResult)
+            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + ZIP_LOG));
+        ctx.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+    }
+
+    private static File extractLog(String trace, Context context, String LOG_LOCATION)
+    {
+        //set a file
+        File des = new File(LOG_LOCATION);
+        des.mkdirs();
+
+        Date datum = new Date();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
+        String fullName = df.format(datum) + "-papyrusreader-log-report.log";
+        File file = new File(LOG_LOCATION, fullName);
+
+        //clears a file
+        if (file.exists())
+        {
+            file.delete();
+        }
+
+        //write log to file
+        int pid = android.os.Process.myPid();
+        try
+        {
+            String command = String.format("logcat -d -v threadtime *:*");
+            Process process = Runtime.getRuntime().exec(command);
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            StringBuilder result = new StringBuilder();
+
+            //get device info
+            result.append(getDeviceName());
+            result.append("\n");
+            result.append(getSoftwareInfo());
+            result.append("\n");
+            result.append(getAppCurrentVersion(context));
+            result.append("\n");
+            result.append("**********\n\n");
+
+            String currentLine = null;
+
+            while ((currentLine = reader.readLine()) != null)
+            {
+                if (currentLine != null && currentLine.contains(String.valueOf(pid)))
+                {
+                    result.append(currentLine);
+                    result.append("\n");
+                }
+            }
+
+            result.append(trace);
+
+            FileWriter out = new FileWriter(file);
+            out.write(result.toString());
+            out.close();
+        } catch (IOException e)
+        {
+            Log.e("extractLog", e.getMessage());
+        }
+
+        //clear the log
+        try
+        {
+            Runtime.getRuntime().exec("logcat -c");
+        } catch (IOException e)
+        {
+            Log.e("extractLog", e.getMessage());
+        }
+
+        return file;
+    }
+
+    private static String getAppVersionName(Context context)
+    {
+        if (appVersionName == null)
+        {
+            PackageInfo pInfo = null;
+            try
+            {
+                pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+                appVersionName = pInfo.versionName;
+            } catch (PackageManager.NameNotFoundException e)
+            {
+                e.printStackTrace();
+                appVersionName = "0";
+            }
+        }
+
+        return appVersionName;
+    }
+
+    private static boolean zipFileAtPath(String sourcePath, String toLocation)
+    {
+        final int BUFFER = 2048;
+
+        File sourceFile = new File(sourcePath);
+        try
+        {
+            BufferedInputStream origin = null;
+            FileOutputStream dest = new FileOutputStream(toLocation);
+            ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+            if (sourceFile.isDirectory())
+            {
+                zipSubFolder(out, sourceFile, sourceFile.getParent().length());
+            } else
+            {
+                byte data[] = new byte[BUFFER];
+                FileInputStream fi = new FileInputStream(sourcePath);
+                origin = new BufferedInputStream(fi, BUFFER);
+                ZipEntry entry = new ZipEntry(getLastPathComponent(sourcePath));
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1)
+                {
+                    out.write(data, 0, count);
+                }
+            }
+            out.close();
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    private static void zipSubFolder(ZipOutputStream out, File folder, int basePathLength) throws IOException
+    {
+        final int BUFFER = 2048;
+
+        File[] fileList = folder.listFiles();
+        BufferedInputStream origin = null;
+        for (File file : fileList)
+        {
+            if (file.isDirectory())
+            {
+                zipSubFolder(out, file, basePathLength);
+            } else
+            {
+                byte data[] = new byte[BUFFER];
+                String unmodifiedFilePath = file.getPath();
+                String relativePath = unmodifiedFilePath
+                        .substring(basePathLength);
+                FileInputStream fi = new FileInputStream(unmodifiedFilePath);
+                origin = new BufferedInputStream(fi, BUFFER);
+                ZipEntry entry = new ZipEntry(relativePath);
+                out.putNextEntry(entry);
+                int count;
+                while ((count = origin.read(data, 0, BUFFER)) != -1)
+                {
+                    out.write(data, 0, count);
+                }
+                origin.close();
+            }
+        }
+    }
+
+    private static String getLastPathComponent(String filePath)
+    {
+        String[] segments = filePath.split("/");
+        String lastPathComponent = segments[segments.length - 1];
+        return lastPathComponent;
+    }
+
 }

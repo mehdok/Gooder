@@ -21,29 +21,27 @@ public class KeyManager
     private static final String TAG = "KeyManager";
     private static final String file1 = "id_value";
     private static final String file2 = "iv_value";
-    private static Context ctx;
 
-    public KeyManager(Context cntx) {
-        ctx = cntx;
+    public KeyManager() {
     }
 
-    public void setId(byte[] data) {
-        writer(data, file1);
+    public void setId(byte[] data, Context ctx) {
+        writer(data, file1, ctx);
     }
 
-    public void setIv(byte[] data) {
-        writer(data, file2);
+    public void setIv(byte[] data, Context ctx) {
+        writer(data, file2, ctx);
     }
 
-    public byte[] getId() {
-        return reader(file1);
+    public byte[] getId(Context ctx) {
+        return reader(file1, ctx);
     }
 
-    public byte[] getIv() {
-        return reader(file2);
+    public byte[] getIv(Context ctx) {
+        return reader(file2, ctx);
     }
 
-    public byte[] reader(String file) {
+    private byte[] reader(String file, Context ctx) {
         byte[] data = null;
         try {
             int bytesRead = 0;
@@ -62,7 +60,7 @@ public class KeyManager
         return data;
     }
 
-    public void writer(byte[] data, String file) {
+    private void writer(byte[] data, String file, Context ctx) {
         try {
             FileOutputStream fos = ctx.openFileOutput(file,
                     Context.MODE_PRIVATE);

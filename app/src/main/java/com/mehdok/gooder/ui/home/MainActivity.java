@@ -4,15 +4,17 @@
 
 package com.mehdok.gooder.ui.home;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,19 +22,40 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.mehdok.gooder.R;
+import com.mehdok.gooder.crypto.Crypto;
+import com.mehdok.gooder.crypto.KeyManager;
+import com.mehdok.gooder.database.DatabaseHelper;
+import com.mehdok.gooder.network.JsonHandler;
+import com.mehdok.gooder.network.interfaces.AccessCodeListener;
+import com.mehdok.gooder.network.model.UserInfo;
+import com.mehdok.gooder.preferences.PreferencesManager;
 import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
 import com.mehdok.gooder.ui.home.fragments.NotificationsFragment;
 import com.mehdok.gooder.ui.home.fragments.StaredItemFragment;
+import com.mehdok.gooder.utils.Util;
+import com.mehdok.gooder.views.VazirButton;
+import com.mehdok.gooder.views.VazirEditText;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        AccessCodeListener
 {
     private BottomBar mBottomBar;
     private boolean firstRun = true;
+    private Dialog loginDialog;
+    private UserInfo userInfo = null;
+    private ProgressDialog waitingDialog;
+    private String mAccessCode;
+    private CoordinatorLayout mRootLayout;
+
+    // used for database storage
+    private byte[] mPassword;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -40,8 +63,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        mRootLayout = (CoordinatorLayout) findViewById(R.id.main_root_layout);
+
+        // set the private encryption key
+        handleFirstRun();
 
         //TODO setup crash reporter and bug feature
+        //TODO setup new version reminder
 
         // setup toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -118,7 +146,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // TODO get new access token then connect
         // TODO check notif number every 15 min to prevent token expire
-        initFirstView();
+        userInfo = DatabaseHelper.getInstance(this).getUserInfo();
+        if (userInfo != null)
+        {
+            //TODO set user info
+            initFirstView();
+        }
+        else
+        {
+            showLoginDialog();
+        }
     }
 
     @Override
@@ -203,6 +240,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mBottomBar.onSaveInstanceState(outState);
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        JsonHandler.getInstance().setAccessCodeListener(this);
+    }
+
     private void addNewPost()
     {
 
@@ -230,5 +274,121 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .replace(R.id.base_fragment_layout, fragment)
                 .addToBackStack(null)
                 .commit();
+    }
+
+    private void handleFirstRun()
+    {
+        PreferencesManager pref = new PreferencesManager(this);
+
+        if (pref.isFirstRun())
+        {
+            // set private key for any encryption, this will run once
+            KeyManager keyManager = new KeyManager();
+            keyManager.setIv(Util.getDeviceName().getBytes(), this);
+            keyManager.setId(Util.getSoftwareInfo().getBytes(), this);
+
+            pref.setFirstRun(false);
+        }
+    }
+
+    private void showLoginDialog()
+    {
+        loginDialog = new Dialog(this, R.style.DialogStyle);
+        loginDialog.setContentView(R.layout.dialog_login);
+        loginDialog.setCancelable(false);
+        loginDialog.show();
+        loginDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        final VazirEditText name = (VazirEditText)loginDialog.findViewById(R.id.login_user_name);
+        final VazirEditText password = (VazirEditText)loginDialog.findViewById(R.id.login_password);
+        final VazirButton loginButton = (VazirButton)loginDialog.findViewById(R.id.login_do);
+
+        loginButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                boolean error = false;
+
+                if (name.getText().toString().equals(""))
+                {
+                    name.setError(getString(R.string.error_required_field));
+                    error = true;
+                }
+
+                if (password.getText().toString().equals(""))
+                {
+                    password.setError(getString(R.string.error_required_field));
+                    error = true;
+                }
+
+                if (error) return;
+
+                loginWithUserPass(name.getText().toString(),
+                        password.getText().toString());
+
+                loginDialog.dismiss();
+            }
+        });
+    }
+
+    private void loginWithUserPass(String userName, String password)
+    {
+        try
+        {
+            mPassword = Crypto.encrypt(password.getBytes(), this);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        waitingDialog = new ProgressDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
+        waitingDialog.setTitle(R.string.wait_for_server_title);
+        waitingDialog.setMessage(getResources().getString(R.string.wait_for_server_body));
+        waitingDialog.show();
+
+        requestAccessCode(userName, password);
+    }
+
+    private void requestAccessCode(String userName, String password)
+    {
+        JsonHandler.getInstance().requestAccessCode(this, userName, password);
+    }
+
+    @Override
+    public void onAccessCodeReceive(String accessCode)
+    {
+        if (userInfo != null)
+        {
+            // this is a token renew
+            mAccessCode = accessCode;
+            waitingDialog.dismiss();
+
+            initFirstView();
+        }
+        else
+        {
+            // TODO get user info
+        }
+    }
+
+    private void putUserInfo(UserInfo userInfo)
+    {
+        //TODO
+    }
+
+    @Override
+    public void onAccessCodeFailure(String error)
+    {
+        Snackbar.make(mRootLayout, error, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.send_report, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View view)
+                    {
+                        Util.sendBugReport(getApplicationContext());
+                    }
+                }).show();
     }
 }

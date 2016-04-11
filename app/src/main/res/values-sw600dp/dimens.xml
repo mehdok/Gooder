@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<resources>
+    <dimen name="dialog_title_text_size">20sp</dimen>
+
+</resources>
