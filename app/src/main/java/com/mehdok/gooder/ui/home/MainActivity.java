@@ -4,19 +4,16 @@
 
 package com.mehdok.gooder.ui.home;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -59,8 +56,6 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AccessCodeListener, UserInfoListener
 {
-    private final int REQUEST_SDP_FRO_BUG_REPORT = 101; //request sdcard read write permission for writing debug info
-
     private BottomBar mBottomBar;
     private boolean firstRun = true;
     private Dialog loginDialog;
@@ -241,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.nav_bug_report)
         {
-            checkForStoragePermissions();
+            Util.sendBugReport(this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
         }
         else if (id == R.id.nav_about_app)
         {
@@ -446,7 +441,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onClick(View view)
                         {
-                            checkForStoragePermissions();
+                            Util.sendBugReport(MainActivity.this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
                         }
                     }).show();
         }
@@ -484,7 +479,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         @Override
                         public void onClick(View view)
                         {
-                            checkForStoragePermissions();
+                            Util.sendBugReport(MainActivity.this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
                         }
                     }).show();
         }
@@ -498,57 +493,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void showNoInternetError(NoInternetException exception)
     {
         Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_LONG).show();
-    }
-
-    private void checkForStoragePermissions()
-    {
-        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED)
-        {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
-            {
-                showRationalForDebugStorage();
-                return;
-            }
-
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_SDP_FRO_BUG_REPORT);
-            return;
-        }
-
-        Util.sendBugReport(this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
-    }
-
-    private void showRationalForDebugStorage()
-    {
-        Snackbar.make(mRootLayout, R.string.storage_permission_rational, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.grant_permission, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View view)
-                    {
-                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_SDP_FRO_BUG_REPORT);
-                    }
-                }).show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
-    {
-        switch (requestCode)
-        {
-            case REQUEST_SDP_FRO_BUG_REPORT:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    Util.sendBugReport(this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
-                } else
-                {
-                    showRationalForDebugStorage();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                break;
-        }
     }
 
     private void setupCrashReporter()
