@@ -4,6 +4,7 @@
 
 package com.mehdok.gooder.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -37,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper
             + COLUMN_AVATAR + " TEXT, "
             + COLUMN_ABOUT + " TEXT, "
             + COLUMN_WEB + " TEXT, "
-            + COLUMN_PASSWORD + "BLOB);";
+            + COLUMN_PASSWORD + " BLOB);";
 
     public static DatabaseHelper getInstance(Context context)
     {
@@ -76,15 +77,13 @@ public class DatabaseHelper extends SQLiteOpenHelper
         Cursor cursor = getReadableDatabase().rawQuery(query, null);
         if (cursor.moveToFirst())
         {
-            String password = "";
-
             UserInfo userInfo = new UserInfo(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_FULL_NAME)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_ABOUT)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_WEB)),
-                    password);
+                    cursor.getBlob(cursor.getColumnIndex(COLUMN_PASSWORD)));
 
             cursor.close();
 
@@ -92,5 +91,21 @@ public class DatabaseHelper extends SQLiteOpenHelper
         }
 
         return null;
+    }
+
+    public boolean putUserInfo(UserInfo userInfo)
+    {
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_USER_ID, userInfo.getUserId());
+        values.put(COLUMN_USER_NAME, userInfo.getUsername());
+        values.put(COLUMN_FULL_NAME, userInfo.getFullName());
+        values.put(COLUMN_AVATAR, userInfo.getAvatar());
+        values.put(COLUMN_ABOUT, userInfo.getAbout());
+        values.put(COLUMN_WEB, userInfo.getWeb());
+        values.put(COLUMN_PASSWORD, userInfo.getPassword());
+
+        long result = getWritableDatabase().insert(TBL_USER, null, values);
+
+        return result != -1;
     }
 }

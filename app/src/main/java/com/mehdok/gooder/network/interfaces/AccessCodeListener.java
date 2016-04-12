@@ -10,5 +10,5 @@ package com.mehdok.gooder.network.interfaces;
 public interface AccessCodeListener
 {
     void onAccessCodeReceive(String accessCode);
-    void onAccessCodeFailure(String error);
+    void onAccessCodeFailure(Exception exception);
 }

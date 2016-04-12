@@ -4,15 +4,18 @@
 
 package com.mehdok.gooder.ui.home;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -24,13 +27,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.network.JsonHandler;
+import com.mehdok.gooder.network.exceptions.InvalidUserNamePasswordException;
+import com.mehdok.gooder.network.exceptions.NoInternetException;
+import com.mehdok.gooder.network.exceptions.UserInfoException;
 import com.mehdok.gooder.network.interfaces.AccessCodeListener;
+import com.mehdok.gooder.network.interfaces.UserInfoListener;
 import com.mehdok.gooder.network.model.UserInfo;
 import com.mehdok.gooder.preferences.PreferencesManager;
 import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
@@ -43,9 +51,14 @@ import com.mehdok.gooder.views.VazirEditText;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
+import java.io.UnsupportedEncodingException;
+import java.util.UUID;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        AccessCodeListener
+        AccessCodeListener, UserInfoListener
 {
+    private final int REQUEST_SDP_FRO_BUG_REPORT = 101; //request sdcard read write permission for writing debug info
+
     private BottomBar mBottomBar;
     private boolean firstRun = true;
     private Dialog loginDialog;
@@ -64,6 +77,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_main);
         mRootLayout = (CoordinatorLayout) findViewById(R.id.main_root_layout);
+
+        JsonHandler.getInstance().addAccessCodeListener(this);
+        JsonHandler.getInstance().setUserInfoListener(this);
 
         // set the private encryption key
         handleFirstRun();
@@ -149,8 +165,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         userInfo = DatabaseHelper.getInstance(this).getUserInfo();
         if (userInfo != null)
         {
-            //TODO set user info
-            initFirstView();
+            // user exist
+            try
+            {
+                showWaitingDialog();
+                requestAccessCode(userInfo.getUsername(),
+                        Crypto.getMD5BASE64(new String(Crypto.decrypt(userInfo.getPassword(), this))));
+            } catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         else
         {
@@ -214,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.nav_bug_report)
         {
-
+            checkForStoragePermissions();
         }
         else if (id == R.id.nav_about_app)
         {
@@ -244,7 +268,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onResume()
     {
         super.onResume();
-        JsonHandler.getInstance().setAccessCodeListener(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        JsonHandler.getInstance().removeAccessCodeListener(this);
+        JsonHandler.getInstance().removeUserInfoListener();
     }
 
     private void addNewPost()
@@ -284,8 +315,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             // set private key for any encryption, this will run once
             KeyManager keyManager = new KeyManager();
-            keyManager.setIv(Util.getDeviceName().getBytes(), this);
-            keyManager.setId(Util.getSoftwareInfo().getBytes(), this);
+            keyManager.setId(UUID.randomUUID().toString().substring(0, 32).getBytes(), this);
+            keyManager.setIv(UUID.randomUUID().toString().substring(0, 16).getBytes(), this);
 
             pref.setFirstRun(false);
         }
@@ -343,52 +374,177 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
+        showWaitingDialog();
+
+        requestAccessCode(userName, Crypto.getMD5BASE64(password));
+    }
+
+    private void showWaitingDialog()
+    {
         waitingDialog = new ProgressDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
         waitingDialog.setTitle(R.string.wait_for_server_title);
         waitingDialog.setMessage(getResources().getString(R.string.wait_for_server_body));
         waitingDialog.show();
-
-        requestAccessCode(userName, password);
     }
 
     private void requestAccessCode(String userName, String password)
     {
-        JsonHandler.getInstance().requestAccessCode(this, userName, password);
+        try
+        {
+            JsonHandler.getInstance().requestAccessCode(this, userName, password);
+        } catch (UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onAccessCodeReceive(String accessCode)
     {
+        mAccessCode = accessCode;
+
         if (userInfo != null)
         {
             // this is a token renew
-            mAccessCode = accessCode;
             waitingDialog.dismiss();
 
             initFirstView();
         }
         else
         {
-            // TODO get user info
+            JsonHandler.getInstance().requestUserInfo(this, mAccessCode);
         }
     }
 
     private void putUserInfo(UserInfo userInfo)
     {
-        //TODO
+        DatabaseHelper.getInstance(this).putUserInfo(userInfo);
     }
 
     @Override
-    public void onAccessCodeFailure(String error)
+    public void onAccessCodeFailure(Exception exception)
     {
-        Snackbar.make(mRootLayout, error, Snackbar.LENGTH_INDEFINITE)
-                .setAction(R.string.send_report, new View.OnClickListener()
+        waitingDialog.dismiss();
+
+        if (exception instanceof NoInternetException)
+        {
+            showNoInternetError((NoInternetException) exception);
+        }
+        else if (exception instanceof InvalidUserNamePasswordException)
+        {
+            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+            showLoginDialog();
+        }
+        else
+        {
+            Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.send_report, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            checkForStoragePermissions();
+                        }
+                    }).show();
+        }
+    }
+
+    @Override
+    public void onUserInfoReceive(UserInfo userInfo)
+    {
+        waitingDialog.dismiss();
+
+        userInfo.setPassword(mPassword);
+        putUserInfo(userInfo);
+        setUserInfoInUI(userInfo);
+        initFirstView();
+    }
+
+    @Override
+    public void onUserInfoFailure(Exception exception)
+    {
+        waitingDialog.dismiss();
+
+        if (exception instanceof NoInternetException)
+        {
+            showNoInternetError((NoInternetException) exception);
+        }
+        else if (exception instanceof UserInfoException)
+        {
+            Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_LONG).show();
+        }
+        else
+        {
+            Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_INDEFINITE)
+                    .setAction(R.string.send_report, new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            checkForStoragePermissions();
+                        }
+                    }).show();
+        }
+    }
+
+    private void setUserInfoInUI(UserInfo userInfo)
+    {
+        //TODO
+    }
+
+    private void showNoInternetError(NoInternetException exception)
+    {
+        Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_LONG).show();
+    }
+
+    private void checkForStoragePermissions()
+    {
+        int hasWriteStoragePermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (hasWriteStoragePermission != PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            {
+                showRationalForDebugStorage();
+                return;
+            }
+
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_SDP_FRO_BUG_REPORT);
+            return;
+        }
+
+        Util.sendBugReport(this);
+    }
+
+    private void showRationalForDebugStorage()
+    {
+        Snackbar.make(mRootLayout, R.string.storage_permission_rational, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.grant_permission, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(View view)
                     {
-                        Util.sendBugReport(getApplicationContext());
+                        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_SDP_FRO_BUG_REPORT);
                     }
                 }).show();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_SDP_FRO_BUG_REPORT:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    Util.sendBugReport(this);
+                } else
+                {
+                    showRationalForDebugStorage();
+                }
+                break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                break;
+        }
     }
 }
