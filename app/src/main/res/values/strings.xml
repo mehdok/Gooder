@@ -27,5 +27,8 @@
     <string name="bug_email_context">Please say something about the bug.</string>
     <string name="storage_permission_rational">I Need permission to read and write sdcard to read your device log for debug</string>
     <string name="grant_permission">Give me the permission</string>
+    <string name="crash_report">Crash Report</string>
+    <string name="crash_email_subject">Gooder Crash</string>
+    <string name="crash_email_context">Please say something about the crash</string>
 
 </resources>

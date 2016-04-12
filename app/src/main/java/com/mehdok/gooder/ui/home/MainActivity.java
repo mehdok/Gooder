@@ -84,7 +84,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // set the private encryption key
         handleFirstRun();
 
-        //TODO setup crash reporter and bug feature
+        //TODO setup crash reporter
+        //TODO setup google tracker
         //TODO setup new version reminder
 
         // setup toolbar
@@ -512,7 +513,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return;
         }
 
-        Util.sendBugReport(this);
+        Util.sendBugReport(this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
     }
 
     private void showRationalForDebugStorage()
@@ -536,7 +537,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case REQUEST_SDP_FRO_BUG_REPORT:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 {
-                    Util.sendBugReport(this);
+                    Util.sendBugReport(this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
                 } else
                 {
                     showRationalForDebugStorage();

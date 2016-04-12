@@ -10,9 +10,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
-
-import com.mehdok.gooder.R;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -36,6 +35,8 @@ public class Util
 {
     private static final String SUPPORT_EMAIL = "mehdok@ymail.com";
     private static String appVersionName;
+    public static final String LOG_DIR = "logs";
+    public static final String LOG_ZIP_DIR = "log_zip";
 
     public static String getDeviceName()
     {
@@ -74,7 +75,7 @@ public class Util
         return softwareInfo;
     }
 
-    private static String getAppCurrentVersion(Context lContext)
+    public static String getAppCurrentVersion(Context lContext)
     {
         PackageInfo pInfo = null;
         try
@@ -92,34 +93,36 @@ public class Util
         return ("App versionCode: " + cVersion + "\nApp versionName: " + nVersion);
     }
 
-    public static void sendBugReport(Context ctx)
+    public static void sendBugReport(Context ctx, String reportTitle, String reportSummery)
     {
-        String BASE_OUT_ADDRESS = ctx.getExternalFilesDir(null).getAbsolutePath();
-        String LOG_LOCATION = BASE_OUT_ADDRESS + "/Logs";
-        String ZIP_LOG = BASE_OUT_ADDRESS + "/log.zip";
+        File logDir = new File(ctx.getFilesDir(), LOG_DIR);
+        logDir.mkdirs();
+        File logZipDir = new File(ctx.getFilesDir(), LOG_ZIP_DIR);
+        logZipDir.mkdirs();
+        String ZIP_LOG = logZipDir.getAbsolutePath() + "/log.zip";
 
-        extractLog("end - no crash", ctx, LOG_LOCATION);
-        boolean zipResult = zipFileAtPath(LOG_LOCATION, ZIP_LOG);
+        extractLog("end - no crash", ctx, logDir.getAbsolutePath());
+        boolean zipResult = zipFileAtPath(logDir.getAbsolutePath(), ZIP_LOG);
         final Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("message/rfc822");
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{SUPPORT_EMAIL});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, ctx.getString(R.string.bug_email_subject) + " -- version: " + getAppVersionName(ctx));
-        emailIntent.putExtra(Intent.EXTRA_TEXT, ctx.getString(R.string.bug_email_context));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, reportTitle + " -- version: " + getAppVersionName(ctx));
+        emailIntent.putExtra(Intent.EXTRA_TEXT, reportSummery);
         if (zipResult)
-            emailIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file://" + ZIP_LOG));
+        {
+            File zipFile = new File(ZIP_LOG);
+            Uri contentUri = FileProvider.getUriForFile(ctx, "com.mehdok.gooder.fileprovider", zipFile);
+            emailIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
+        }
         ctx.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
     }
 
-    private static File extractLog(String trace, Context context, String LOG_LOCATION)
+    public static File extractLog(String trace, Context context, String logDir)
     {
-        //set a file
-        File des = new File(LOG_LOCATION);
-        des.mkdirs();
-
         Date datum = new Date();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.US);
-        String fullName = df.format(datum) + "-papyrusreader-log-report.log";
-        File file = new File(LOG_LOCATION, fullName);
+        String fullName = df.format(datum) + "-gooder-log-report.log";
+        File file = new File(logDir, fullName);
 
         //clears a file
         if (file.exists())
@@ -179,7 +182,7 @@ public class Util
         return file;
     }
 
-    private static String getAppVersionName(Context context)
+    public static String getAppVersionName(Context context)
     {
         if (appVersionName == null)
         {
@@ -198,7 +201,7 @@ public class Util
         return appVersionName;
     }
 
-    private static boolean zipFileAtPath(String sourcePath, String toLocation)
+    public static boolean zipFileAtPath(String sourcePath, String toLocation)
     {
         final int BUFFER = 2048;
 
