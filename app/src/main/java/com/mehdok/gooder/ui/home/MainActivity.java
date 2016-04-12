@@ -8,6 +8,7 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -45,6 +46,7 @@ import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
 import com.mehdok.gooder.ui.home.fragments.NotificationsFragment;
 import com.mehdok.gooder.ui.home.fragments.StaredItemFragment;
+import com.mehdok.gooder.utils.CustomExceptionHandler;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // set the private encryption key
         handleFirstRun();
 
-        //TODO setup crash reporter
+        setupCrashReporter();
         //TODO setup google tracker
         //TODO setup new version reminder
 
@@ -546,6 +548,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 break;
+        }
+    }
+
+    private void setupCrashReporter()
+    {
+        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler))
+        {
+            Intent intent = new Intent(this, CrashReporterActivity.class);
+            if (android.os.Build.VERSION.SDK_INT >= 11)
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this, getResources().getString(R.string.app_name), intent));
         }
     }
 }

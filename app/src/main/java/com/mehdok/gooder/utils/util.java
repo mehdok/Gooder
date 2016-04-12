@@ -33,7 +33,7 @@ import java.util.zip.ZipOutputStream;
  */
 public class Util
 {
-    private static final String SUPPORT_EMAIL = "mehdok@ymail.com";
+    public static final String SUPPORT_EMAIL = "mehdok@ymail.com";
     private static String appVersionName;
     public static final String LOG_DIR = "logs";
     public static final String LOG_ZIP_DIR = "log_zip";

@@ -7,4 +7,7 @@
     <color name="title_color">#535554</color>
     <color name="transparent">#00000000</color>
 
+    <color name="black">#454444</color>
+    <color name="holo_text_color">#2895a4</color>
+
 </resources>

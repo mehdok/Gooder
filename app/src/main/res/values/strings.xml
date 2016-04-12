@@ -30,5 +30,7 @@
     <string name="crash_report">Crash Report</string>
     <string name="crash_email_subject">Gooder Crash</string>
     <string name="crash_email_context">Please say something about the crash</string>
+    <string name="crash_report_text">Unfortunately the app getting crashed, Would you like to send a crash report?</string>
+    <string name="ok">OK</string>
 
 </resources>
