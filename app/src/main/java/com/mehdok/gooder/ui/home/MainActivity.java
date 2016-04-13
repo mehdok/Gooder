@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
@@ -16,17 +17,23 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
@@ -47,6 +54,7 @@ import com.mehdok.gooder.utils.CustomExceptionHandler;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
+import com.mehdok.gooder.views.VazirTextView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -54,18 +62,22 @@ import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        AccessCodeListener, UserInfoListener
+        AccessCodeListener, UserInfoListener, View.OnClickListener
 {
+    public static final String TAG_ACCESS_CODE = "access_code";
+
     private BottomBar mBottomBar;
     private boolean firstRun = true;
     private Dialog loginDialog;
     private UserInfo userInfo = null;
     private ProgressDialog waitingDialog;
     private String mAccessCode;
-    private CoordinatorLayout mRootLayout;
-
     // used for database storage
     private byte[] mPassword;
+
+    private CoordinatorLayout mRootLayout;
+    private ImageView userImage;
+    private VazirTextView tvUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -110,6 +122,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // setup left navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        // set click listener for nav header for login or go to profile page
+        LinearLayout headerLayout = (LinearLayout)navigationView.getHeaderView(0);
+        headerLayout.setOnClickListener(this);
+
+        userImage = (ImageView)headerLayout.findViewById(R.id.user_photo);
+        tvUserName = (VazirTextView)headerLayout.findViewById(R.id.user_name);
 
         // setup bottom navigation
         mBottomBar = BottomBar.attach(this, savedInstanceState);
@@ -283,11 +302,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initFirstView()
     {
-        // TODO send access data to fragment
+        setUserInfoInUI(userInfo);
 
-//        Bundle bundle = new Bundle();
-//        bundle.putString(TAG, id);
-//        FriendsItemFragment.getInstance().setArguments(bundle);
+        Bundle bundle = new Bundle();
+        bundle.putString(TAG_ACCESS_CODE, mAccessCode);
+        FriendsItemFragment.getInstance().setArguments(bundle);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -297,7 +316,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void changeView(Fragment fragment)
     {
-        // TODO add token to fragment via bundle
+        Bundle bundle = new Bundle();
+        bundle.putString(TAG_ACCESS_CODE, mAccessCode);
+        fragment.setArguments(bundle);
+
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.base_fragment_layout, fragment)
@@ -416,6 +438,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void putUserInfo(UserInfo userInfo)
     {
+        this.userInfo = userInfo;
         DatabaseHelper.getInstance(this).putUserInfo(userInfo);
     }
 
@@ -454,7 +477,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         userInfo.setPassword(mPassword);
         putUserInfo(userInfo);
-        setUserInfoInUI(userInfo);
         initFirstView();
     }
 
@@ -487,7 +509,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setUserInfoInUI(UserInfo userInfo)
     {
-        //TODO
+        tvUserName.setText(userInfo.getFullName());
+
+        Glide
+                .with(this)
+                .load(userInfo.getAvatar())
+                .asBitmap()
+                .centerCrop()
+                .placeholder(R.mipmap.ic_launcher)
+                .into(new BitmapImageViewTarget(userImage)
+                {
+                    @Override
+                    protected void setResource(Bitmap resource)
+                    {
+                        RoundedBitmapDrawable circularBitmapDrawable =
+                                RoundedBitmapDrawableFactory.create(getResources(), resource);
+                        circularBitmapDrawable.setCircular(true);
+                        userImage.setImageDrawable(circularBitmapDrawable);
+            }
+        });
     }
 
     private void showNoInternetError(NoInternetException exception)
@@ -505,5 +545,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this, getResources().getString(R.string.app_name), intent));
         }
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        int id = view.getId();
+
+        if (id == R.id.nav_header)
+        {
+            if (userInfo!= null)
+                openProfilePage();
+            else
+                showLoginDialog();
+        }
+    }
+
+    private void openProfilePage()
+    {
+        //TODO
+        Log.e("openProfilePage", "openProfilePage");
     }
 }
