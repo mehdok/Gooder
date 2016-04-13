@@ -14,7 +14,9 @@ import com.mehdok.gooder.network.exceptions.NoInternetException;
 import com.mehdok.gooder.network.exceptions.UserInfoException;
 import com.mehdok.gooder.network.handler.JsonThreadHandler;
 import com.mehdok.gooder.network.interfaces.AccessCodeListener;
+import com.mehdok.gooder.network.interfaces.FriendsPostListener;
 import com.mehdok.gooder.network.interfaces.UserInfoListener;
+import com.mehdok.gooder.network.model.Post;
 import com.mehdok.gooder.network.model.UserInfo;
 
 import java.io.UnsupportedEncodingException;
@@ -35,6 +37,7 @@ public class JsonHandler
 
     private ArrayList<AccessCodeListener> accessCodeListener;
     private UserInfoListener userInfoListener;
+    private FriendsPostListener friendsPostListener;
 
     public static JsonHandler getInstance()
     {
@@ -168,23 +171,82 @@ public class JsonHandler
         }).start();
     }
 
+    /**
+     * request for all new friends post
+     *
+     * @param gid
+     * @param start
+     * @param unread_only
+     * @param reverse_order
+     */
+    public void requestFriendsPost(final Context ctx, final String accessCode, final String gid, final int start, final int unread_only, final int reverse_order)
+    {
+        if (!NetworkUtil.isNetworkAvailable(ctx))
+        {
+            if (friendsPostListener != null)
+                friendsPostListener.onFriendsPostFailure(new NoInternetException());
+
+            return;
+        }
+
+        final String postParams = "client_id=" + Crypto.API_KEY +
+                "&access_code=" + accessCode;
+
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                ServiceHandler sh = new ServiceHandler();
+                String response = sh.makePostRequest(ctx,
+                        AddressHandler.getAllFriendsItem(gid, start, unread_only, reverse_order),
+                        postParams);
+                //TODO handle server Exceptions
+                ArrayList<Post> posts = parser.parsePostJson(response);
+
+                // the list might be too large so bundle may produce error
+                sendFriendsPostBack(posts);
+            }
+        }).start();
+    }
+
     public void addAccessCodeListener(AccessCodeListener toAdd)
     {
         accessCodeListener.add(toAdd);
     }
-
     public void removeAccessCodeListener(AccessCodeListener toRemove)
     {
         accessCodeListener.remove(toRemove);
     }
-
     public void setUserInfoListener(UserInfoListener listener)
     {
         userInfoListener = listener;
     }
-
     public void removeUserInfoListener()
     {
         userInfoListener = null;
+    }
+    public void setFriendsPostListener(FriendsPostListener toAdd)
+    {
+        friendsPostListener = toAdd;
+    }
+    public void removeFriendsPostListener()
+    {
+        friendsPostListener = null;
+    }
+
+    private void sendFriendsPostBack(final ArrayList<Post> posts)
+    {
+        if (friendsPostListener != null)
+        {
+            mHandler.post(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    friendsPostListener.onFriendsPostReceive(posts);
+                }
+            });
+        }
     }
 }

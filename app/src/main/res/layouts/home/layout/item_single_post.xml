@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:focusable="true"
+                                    android:clickable="true"
+                                    card_view:cardElevation="4dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/standard_margin"
+        android:paddingRight="@dimen/standard_margin"
+        android:paddingTop="@dimen/standard_padding"
+        android:paddingBottom="@dimen/standard_padding"
+        android:orientation="vertical"
+        android:background="@color/white">
+
+        <com.mehdok.gooder.views.VazirTextView
+            android:id="@+id/post_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/post_date"
+            android:text="Author"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="right"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:lines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginLeft="@dimen/text_margin"/>
+
+        <com.mehdok.gooder.views.VazirTextView
+            android:id="@+id/post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_author"
+            android:text="Title"
+            android:gravity="right"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:lines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginTop="@dimen/text_margin"/>
+
+        <com.mehdok.gooder.views.VazirTextView
+            android:id="@+id/post_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignBaseline="@id/post_author"
+            android:text="2016/04/13"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+
+        <com.mehdok.gooder.views.VazirTextView
+            android:id="@+id/post_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/post_title"
+            android:text="2016/04/13"
+            android:gravity="right"
+            android:ellipsize="end"
+            android:maxLines="4"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_marginTop="@dimen/standard_padding"/>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/post_body"
+            android:background="@color/selection_color"
+            android:layout_marginTop="@dimen/standard_padding"
+            android:layout_marginBottom="@dimen/standard_padding"/>
+
+        <ImageButton
+            android:id="@+id/like_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_outline_grey600_24dp"
+            android:background="@drawable/buttons_background"
+            android:layout_below="@id/separator"
+            android:layout_alignParentLeft="true"
+            android:tint="@color/colorPrimary"
+            android:padding="@dimen/button_padding"/>
+
+        <TextView
+            android:id="@+id/like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_alignBottom="@id/like_button"
+            android:layout_toRightOf="@id/like_button"/>
+
+        <ImageButton
+            android:id="@+id/star_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_star_outline_grey600_24dp"
+            android:background="@drawable/buttons_background"
+            android:layout_below="@id/separator"
+            android:layout_toRightOf="@id/like_count"
+            android:tint="@color/colorPrimary"
+            android:padding="@dimen/button_padding"/>
+
+        <ImageButton
+            android:id="@+id/share_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_share_grey600_24dp"
+            android:background="@drawable/buttons_background"
+            android:layout_below="@id/separator"
+            android:layout_toRightOf="@id/star_button"
+            android:tint="@color/colorPrimary"
+            android:padding="@dimen/button_padding"/>
+
+        <TextView
+            android:id="@+id/share_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_alignBottom="@id/share_button"
+            android:layout_toRightOf="@id/share_button"/>
+
+        <TextView
+            android:id="@+id/comment_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:layout_alignBottom="@id/share_button"
+            android:layout_alignParentRight="true"/>
+
+        <ImageButton
+            android:id="@+id/comment_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_insert_comment_grey600_24dp"
+            android:background="@drawable/buttons_background"
+            android:layout_below="@id/separator"
+            android:layout_toLeftOf="@id/comment_count"
+            android:tint="@color/colorPrimary"
+            android:padding="@dimen/button_padding"
+            android:clickable="false"
+            android:focusable="false"/>
+
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

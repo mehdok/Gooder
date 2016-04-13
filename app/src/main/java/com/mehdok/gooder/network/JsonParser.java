@@ -5,10 +5,21 @@
 package com.mehdok.gooder.network;
 
 import com.mehdok.gooder.network.exceptions.InvalidUserNamePasswordException;
+import com.mehdok.gooder.network.model.Author;
+import com.mehdok.gooder.network.model.Extra;
+import com.mehdok.gooder.network.model.Flags;
+import com.mehdok.gooder.network.model.Post;
 import com.mehdok.gooder.network.model.UserInfo;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * Created by mehdok on 4/11/2016.
@@ -26,6 +37,34 @@ public class JsonParser
     private final String AVATAR = "avatar";
     private final String ABOUT = "about";
     private final String WEB = "web";
+    private final String PID = "pid";
+    private final String AUTHOR = "author";
+    private final String UID = "uid";
+    private final String TIME = "time";
+    private final String PARENT_PID = "parent_pid";
+    private final String TITLE = "title";
+    private final String POST_BODY = "post_body";
+    private final String COMMENTS_COUNT = "comments_count";
+    private final String SHARES_COUNT = "shares_count";
+    private final String LIKES_COUNT = "likes_count";
+    private final String FLAGS = "flags";
+    private final String COMMENTS_DISABLED = "comments-disabled";
+    private final String RESHARES_DISABLED = "reshares-disabled";
+    private final String DRAFTS = "draft";
+    private final String EDITED = "edited";
+    private final String EXTRA = "extra";
+    private final String NOTE = "note";
+    private final String URL = "url";
+
+    private SimpleDateFormat dateFormat;
+    private Calendar calendar;
+
+    public JsonParser()
+    {
+        dateFormat = new SimpleDateFormat("yyyy/MM/dd H:m", Locale.US);
+        calendar = Calendar.getInstance();
+        calendar.setTimeZone(TimeZone.getTimeZone("Asia/Tehran"));
+    }
 
     public String parseAccessCodeJson(String json) throws InvalidUserNamePasswordException
     {
@@ -76,5 +115,96 @@ public class JsonParser
         }
 
         return null;
+    }
+
+    public ArrayList<Post> parsePostJson(String json)
+    {
+        ArrayList<Post> result = new ArrayList<>();
+
+        String pid;
+        Author author;
+        String time;
+        String parentPid;
+        String title;
+        String postBody;
+        String commentsCount;
+        String sharesCount;
+        String likesCount;
+        Flags flags;
+        Extra extra;
+
+        if (json != null)
+        {
+            try
+            {
+                JSONObject mainJsonObject = new JSONObject(json);
+                JSONArray allPost = mainJsonObject.getJSONArray(MSG_DATA);
+
+                for (int i = 0; i < allPost.length(); i++)
+                {
+                    JSONObject post = allPost.getJSONObject(i);
+
+                    pid = post.getString(PID);
+                    JSONObject authorObj = post.getJSONObject(AUTHOR);
+                    author = parseAuthor(authorObj);
+                    time = post.getString(TIME);
+                    parentPid = post.getString(PARENT_PID);
+                    title = post.getString(TITLE);
+                    postBody = post.getString(POST_BODY);
+                    commentsCount = post.getString(COMMENTS_COUNT);
+                    sharesCount = post.getString(SHARES_COUNT);
+                    likesCount = post.getString(LIKES_COUNT);
+                    JSONObject flagObj = post.getJSONObject(FLAGS);
+                    flags = parseFlag(flagObj);
+                    JSONObject extraObj = post.getJSONObject(EXTRA);
+                    extra = parseExtra(extraObj);
+
+                    result.add(new Post(pid,
+                            author,
+                            getReadableDate(time),
+                            parentPid,
+                            title,
+                            postBody,
+                            commentsCount,
+                            sharesCount,
+                            likesCount,
+                            flags,
+                            extra));
+                }
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        return result;
+    }
+
+    private Author parseAuthor(JSONObject obj) throws JSONException
+    {
+        return new Author(obj.getString(UID),
+                obj.getString(FULLNAME));
+    }
+
+    private Flags parseFlag(JSONObject obj)throws JSONException
+    {
+        return new Flags(obj.getBoolean(COMMENTS_DISABLED),
+                obj.getBoolean(RESHARES_DISABLED),
+                obj.getBoolean(DRAFTS),
+                obj.getBoolean(EDITED));
+    }
+
+    private Extra parseExtra(JSONObject obj)throws JSONException
+    {
+        return new Extra(obj.getString(NOTE),
+                obj.getString(URL));
+    }
+
+    private String getReadableDate(String date)
+    {
+        long time = Long.parseLong(date);
+        calendar.setTimeInMillis(time * 1000);
+        return dateFormat.format(calendar.getTime());
     }
 }

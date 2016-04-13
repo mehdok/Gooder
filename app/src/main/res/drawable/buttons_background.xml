@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) mehdi sohrabi (mehdok)
+  ~ Email: mehdok@gmail.com
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:state_pressed="true">
+         <shape >
+            <solid
+                
+                android:color="@color/selection_color" /> <!-- pressed -->
+        </shape>
+     </item>
+           
+     <item>        
+        <shape>
+            <solid
+                android:color="@null" /> <!-- default -->
+            
+        </shape>
+    </item>
+
+</selector>

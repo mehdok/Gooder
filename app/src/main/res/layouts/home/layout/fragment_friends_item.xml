@@ -4,10 +4,20 @@
     android:layout_height="match_parent"
     tools:context="com.mehdok.gooder.ui.home.fragments.FriendsItemFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friends_item_recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="friends item" />
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/friends_item_progress"
+        android:layout_gravity="center_horizontal|top"
+        android:indeterminate="true"
+        android:visibility="invisible"/>
 
 </FrameLayout>

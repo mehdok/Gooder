@@ -50,6 +50,7 @@ import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
 import com.mehdok.gooder.ui.home.fragments.NotificationsFragment;
 import com.mehdok.gooder.ui.home.fragments.StaredItemFragment;
+import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.utils.CustomExceptionHandler;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        MainActivityDelegate.subscribeOn(this);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -132,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // setup bottom navigation
         mBottomBar = BottomBar.attach(this, savedInstanceState);
+        mBottomBar.noTabletGoodness();
         mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener()
         {
             @Override
@@ -295,6 +298,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         JsonHandler.getInstance().removeUserInfoListener();
     }
 
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        MainActivityDelegate.unSubscribe(this);
+    }
+
     private void addNewPost()
     {
 
@@ -316,9 +326,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void changeView(Fragment fragment)
     {
-        Bundle bundle = new Bundle();
-        bundle.putString(TAG_ACCESS_CODE, mAccessCode);
-        fragment.setArguments(bundle);
+        if (fragment.getArguments() == null)
+        {
+            Bundle bundle = new Bundle();
+            bundle.putString(TAG_ACCESS_CODE, mAccessCode);
+            fragment.setArguments(bundle);
+        }
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -530,7 +543,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void showNoInternetError(NoInternetException exception)
+    public void showNoInternetError(NoInternetException exception)
     {
         Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_LONG).show();
     }

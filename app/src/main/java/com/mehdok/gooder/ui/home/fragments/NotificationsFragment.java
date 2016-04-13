@@ -42,12 +42,4 @@ public class NotificationsFragment extends Fragment
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
-
-    @Override
-    public void onDestroyView()
-    {
-        super.onDestroyView();
-
-        mInstance = null;
-    }
 }

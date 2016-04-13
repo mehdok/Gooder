@@ -42,13 +42,4 @@ public class CommentViewFragment extends Fragment
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_comment_view, container, false);
     }
-
-    @Override
-    public void onDestroyView()
-    {
-        super.onDestroyView();
-
-        mInstance = null;
-    }
-
 }

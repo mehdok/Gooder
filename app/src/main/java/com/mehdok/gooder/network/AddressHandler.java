@@ -25,4 +25,16 @@ public class AddressHandler
     {
         return "http://gooder.in/api/?method=user-info";
     }
+
+    public static String getAllFriendsItem(String gid, int start, int unread_only, int reverse_order)
+    {
+        String params = "&start=" + start
+                + "&unread_only=" + unread_only
+                + "&reverse_order=" + reverse_order;
+
+        if (gid != null)
+            params = params + "&gid=" + gid;
+
+        return "http://gooder.in/api/?method=users-timeline" + params;
+    }
 }
