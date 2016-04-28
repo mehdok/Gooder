@@ -8,7 +8,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -131,7 +132,7 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void restartApp(String crashAddress)
     {
-        Log.e("CustomExceptionHandler", "restartApp");
+        Logger.e("CustomExceptionHandler", "restartApp");
 
         mEmailIntent.putExtra(CRASH_TAG, crashAddress);
         lcontext.get().startActivity(mEmailIntent);

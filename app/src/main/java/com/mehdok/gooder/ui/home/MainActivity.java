@@ -24,7 +24,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,7 +55,9 @@ import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooder.views.VazirTextView;
+import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.UnsupportedEncodingException;
@@ -179,6 +180,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mBottomBar.mapColorForTab(1, colorId);
         mBottomBar.mapColorForTab(2, colorId);
         mBottomBar.mapColorForTab(3, colorId);
+
+        //TODO badge test
+        BottomBarBadge unreadMessages = mBottomBar.makeBadgeForTabAt(3, "#FF0000", 6);
+
+        unreadMessages.show();
+
 
         // TODO get new access token then connect
         // TODO check notif number every 15 min to prevent token expire
@@ -336,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.base_fragment_layout, fragment)
-                .addToBackStack(null)
                 .commit();
     }
 
@@ -577,6 +583,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void openProfilePage()
     {
         //TODO
-        Log.e("openProfilePage", "openProfilePage");
+        Logger.e("openProfilePage", "openProfilePage");
     }
 }

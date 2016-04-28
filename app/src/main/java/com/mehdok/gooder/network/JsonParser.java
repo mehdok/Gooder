@@ -10,6 +10,7 @@ import com.mehdok.gooder.network.model.Extra;
 import com.mehdok.gooder.network.model.Flags;
 import com.mehdok.gooder.network.model.Post;
 import com.mehdok.gooder.network.model.UserInfo;
+import com.mehdok.gooder.utils.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -150,7 +151,7 @@ public class JsonParser
                     time = post.getString(TIME);
                     parentPid = post.getString(PARENT_PID);
                     title = post.getString(TITLE);
-                    postBody = post.getString(POST_BODY);
+                    postBody = Util.getCleanString(post.getString(POST_BODY));
                     commentsCount = post.getString(COMMENTS_COUNT);
                     sharesCount = post.getString(SHARES_COUNT);
                     likesCount = post.getString(LIKES_COUNT);
@@ -206,5 +207,19 @@ public class JsonParser
         long time = Long.parseLong(date);
         calendar.setTimeInMillis(time * 1000);
         return dateFormat.format(calendar.getTime());
+    }
+
+    private String replaceForumUrl(String str)
+    {
+        int openTagIndex = str.indexOf("[url=");
+        if (openTagIndex != -1)
+        {
+            str = str.subSequence(0, openTagIndex) + "<a href=\"" + str.substring(openTagIndex + 5, str.length());
+            int secondOpenTagIndex = str.indexOf("]", openTagIndex);
+            str = str.subSequence(0, secondOpenTagIndex) + "\">" + str.substring(secondOpenTagIndex +1, str.length());
+            str = str.replace("[/url]", "</a>");
+        }
+
+        return str;
     }
 }

@@ -5,7 +5,8 @@
 package com.mehdok.gooder.crypto;
 
 import android.content.Context;
-import android.util.Log;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
@@ -53,9 +54,9 @@ public class KeyManager
             }
             data = bos.toByteArray();
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found in getId()");
+            Logger.e(TAG, "File not found in getId()");
         } catch (IOException e) {
-            Log.e(TAG, "IOException in setId(): " + e.getMessage());
+            Logger.e(TAG, "IOException in setId(): " + e.getMessage());
         }
         return data;
     }
@@ -68,9 +69,9 @@ public class KeyManager
             fos.flush();
             fos.close();
         } catch (FileNotFoundException e) {
-            Log.e(TAG, "File not found in setId()");
+            Logger.e(TAG, "File not found in setId()");
         } catch (IOException e) {
-            Log.e(TAG, "IOException in setId(): " + e.getMessage());
+            Logger.e(TAG, "IOException in setId(): " + e.getMessage());
         }
     }
 }

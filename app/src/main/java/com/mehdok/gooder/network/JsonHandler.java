@@ -6,7 +6,6 @@ package com.mehdok.gooder.network;
 
 import android.content.Context;
 import android.os.Message;
-import android.util.Log;
 
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.network.exceptions.InvalidUserNamePasswordException;
@@ -18,6 +17,7 @@ import com.mehdok.gooder.network.interfaces.FriendsPostListener;
 import com.mehdok.gooder.network.interfaces.UserInfoListener;
 import com.mehdok.gooder.network.model.Post;
 import com.mehdok.gooder.network.model.UserInfo;
+import com.orhanobut.logger.Logger;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -95,7 +95,7 @@ public class JsonHandler
     {
         if (!NetworkUtil.isNetworkAvailable(ctx))
         {
-            Log.e("requestAccessCode", "no internet : " + accessCodeListener.size());
+            Logger.e("requestAccessCode", "no internet : " + accessCodeListener.size());
 
             for (AccessCodeListener al : accessCodeListener)
                 al.onAccessCodeFailure(new NoInternetException());
