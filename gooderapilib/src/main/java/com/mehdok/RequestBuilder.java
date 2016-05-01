@@ -33,7 +33,8 @@ public class RequestBuilder
                     @Override
                     public Observable<UserInfo> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
-                        return mGooderApi.getUserInfo(queryBuilder.getGetParams(), queryBuilder.getPostParams());
+                        return mGooderApi.getUserInfo(queryBuilder.getUserInfoParams(),
+                                queryBuilder.getPostParams());
                     }
                 });
     }
@@ -49,7 +50,8 @@ public class RequestBuilder
                     @Override
                     public Observable<Posts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
-                        return mGooderApi.getAllFriendsItem(queryBuilder.getGetParams(), queryBuilder.getPostParams());
+                        return mGooderApi.getAllFriendsItem(queryBuilder.getUsersTimeLineParams(),
+                                queryBuilder.getPostParams());
                     }
                 });
     }

@@ -32,4 +32,8 @@ public interface GooderInterface
     @FormUrlEncoded
     @POST("?method=users-timeline")
     Observable<Posts> getAllFriendsItem(@QueryMap Map<String, String> params, @FieldMap Map<String, String> query);
+
+//    @FormUrlEncoded
+//    @POST("?method=users-info")
+//    Observable<UserInfo> getUsersInfo(@QueryMap Map<String, String> params, @FieldMap Map<String, String> query);
 }
