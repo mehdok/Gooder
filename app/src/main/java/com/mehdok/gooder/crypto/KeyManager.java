@@ -17,8 +17,7 @@ import java.io.IOException;
 /**
  * Created by mehdok on 4/10/2016.
  */
-public class KeyManager
-{
+public class KeyManager {
     private static final String TAG = "KeyManager";
     private static final String file1 = "id_value";
     private static final String file2 = "iv_value";
@@ -54,9 +53,9 @@ public class KeyManager
             }
             data = bos.toByteArray();
         } catch (FileNotFoundException e) {
-            Logger.e(TAG, "File not found in getId()");
+            Logger.t(TAG).e("File not found in getId()");
         } catch (IOException e) {
-            Logger.e(TAG, "IOException in setId(): " + e.getMessage());
+            Logger.t(TAG).e("IOException in setId(): " + e.getMessage());
         }
         return data;
     }
@@ -69,9 +68,9 @@ public class KeyManager
             fos.flush();
             fos.close();
         } catch (FileNotFoundException e) {
-            Logger.e(TAG, "File not found in setId()");
+            Logger.t(TAG).e("File not found in setId()");
         } catch (IOException e) {
-            Logger.e(TAG, "IOException in setId(): " + e.getMessage());
+            Logger.t(TAG).e("IOException in setId(): " + e.getMessage());
         }
     }
 }

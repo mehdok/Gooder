@@ -4,6 +4,10 @@
   -->
 
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <files-path name="log" path="logs/"/>
-    <files-path name="log" path="log_zip/"/>
+    <files-path
+        name="log"
+        path="logs/"/>
+    <files-path
+        name="log"
+        path="log_zip/"/>
 </paths>

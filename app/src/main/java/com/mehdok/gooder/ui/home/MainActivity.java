@@ -33,6 +33,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.mehdok.QueryBuilder;
+import com.mehdok.RequestBuilder;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
@@ -55,6 +57,7 @@ import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooder.views.VazirTextView;
+import com.mehdok.models.post.Posts;
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarBadge;
@@ -62,6 +65,11 @@ import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.io.UnsupportedEncodingException;
 import java.util.UUID;
+
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         AccessCodeListener, UserInfoListener, View.OnClickListener
@@ -198,6 +206,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showWaitingDialog();
                 requestAccessCode(userInfo.getUsername(),
                         Crypto.getMD5BASE64(new String(Crypto.decrypt(userInfo.getPassword(), this))));
+
+
+
+
+                //TODO test
+                RequestBuilder gooder = new RequestBuilder();
+
+                QueryBuilder queryBuilder = new QueryBuilder();
+                queryBuilder.setUserName(userInfo.getUsername());
+                queryBuilder.setPassword(Crypto.getMD5BASE64(new String(Crypto.decrypt(userInfo.getPassword(), this))));
+
+                gooder.getUserInfo(queryBuilder)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<com.mehdok.models.UserInfo>() {
+                            @Override
+                            public void onCompleted() {
+                                Logger.d("onCompleted");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                Logger.e(e, "onError");
+                            }
+
+                            @Override
+                            public void onNext(com.mehdok.models.UserInfo userInfo) {
+                                Logger.d(userInfo.getFullname());
+
+                            }
+                        });
+
+                queryBuilder.setStart(10);
+                queryBuilder.setUnreadOnly(QueryBuilder.Value.YES);
+                gooder.getAllFriendsItem(queryBuilder)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<Posts>() {
+                            @Override
+                            public void onCompleted() {
+                                Logger.d("onCompleted");
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                if (e instanceof HttpException)
+                                {
+                                    Logger.e("onError: " + ((HttpException) e).response().body().toString());
+                                }
+                                else {
+                                    Logger.e(e, "onError");
+                                }
+                            }
+
+                            @Override
+                            public void onNext(Posts posts) {
+                                Logger.d("onNext -- size: " + posts.getPosts().size());
+                            }
+                        });
+
+
+
+
+
+
+
+
             } catch (Exception e)
             {
                 e.printStackTrace();
@@ -583,6 +658,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void openProfilePage()
     {
         //TODO
-        Logger.e("openProfilePage", "openProfilePage");
+        Logger.t("openProfilePage").e("openProfilePage");
     }
 }

@@ -10,8 +10,7 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GooderApi
-{
+public class GooderApi {
     private static GooderApi instance = null;
     public static String apiKey;
 

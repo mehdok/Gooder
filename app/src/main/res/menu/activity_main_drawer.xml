@@ -7,11 +7,11 @@
         <item
             android:id="@+id/nav_people_you_follow"
             android:icon="@drawable/ic_people_grey600_24dp"
-            android:title="@string/people_you_follow" />
+            android:title="@string/people_you_follow"/>
         <item
             android:id="@+id/nav_special_item"
             android:icon="@drawable/ic_folder_special_grey600_24dp"
-            android:title="@string/recommended_item" />
+            android:title="@string/recommended_item"/>
     </group>
 
     <group
@@ -20,11 +20,11 @@
         <item
             android:id="@+id/nav_bug_report"
             android:icon="@drawable/ic_bug_report_grey600_24dp"
-            android:title="@string/bug_report" />
+            android:title="@string/bug_report"/>
         <item
             android:id="@+id/nav_about_app"
             android:icon="@drawable/ic_info_grey600_24dp"
-            android:title="@string/about" />
+            android:title="@string/about"/>
     </group>
 
     <group
@@ -33,7 +33,7 @@
         <item
             android:id="@+id/nav_log_out"
             android:icon="@drawable/ic_exit_to_app_grey600_24dp"
-            android:title="@string/log_out" />
+            android:title="@string/log_out"/>
     </group>
 
 </menu>

@@ -4,6 +4,8 @@
 
 package com.mehdok.gooder.network.model;
 
+import android.text.SpannableString;
+
 /**
  * Created by mehdok on 4/13/2016.
  */
@@ -14,14 +16,14 @@ public class Post
     private String time;
     private String parentPid;
     private String title;
-    private String postBody;
+    private SpannableString postBody;
     private String commentsCount;
     private String sharesCount;
     private String likesCount;
     private Flags flags;
     private Extra extra;
 
-    public Post(String pid, Author author, String time, String parentPid, String title, String postBody, String commentsCount, String sharesCount, String likesCount, Flags flags, Extra extra)
+    public Post(String pid, Author author, String time, String parentPid, String title, SpannableString postBody, String commentsCount, String sharesCount, String likesCount, Flags flags, Extra extra)
     {
         this.pid = pid;
         this.author = author;
@@ -61,7 +63,7 @@ public class Post
         return title;
     }
 
-    public String getPostBody()
+    public SpannableString getPostBody()
     {
         return postBody;
     }

@@ -6,23 +6,30 @@ package com.mehdok.gooder;
 
 import android.app.Application;
 
+import com.mehdok.GooderApi;
+import com.mehdok.gooder.crypto.Crypto;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
+
+import okhttp3.logging.HttpLoggingInterceptor;
 
 /**
  * Created by mehdok on 4/28/2016.
  */
-public class AndroidApplication extends Application
-{
+public class AndroidApplication extends Application {
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
 
-        // init the logger library
-        if (BuildConfig.DEBUG)
+        if (BuildConfig.DEBUG) {
+            // init the logger library
             Logger.init().logLevel(LogLevel.FULL);
-        else
+
+            // init Retrofit
+            GooderApi.create(Crypto.API_KEY, HttpLoggingInterceptor.Level.BODY);
+        } else {
             Logger.init().logLevel(LogLevel.NONE);
+            GooderApi.create(Crypto.API_KEY, HttpLoggingInterceptor.Level.NONE);
+        }
     }
 }

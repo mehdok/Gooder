@@ -11,17 +11,39 @@ import com.google.gson.annotations.SerializedName;
  * Created by mehdok on 5/1/2016.
  */
 public class Post {
-    @SerializedName("pid") @Expose private String pid;
-    @SerializedName("author") @Expose private Author author;
-    @SerializedName("time") @Expose private String time;
-    @SerializedName("parent_pid") @Expose private String parentPid;
-    @SerializedName("title") @Expose private String title;
-    @SerializedName("post_body") @Expose private String postBody;
-    @SerializedName("comments_count") @Expose private String commentCount;
-    @SerializedName("shares_count") @Expose private String sharesCount;
-    @SerializedName("likes_count") @Expose private String likeCounts;
-    @SerializedName("flags") @Expose private Flag flags;
-    @SerializedName("extra") @Expose private Extra extra;
+    @SerializedName("pid")
+    @Expose
+    private String pid;
+    @SerializedName("author")
+    @Expose
+    private Author author;
+    @SerializedName("time")
+    @Expose
+    private String time;
+    @SerializedName("parent_pid")
+    @Expose
+    private String parentPid;
+    @SerializedName("title")
+    @Expose
+    private String title;
+    @SerializedName("post_body")
+    @Expose
+    private String postBody;
+    @SerializedName("comments_count")
+    @Expose
+    private String commentCount;
+    @SerializedName("shares_count")
+    @Expose
+    private String sharesCount;
+    @SerializedName("likes_count")
+    @Expose
+    private String likeCounts;
+    @SerializedName("flags")
+    @Expose
+    private Flag flags;
+    @SerializedName("extra")
+    @Expose
+    private Extra extra;
 
     public String getPid() {
         return pid;

@@ -14,8 +14,7 @@ import rx.functions.Func1;
 /**
  * Created by mehdok on 5/1/2016.
  */
-public class RequestBuilder
-{
+public class RequestBuilder {
     private GooderInterface mGooderApi;
 
     public RequestBuilder() {
@@ -23,11 +22,10 @@ public class RequestBuilder
     }
 
     /**
-     *
      * @param queryBuilder
-     * @return  user info
+     * @return user info
      */
-    public Observable<UserInfo> getUserInfo(final QueryBuilder queryBuilder){
+    public Observable<UserInfo> getUserInfo(final QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
                 .flatMap(new Func1<String, Observable<UserInfo>>() {
                     @Override
@@ -40,7 +38,6 @@ public class RequestBuilder
     }
 
     /**
-     *
      * @param queryBuilder
      * @return n number of friends item
      */
@@ -59,12 +56,11 @@ public class RequestBuilder
     /**
      * If access code is usable return it  otherwise request new one.
      */
-    private Observable<String> getAccessCode(QueryBuilder queryBuilder){
+    private Observable<String> getAccessCode(QueryBuilder queryBuilder) {
         if (GooderApi.lastOperation - System.currentTimeMillis() > GooderApi.ACCESS_CODE_LIMIT) {
             GooderApi.lastOperation = System.currentTimeMillis();
             return Observable.just(GooderApi.mAccessCode);
-        }
-        else
+        } else {
             return mGooderApi.getAccessCode(queryBuilder.getAccessCodeParams())
                     .flatMap(new Func1<AccessCode, Observable<String>>() {
                         @Override
@@ -74,5 +70,6 @@ public class RequestBuilder
                             return Observable.just(GooderApi.mAccessCode);
                         }
                     });
+        }
     }
 }

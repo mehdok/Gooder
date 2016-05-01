@@ -95,7 +95,7 @@ public class JsonHandler
     {
         if (!NetworkUtil.isNetworkAvailable(ctx))
         {
-            Logger.e("requestAccessCode", "no internet : " + accessCodeListener.size());
+            Logger.t("requestAccessCode").e("no internet : " + accessCodeListener.size());
 
             for (AccessCodeListener al : accessCodeListener)
                 al.onAccessCodeFailure(new NoInternetException());
@@ -201,6 +201,7 @@ public class JsonHandler
                 String response = sh.makePostRequest(ctx,
                         AddressHandler.getAllFriendsItem(gid, start, unread_only, reverse_order),
                         postParams);
+                //Logger.t("requestFriendsPost").e(response);
                 //TODO handle server Exceptions
                 ArrayList<Post> posts = parser.parsePostJson(response);
 

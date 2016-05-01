@@ -25,8 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class CustomExceptionHandler implements UncaughtExceptionHandler
-{
+public class CustomExceptionHandler implements UncaughtExceptionHandler {
     private UncaughtExceptionHandler defaultUEH;
 
     private static WeakReference<Context> lcontext;
@@ -39,16 +38,14 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler
      * if any of the parameters is null, the respective functionality 
      * will not be used 
      */
-    public CustomExceptionHandler(Context context, String appname, Intent emailIntent)
-    {
+    public CustomExceptionHandler(Context context, String appname, Intent emailIntent) {
         lcontext = new WeakReference<Context>(context);
         this.appName = appname;
         this.mEmailIntent = emailIntent;
         this.defaultUEH = Thread.getDefaultUncaughtExceptionHandler();
     }
 
-    public void uncaughtException(Thread t, Throwable e)
-    {
+    public void uncaughtException(Thread t, Throwable e) {
         final Writer result = new StringWriter();
         final PrintWriter printWriter = new PrintWriter(result);
         e.printStackTrace(printWriter);
@@ -64,28 +61,26 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler
 
         extractLog(stacktrace, logDir.getAbsolutePath(), fullName);
 
-        restartApp(logDir.getAbsolutePath() + "/" + fullName);
-        //defaultUEH.uncaughtException(t, e);
+        //restartApp(logDir.getAbsolutePath() + "/" + fullName);
+        defaultUEH.uncaughtException(t, e);
     }
 
-    public static File extractLog(String trace, String logDir, String fullName)
-    {
+    public static File extractLog(String trace, String logDir, String fullName) {
         File file = new File(logDir, fullName);
 
         //clears a file
-        if (file.exists())
-        {
+        if (file.exists()) {
             file.delete();
         }
 
         //write log to file
         int pid = android.os.Process.myPid();
-        try
-        {
+        try {
             String command = String.format("logcat -d -v threadtime *:*");
             Process process = Runtime.getRuntime().exec(command);
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
             StringBuilder result = new StringBuilder();
 
             //get device info
@@ -99,10 +94,8 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler
 
             String currentLine = null;
 
-            while ((currentLine = reader.readLine()) != null)
-            {
-                if (currentLine != null && currentLine.contains(String.valueOf(pid)))
-                {
+            while ((currentLine = reader.readLine()) != null) {
+                if (currentLine != null && currentLine.contains(String.valueOf(pid))) {
                     result.append(currentLine);
                     result.append("\n");
                 }
@@ -114,25 +107,21 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler
             out.write(result.toString());
             out.close();
 
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
         }
 
         //clear the log
-        try
-        {
+        try {
             Runtime.getRuntime().exec("logcat -c");
-        } catch (IOException e)
-        {
+        } catch (IOException e) {
         }
 
         return file;
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    private void restartApp(String crashAddress)
-    {
-        Logger.e("CustomExceptionHandler", "restartApp");
+    private void restartApp(String crashAddress) {
+        Logger.t("CustomExceptionHandler").e("restartApp");
 
         mEmailIntent.putExtra(CRASH_TAG, crashAddress);
         lcontext.get().startActivity(mEmailIntent);

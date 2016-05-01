@@ -91,6 +91,7 @@ public class ServiceHandler
 
     public String makePostRequest(Context context, String url, String query)
     {
+        //Logger.t("makePostRequest").d("url : " + url + " -- query: " + query);
         try
         {
             return sendPost(url, query);

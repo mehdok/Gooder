@@ -11,14 +11,16 @@
     android:orientation="vertical"
     android:gravity="bottom"
     android:clickable="true"
-    android:id="@+id/nav_header">
+    android:id="@+id/nav_header"
+    >
 
     <ImageView
         android:id="@+id/user_photo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon"/>
+        android:src="@android:drawable/sym_def_app_icon"
+        />
 
     <com.mehdok.gooder.views.VazirTextView
         android:id="@+id/user_name"
@@ -27,6 +29,7 @@
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Log in"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:gravity="left"/>
+        android:gravity="left"
+        />
 
 </LinearLayout>

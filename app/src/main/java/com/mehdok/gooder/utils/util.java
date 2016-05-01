@@ -11,7 +11,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.support.v4.content.FileProvider;
-import android.util.Log;
+
+import com.orhanobut.logger.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -167,7 +168,7 @@ public class Util
             out.close();
         } catch (IOException e)
         {
-            Log.e("extractLog", e.getMessage());
+            Logger.t("extractLog").e(e.getMessage());
         }
 
         //clear the log
@@ -176,7 +177,7 @@ public class Util
             Runtime.getRuntime().exec("logcat -c");
         } catch (IOException e)
         {
-            Log.e("extractLog", e.getMessage());
+            Logger.t("extractLog").e(e.getMessage());
         }
 
         return file;
@@ -272,6 +273,13 @@ public class Util
         String[] segments = filePath.split("/");
         String lastPathComponent = segments[segments.length - 1];
         return lastPathComponent;
+    }
+
+    public static String getCleanString(String str)
+    {
+        str = str.replace("\\r\\n", "<br\\>");
+        str = str.replace("\\n", "<br\\>");
+        return str;
     }
 
 }

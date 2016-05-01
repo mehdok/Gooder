@@ -4,13 +4,15 @@
 
 package com.mehdok.gooder.network;
 
+import android.text.SpannableString;
+
 import com.mehdok.gooder.network.exceptions.InvalidUserNamePasswordException;
 import com.mehdok.gooder.network.model.Author;
 import com.mehdok.gooder.network.model.Extra;
 import com.mehdok.gooder.network.model.Flags;
 import com.mehdok.gooder.network.model.Post;
 import com.mehdok.gooder.network.model.UserInfo;
-import com.mehdok.gooder.utils.Util;
+import com.mehdok.gooder.utils.PrettySpann;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,6 +29,8 @@ import java.util.TimeZone;
  */
 public class JsonParser
 {
+    private final String TAG = "#!tag/";
+
     private final String MSG_CODE = "msg_code";
     private final String MSG_TYPE = "msg_type";
     private final String MSG_TEXT = "msg_text";
@@ -127,7 +131,7 @@ public class JsonParser
         String time;
         String parentPid;
         String title;
-        String postBody;
+        SpannableString postBody;
         String commentsCount;
         String sharesCount;
         String likesCount;
@@ -151,7 +155,7 @@ public class JsonParser
                     time = post.getString(TIME);
                     parentPid = post.getString(PARENT_PID);
                     title = post.getString(TITLE);
-                    postBody = Util.getCleanString(post.getString(POST_BODY));
+                    postBody = PrettySpann.getPrettyString(post.getString(POST_BODY), TAG, null);
                     commentsCount = post.getString(COMMENTS_COUNT);
                     sharesCount = post.getString(SHARES_COUNT);
                     likesCount = post.getString(LIKES_COUNT);

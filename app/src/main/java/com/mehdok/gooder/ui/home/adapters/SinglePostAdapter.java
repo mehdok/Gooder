@@ -5,7 +5,6 @@
 package com.mehdok.gooder.ui.home.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         holder.postAuthor.setText(mPosts.get(position).getAuthor().getFullName());
         holder.postTitle.setText(mPosts.get(position).getTitle());
         holder.postDate.setText(mPosts.get(position).getTime());
-        holder.postBody.setText(Html.fromHtml(mPosts.get(position).getPostBody()));// TODO limit text size
+        holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
         //holder.postBody.setMovementMethod(LinkMovementMethod.getInstance());
         holder.likeCount.setText(getCount(mPosts.get(position).getLikesCount()));
         holder.shareCount.setText(getCount(mPosts.get(position).getSharesCount()));

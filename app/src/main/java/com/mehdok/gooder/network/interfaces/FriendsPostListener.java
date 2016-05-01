@@ -11,8 +11,8 @@ import java.util.ArrayList;
 /**
  * Created by mehdok on 4/13/2016.
  */
-public interface FriendsPostListener
-{
+public interface FriendsPostListener {
     void onFriendsPostReceive(ArrayList<Post> posts);
+
     void onFriendsPostFailure(Exception exception);
 }

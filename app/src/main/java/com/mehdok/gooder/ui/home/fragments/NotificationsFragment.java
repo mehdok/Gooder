@@ -16,29 +16,24 @@ import com.mehdok.gooder.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotificationsFragment extends Fragment
-{
+public class NotificationsFragment extends Fragment {
     private static NotificationsFragment mInstance;
 
-    public static NotificationsFragment getInstance()
-    {
-        if (mInstance == null)
-        {
+    public static NotificationsFragment getInstance() {
+        if (mInstance == null) {
             mInstance = new NotificationsFragment();
         }
 
         return mInstance;
     }
 
-    public NotificationsFragment()
-    {
+    public NotificationsFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }

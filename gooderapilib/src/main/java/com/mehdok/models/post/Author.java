@@ -11,8 +11,12 @@ import com.google.gson.annotations.SerializedName;
  * Created by mehdok on 5/1/2016.
  */
 public class Author {
-    @SerializedName("uid") @Expose private String uid;
-    @SerializedName("fullname") @Expose private String fullName;
+    @SerializedName("uid")
+    @Expose
+    private String uid;
+    @SerializedName("fullname")
+    @Expose
+    private String fullName;
 
     public String getUid() {
         return uid;

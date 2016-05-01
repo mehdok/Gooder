@@ -4,10 +4,11 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:layout_margin="@dimen/standard_margin">
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/standard_margin"
+    >
 
     <com.mehdok.gooder.views.VazirTextView
         android:layout_width="match_parent"
@@ -17,29 +18,34 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/dialog_title_text_size"
         android:layout_marginBottom="@dimen/standard_padding"
-        android:gravity="center"/>
+        android:gravity="center"
+        />
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <com.mehdok.gooder.views.VazirEditText
             android:id="@+id/login_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/user_name"/>
+            android:hint="@string/user_name"
+            />
     </android.support.design.widget.TextInputLayout>
 
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <com.mehdok.gooder.views.VazirEditText
             android:id="@+id/login_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"
-            android:hint="@string/password"/>
+            android:hint="@string/password"
+            />
     </android.support.design.widget.TextInputLayout>
 
     <com.mehdok.gooder.views.VazirButton
@@ -48,7 +54,8 @@
         android:layout_height="wrap_content"
         android:text="@string/log_in"
         android:background="?android:attr/selectableItemBackground"
-        android:layout_marginTop="@dimen/standard_margin">
+        android:layout_marginTop="@dimen/standard_margin"
+        >
 
     </com.mehdok.gooder.views.VazirButton>
 

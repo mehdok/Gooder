@@ -11,11 +11,10 @@ import android.net.NetworkInfo;
 /**
  * Created by mehdok on 4/11/2016.
  */
-public class NetworkUtil
-{
-    public static boolean isNetworkAvailable(Context context)
-    {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+public class NetworkUtil {
+    public static boolean isNetworkAvailable(Context context) {
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

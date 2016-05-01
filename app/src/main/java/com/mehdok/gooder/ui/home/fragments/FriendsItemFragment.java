@@ -29,8 +29,7 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsItemFragment extends Fragment implements FriendsPostListener
-{
+public class FriendsItemFragment extends Fragment implements FriendsPostListener {
     private static FriendsItemFragment mInstance;
     private String accessCode;
     private RecyclerView mRecyclerView;
@@ -38,106 +37,94 @@ public class FriendsItemFragment extends Fragment implements FriendsPostListener
     private SinglePostAdapter mAdapter;
     private ArrayList<Post> mPosts;
 
-    public static FriendsItemFragment getInstance()
-    {
-        if (mInstance == null)
-        {
+    public static FriendsItemFragment getInstance() {
+        if (mInstance == null) {
             mInstance = new FriendsItemFragment();
         }
 
         return mInstance;
     }
 
-    public FriendsItemFragment()
-    {
+    public FriendsItemFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         accessCode = getArguments().getString(MainActivity.TAG_ACCESS_CODE);
 
         View v = inflater.inflate(R.layout.fragment_friends_item, container, false);
 
         // init recycler
-        mRecyclerView = (RecyclerView)v.findViewById(R.id.friends_item_recycler);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.friends_item_recycler);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(getActivity().getResources().getDimensionPixelSize(R.dimen.standard_padding)));
+        mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(
+                getActivity().getResources().getDimensionPixelSize(R.dimen.standard_padding)));
 
-        if (mAdapter == null)
-        {
+        if (mAdapter == null) {
             mPosts = new ArrayList<>();
             mAdapter = new SinglePostAdapter(mPosts);
             mRecyclerView.setAdapter(mAdapter);
 
             //TODO set recycler listener
 
-            mProgress = (ProgressBar)v.findViewById(R.id.friends_item_progress);
+            mProgress = (ProgressBar) v.findViewById(R.id.friends_item_progress);
 
             getData();
-        }
-        else
-        {
+        } else {
             mRecyclerView.setAdapter(mAdapter);
         }
 
         return v;
     }
 
-    private void showProgress(boolean show)
-    {
-        if (show)
+    private void showProgress(boolean show) {
+        if (show) {
             mProgress.setVisibility(View.VISIBLE);
-        else
+        } else {
             mProgress.setVisibility(View.INVISIBLE);
+        }
     }
 
-    private void getData()
-    {
+    private void getData() {
         showProgress(true);
 
         //TODO do something about this fucking access code
-        JsonHandler.getInstance().requestFriendsPost(getActivity(), accessCode, null, mPosts.size(), 0, 0);
+        JsonHandler.getInstance()
+                .requestFriendsPost(getActivity(), accessCode, null, mPosts.size(), 0, 0);
     }
 
     @Override
-    public void onFriendsPostReceive(ArrayList<Post> posts)
-    {
+    public void onFriendsPostReceive(ArrayList<Post> posts) {
         showProgress(false);
 
-        if (posts != null)
-        {
+        if (posts != null) {
             mPosts.addAll(posts);
             mAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
-    public void onFriendsPostFailure(Exception exception)
-    {
+    public void onFriendsPostFailure(Exception exception) {
         showProgress(false);
 
         //TODO handle other exceptions
-        if (exception instanceof NoInternetException)
-        {
+        if (exception instanceof NoInternetException) {
             MainActivityDelegate.getInstance().getActivity().
                     showNoInternetError((NoInternetException) exception);
         }
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         JsonHandler.getInstance().setFriendsPostListener(this);
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         JsonHandler.getInstance().removeFriendsPostListener();
     }

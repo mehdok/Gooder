@@ -19,21 +19,22 @@ import rx.Observable;
 /**
  * Created by mehdok on 5/1/2016.
  */
-public interface GooderInterface
-{
+public interface GooderInterface {
     @FormUrlEncoded
     @POST("?method=get-access-code")
     Observable<AccessCode> getAccessCode(@FieldMap Map<String, String> query);
 
     @FormUrlEncoded
     @POST("?method=user-info")
-    Observable<UserInfo> getUserInfo(@QueryMap Map<String, String> params, @FieldMap Map<String, String> query);
+    Observable<UserInfo> getUserInfo(@QueryMap Map<String, String> params,
+                                     @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
     @POST("?method=users-timeline")
-    Observable<Posts> getAllFriendsItem(@QueryMap Map<String, String> params, @FieldMap Map<String, String> query);
+    Observable<Posts> getAllFriendsItem(@QueryMap Map<String, String> params,
+                                        @FieldMap Map<String, String> query);
 
-//    @FormUrlEncoded
-//    @POST("?method=users-info")
-//    Observable<UserInfo> getUsersInfo(@QueryMap Map<String, String> params, @FieldMap Map<String, String> query);
+    //    @FormUrlEncoded
+    //    @POST("?method=users-info")
+    //    Observable<UserInfo> getUsersInfo(@QueryMap Map<String, String> params, @FieldMap Map<String, String> query);
 }
