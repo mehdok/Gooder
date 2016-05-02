@@ -2,7 +2,7 @@
  * Copyright (c) 2016. Mehdi Sohrabi
  */
 
-package com.mehdok.models;
+package com.mehdok.models.user;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

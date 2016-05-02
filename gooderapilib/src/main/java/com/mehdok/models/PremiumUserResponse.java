@@ -8,14 +8,14 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by mehdok on 5/1/2016.
+ * Created by mehdok on 5/2/2016.
  */
-public class AccessCode extends BaseResponse {
+public class PremiumUserResponse extends BaseResponse {
     @SerializedName("msg_data")
     @Expose
-    public AccessCodeData msgData;
+    private Boolean premium;
 
-    public AccessCodeData getMsgData() {
-        return msgData;
+    public Boolean getPremium() {
+        return premium;
     }
 }

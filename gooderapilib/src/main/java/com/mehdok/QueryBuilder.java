@@ -234,35 +234,11 @@ public class QueryBuilder {
     /**
      * gid: If provided, only members of the provided group will be returned.
      *
+     * also used for followed feed, followed and feed
+     *
      * @return
      */
     public Map<String, String> getFollowedUsersParams() {
-        Map<String, String> query = new HashMap<>();
-        if (gid != null) {
-            query.put(KEY_GID, gid);
-        }
-        return query;
-    }
-
-    /**
-     * gid: If provided, only members of the provided group will be returned.
-     *
-     * @return
-     */
-    public Map<String, String> getFollowedFeedParams() {
-        Map<String, String> query = new HashMap<>();
-        if (gid != null) {
-            query.put(KEY_GID, gid);
-        }
-        return query;
-    }
-
-    /**
-     * gid: If provided, only members of the provided group will be returned.
-     *
-     * @return
-     */
-    public Map<String, String> getFollowedUserAndFeedParams() {
         Map<String, String> query = new HashMap<>();
         if (gid != null) {
             query.put(KEY_GID, gid);
@@ -358,33 +334,11 @@ public class QueryBuilder {
      * for pagination. unread_only: Set this parameter to 1 to return only unread posts.
      * reverse_order: Set this parameter to 1 to return older posts first.
      *
-     * @return
-     */
-    public Map<String, String> getGeneralTimeLineParams() {
-        Map<String, String> query = new HashMap<>();
-        if (gid != null) {
-            query.put(KEY_GID, gid);
-        }
-        if (start != null) {
-            query.put(KEY_START, start);
-        }
-        if (unreadOnly != null) {
-            query.put(KEY_UNREAD_ONLY, unreadOnly);
-        }
-        if (reverseOrder != null) {
-            query.put(KEY_REVERSE_ORDER, reverseOrder);
-        }
-        return query;
-    }
-
-    /**
-     * gid: If provided, will filter the results to the provided group id. start: Start offset. Use
-     * for pagination. unread_only: Set this parameter to 1 to return only unread posts.
-     * reverse_order: Set this parameter to 1 to return older posts first.
+     * also used for feeds-timeline
      *
      * @return
      */
-    public Map<String, String> getFeedsTimeLineParams() {
+    public Map<String, String> getGeneralTimeLineParams() {
         Map<String, String> query = new HashMap<>();
         if (gid != null) {
             query.put(KEY_GID, gid);
@@ -452,8 +406,8 @@ public class QueryBuilder {
     }
 
     /**
-     * term: The term which the search will be performed for. start: Start offset. Use for
-     * pagination.
+     * term: The term which the search will be performed for.
+     * start: Start offset. Use for pagination.
      *
      * @return
      */
@@ -471,8 +425,9 @@ public class QueryBuilder {
     }
 
     /**
-     * term: The term which the search will be performed for. start: Start offset. Use for
-     * pagination. reverse_order: Set this parameter to 1 to return older posts first.
+     * term: The term which the search will be performed for.
+     * start: Start offset. Use for pagination.
+     * reverse_order: Set this parameter to 1 to return older posts first.
      *
      * @return
      */
@@ -527,6 +482,8 @@ public class QueryBuilder {
 
         query.put(KEY_POST_TITLE, postTitle);
         query.put(KEY_POST_BODY, postBody);
+        query.put(KEY_CLIENT_ID, GooderApi.apiKey);
+        query.put(KEY_ACCESS_CODE, accessCode);
 
         return query;
     }
@@ -584,6 +541,8 @@ public class QueryBuilder {
             throw new RuntimeException("commentBody is required");
         }
 
+        query.put(KEY_CLIENT_ID, GooderApi.apiKey);
+        query.put(KEY_ACCESS_CODE, accessCode);
         query.put(KEY_COMMENT_BODY, commentBody);
         return query;
     }

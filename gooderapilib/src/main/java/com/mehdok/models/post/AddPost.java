@@ -8,17 +8,15 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.mehdok.models.BaseResponse;
 
-import java.util.List;
-
 /**
- * Created by mehdok on 5/1/2016.
+ * Created by mehdok on 5/2/2016.
  */
-public class Posts extends BaseResponse {
+public class AddPost extends BaseResponse {
     @SerializedName("msg_data")
     @Expose
-    private List<Post> posts;
+    public AddPostInfo postInfo;
 
-    public List<Post> getPosts() {
-        return posts;
+    public AddPostInfo getPostInfo() {
+        return postInfo;
     }
 }

@@ -10,14 +10,12 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by mehdok on 5/1/2016.
  */
-public class AccessCodeData
-{
+public class AccessCodeData {
     @SerializedName("access_code")
     @Expose
     public String accessCode;
 
-    public String getAccessCode()
-    {
+    public String getAccessCode() {
         return accessCode;
     }
 }
