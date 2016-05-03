@@ -32,6 +32,8 @@ public class PrettyPost implements PrettySpann.TagClickListener {
     private String likeCounts;
     private Flag flags;
     private Extra extra;
+    private boolean liked;
+    private boolean stared;
 
     public PrettyPost(Post post, Html.ImageGetter imageGetter)
     {
@@ -85,12 +87,32 @@ public class PrettyPost implements PrettySpann.TagClickListener {
         return likeCounts;
     }
 
+    public void setLikeCounts(String likeCounts) {
+        this.likeCounts = likeCounts;
+    }
+
     public Flag getFlags() {
         return flags;
     }
 
     public Extra getExtra() {
         return extra;
+    }
+
+    public boolean isStared() {
+        return stared;
+    }
+
+    public void setStared(boolean stared) {
+        this.stared = stared;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     @Override

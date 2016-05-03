@@ -367,14 +367,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onError(Throwable e) {
                         waitingDialog.dismiss();
-                        e.printStackTrace();
-                        String error;
-                        if (e instanceof HttpException) {
-                            error = ((HttpException) e).response().body().toString();
-                        } else {
-                            error = e.getMessage();
-                        }
-                        showBugSnackBar(error);
+                        showBugSnackBar(e);
                     }
 
                     @Override
@@ -450,8 +443,15 @@ public class MainActivity extends AppCompatActivity implements
         Logger.t("openProfilePage").e("openProfilePage");
     }
 
-    public void showBugSnackBar(String message) {
-        Snackbar.make(mRootLayout, message, Snackbar.LENGTH_INDEFINITE)
+    public void showBugSnackBar(Throwable e) {
+        e.printStackTrace();
+        String error;
+        if (e instanceof HttpException) {
+            error = ((HttpException) e).response().body().toString();
+        } else {
+            error = e.getMessage();
+        }
+        Snackbar.make(mRootLayout, error, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.send_report, new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

@@ -30,7 +30,6 @@ import com.mehdok.gooderapilib.models.user.UserInfo;
 
 import java.util.ArrayList;
 
-import retrofit2.adapter.rxjava.HttpException;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -77,7 +76,7 @@ public class FriendsItemFragment extends Fragment implements InfiniteScrollListe
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
-            mAdapter = new SinglePostAdapter(mPosts);
+            mAdapter = new SinglePostAdapter(getActivity(), mPosts);
             mRecyclerView.setAdapter(mAdapter);
 
             //TODO set recycler listener
@@ -142,15 +141,8 @@ public class FriendsItemFragment extends Fragment implements InfiniteScrollListe
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
                         showProgress(false);
-                        String error;
-                        if (e instanceof HttpException) {
-                            error = ((HttpException) e).response().body().toString();
-                        } else {
-                            error = e.getMessage();
-                        }
-                        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(error);
+                        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
                     }
 
                     @Override
