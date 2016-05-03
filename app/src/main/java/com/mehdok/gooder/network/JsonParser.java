@@ -4,22 +4,15 @@
 
 package com.mehdok.gooder.network;
 
-import android.text.SpannableString;
-
 import com.mehdok.gooder.network.exceptions.InvalidUserNamePasswordException;
 import com.mehdok.gooder.network.model.Author;
 import com.mehdok.gooder.network.model.Extra;
 import com.mehdok.gooder.network.model.Flags;
-import com.mehdok.gooder.network.model.Post;
-import com.mehdok.gooder.network.model.UserInfo;
-import com.mehdok.gooder.utils.PrettySpann;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -97,7 +90,7 @@ public class JsonParser
         return "";
     }
 
-    public UserInfo parseUserInfoJson(String json)
+    /*public UserInfo parseUserInfoJson(String json)
     {
         if (json != null)
         {
@@ -121,8 +114,8 @@ public class JsonParser
 
         return null;
     }
-
-    public ArrayList<Post> parsePostJson(String json)
+*/
+    /*public ArrayList<Post> parsePostJson(String json)
     {
         ArrayList<Post> result = new ArrayList<>();
 
@@ -155,7 +148,7 @@ public class JsonParser
                     time = post.getString(TIME);
                     parentPid = post.getString(PARENT_PID);
                     title = post.getString(TITLE);
-                    postBody = PrettySpann.getPrettyString(post.getString(POST_BODY), TAG, null);
+                    postBody = PrettySpann.getPrettyString(post.getString(POST_BODY), TAG, null);//TODO click listener
                     commentsCount = post.getString(COMMENTS_COUNT);
                     sharesCount = post.getString(SHARES_COUNT);
                     likesCount = post.getString(LIKES_COUNT);
@@ -184,7 +177,7 @@ public class JsonParser
         }
 
         return result;
-    }
+    }*/
 
     private Author parseAuthor(JSONObject obj) throws JSONException
     {

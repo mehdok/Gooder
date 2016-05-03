@@ -10,7 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.mehdok.gooder.network.model.UserInfo;
+import com.mehdok.gooderapilib.models.user.UserInfo;
 
 /**
  * Created by mehdok on 4/10/2016.
@@ -96,9 +96,9 @@ public class DatabaseHelper extends SQLiteOpenHelper
     public boolean putUserInfo(UserInfo userInfo)
     {
         ContentValues values = new ContentValues();
-        values.put(COLUMN_USER_ID, userInfo.getUserId());
+        values.put(COLUMN_USER_ID, userInfo.getUid());
         values.put(COLUMN_USER_NAME, userInfo.getUsername());
-        values.put(COLUMN_FULL_NAME, userInfo.getFullName());
+        values.put(COLUMN_FULL_NAME, userInfo.getFullname());
         values.put(COLUMN_AVATAR, userInfo.getAvatar());
         values.put(COLUMN_ABOUT, userInfo.getAbout());
         values.put(COLUMN_WEB, userInfo.getWeb());

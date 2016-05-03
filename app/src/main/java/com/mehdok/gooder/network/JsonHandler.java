@@ -13,10 +13,8 @@ import com.mehdok.gooder.network.exceptions.NoInternetException;
 import com.mehdok.gooder.network.exceptions.UserInfoException;
 import com.mehdok.gooder.network.handler.JsonThreadHandler;
 import com.mehdok.gooder.network.interfaces.AccessCodeListener;
-import com.mehdok.gooder.network.interfaces.FriendsPostListener;
 import com.mehdok.gooder.network.interfaces.UserInfoListener;
-import com.mehdok.gooder.network.model.Post;
-import com.mehdok.gooder.network.model.UserInfo;
+import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.orhanobut.logger.Logger;
 
 import java.io.UnsupportedEncodingException;
@@ -37,7 +35,7 @@ public class JsonHandler
 
     private ArrayList<AccessCodeListener> accessCodeListener;
     private UserInfoListener userInfoListener;
-    private FriendsPostListener friendsPostListener;
+    //    private FriendsPostListener friendsPostListener;
 
     public static JsonHandler getInstance()
     {
@@ -163,9 +161,9 @@ public class JsonHandler
                 String response = sh.makePostRequest(ctx,
                         AddressHandler.getUriUserInfo(),
                         postParams);
-                UserInfo userInfo = parser.parseUserInfoJson(response);
+                //                UserInfo userInfo = parser.parseUserInfoJson(response);
                 Message msg = mHandler.obtainMessage(MSG_USER_INFO_RECEIVED);
-                msg.obj = userInfo;
+                //                msg.obj = userInfo;
                 mHandler.sendMessage(msg);
             }
         }).start();
@@ -179,12 +177,12 @@ public class JsonHandler
      * @param unread_only
      * @param reverse_order
      */
-    public void requestFriendsPost(final Context ctx, final String accessCode, final String gid, final int start, final int unread_only, final int reverse_order)
+    /*public void requestFriendsPost(final Context ctx, final String accessCode, final String gid, final int start, final int unread_only, final int reverse_order)
     {
         if (!NetworkUtil.isNetworkAvailable(ctx))
         {
-            if (friendsPostListener != null)
-                friendsPostListener.onFriendsPostFailure(new NoInternetException());
+//            if (friendsPostListener != null)
+//                friendsPostListener.onFriendsPostFailure(new NoInternetException());
 
             return;
         }
@@ -206,10 +204,10 @@ public class JsonHandler
                 ArrayList<Post> posts = parser.parsePostJson(response);
 
                 // the list might be too large so bundle may produce error
-                sendFriendsPostBack(posts);
+//                sendFriendsPostBack(posts);
             }
         }).start();
-    }
+    }*/
 
     public void addAccessCodeListener(AccessCodeListener toAdd)
     {
@@ -227,27 +225,27 @@ public class JsonHandler
     {
         userInfoListener = null;
     }
-    public void setFriendsPostListener(FriendsPostListener toAdd)
-    {
-        friendsPostListener = toAdd;
-    }
-    public void removeFriendsPostListener()
-    {
-        friendsPostListener = null;
-    }
+    //    public void setFriendsPostListener(FriendsPostListener toAdd)
+    //    {
+    //        friendsPostListener = toAdd;
+    //    }
+    //    public void removeFriendsPostListener()
+    //    {
+    //        friendsPostListener = null;
+    //    }
 
-    private void sendFriendsPostBack(final ArrayList<Post> posts)
-    {
-        if (friendsPostListener != null)
-        {
-            mHandler.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    friendsPostListener.onFriendsPostReceive(posts);
-                }
-            });
-        }
-    }
+    //    private void sendFriendsPostBack(final ArrayList<Post> posts)
+    //    {
+    //        if (friendsPostListener != null)
+    //        {
+    //            mHandler.post(new Runnable()
+    //            {
+    //                @Override
+    //                public void run()
+    //                {
+    //                    friendsPostListener.onFriendsPostReceive(posts);
+    //                }
+    //            });
+    //        }
+    //    }
 }

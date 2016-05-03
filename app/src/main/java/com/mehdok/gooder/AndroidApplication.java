@@ -6,7 +6,7 @@ package com.mehdok.gooder;
 
 import android.app.Application;
 
-import com.mehdok.GooderApi;
+import com.mehdok.gooderapilib.GooderApi;
 import com.mehdok.gooder.crypto.Crypto;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;

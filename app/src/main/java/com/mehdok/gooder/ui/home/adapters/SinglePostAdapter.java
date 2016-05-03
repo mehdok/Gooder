@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mehdok.gooder.R;
-import com.mehdok.gooder.network.model.Post;
+import com.mehdok.gooder.ui.home.models.PrettyPost;
 
 import java.util.ArrayList;
 
@@ -20,10 +20,10 @@ import java.util.ArrayList;
  */
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ItemViewHolder>
 {
-    private ArrayList<Post> mPosts;
+    private ArrayList<PrettyPost> mPosts;
     private int BODY_COUNT = 200;
 
-    public SinglePostAdapter(ArrayList<Post> posts)
+    public SinglePostAdapter(ArrayList<PrettyPost> posts)
     {
         mPosts = posts;
     }
@@ -42,10 +42,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         holder.postTitle.setText(mPosts.get(position).getTitle());
         holder.postDate.setText(mPosts.get(position).getTime());
         holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
-        //holder.postBody.setMovementMethod(LinkMovementMethod.getInstance());
-        holder.likeCount.setText(getCount(mPosts.get(position).getLikesCount()));
+        holder.likeCount.setText(getCount(mPosts.get(position).getLikeCounts()));
         holder.shareCount.setText(getCount(mPosts.get(position).getSharesCount()));
-        holder.commentCount.setText(getCount(mPosts.get(position).getCommentsCount()));
+        holder.commentCount.setText(getCount(mPosts.get(position).getCommentCount()));
     }
 
     @Override

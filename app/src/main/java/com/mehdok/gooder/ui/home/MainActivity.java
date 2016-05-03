@@ -29,23 +29,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.mehdok.QueryBuilder;
-import com.mehdok.RequestBuilder;
+import com.mehdok.gooderapilib.QueryBuilder;
+import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
 import com.mehdok.gooder.database.DatabaseHelper;
-import com.mehdok.gooder.network.JsonHandler;
-import com.mehdok.gooder.network.exceptions.InvalidUserNamePasswordException;
-import com.mehdok.gooder.network.exceptions.NoInternetException;
-import com.mehdok.gooder.network.exceptions.UserInfoException;
-import com.mehdok.gooder.network.interfaces.AccessCodeListener;
-import com.mehdok.gooder.network.interfaces.UserInfoListener;
-import com.mehdok.gooder.network.model.UserInfo;
 import com.mehdok.gooder.preferences.PreferencesManager;
 import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
@@ -57,13 +49,12 @@ import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooder.views.VazirTextView;
-import com.mehdok.models.post.Posts;
+import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 import retrofit2.adapter.rxjava.HttpException;
@@ -71,17 +62,13 @@ import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        AccessCodeListener, UserInfoListener, View.OnClickListener
-{
-    public static final String TAG_ACCESS_CODE = "access_code";
-
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
     private BottomBar mBottomBar;
     private boolean firstRun = true;
     private Dialog loginDialog;
     private UserInfo userInfo = null;
     private ProgressDialog waitingDialog;
-    private String mAccessCode;
     // used for database storage
     private byte[] mPassword;
 
@@ -90,16 +77,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private VazirTextView tvUserName;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         MainActivityDelegate.subscribeOn(this);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
         mRootLayout = (CoordinatorLayout) findViewById(R.id.main_root_layout);
-
-        JsonHandler.getInstance().addAccessCodeListener(this);
-        JsonHandler.getInstance().setUserInfoListener(this);
 
         // set the private encryption key
         handleFirstRun();
@@ -114,11 +97,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         // setup add new post
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 addNewPost();
             }
         });
@@ -126,7 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // setup drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -135,48 +117,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         // set click listener for nav header for login or go to profile page
-        LinearLayout headerLayout = (LinearLayout)navigationView.getHeaderView(0);
+        LinearLayout headerLayout = (LinearLayout) navigationView.getHeaderView(0);
         headerLayout.setOnClickListener(this);
 
-        userImage = (ImageView)headerLayout.findViewById(R.id.user_photo);
-        tvUserName = (VazirTextView)headerLayout.findViewById(R.id.user_name);
+        userImage = (ImageView) headerLayout.findViewById(R.id.user_photo);
+        tvUserName = (VazirTextView) headerLayout.findViewById(R.id.user_name);
 
         // setup bottom navigation
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.noTabletGoodness();
-        mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener()
-        {
+        mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener() {
             @Override
-            public void onMenuTabSelected(@IdRes int menuItemId)
-            {
-                if (firstRun)
-                {
+            public void onMenuTabSelected(@IdRes int menuItemId) {
+                if (firstRun) {
                     // this library call onClick on it's init, so ignore first click
                     firstRun = false;
                     return;
                 }
 
-                if (menuItemId == R.id.friends_item)
-                {
+                if (menuItemId == R.id.friends_item) {
                     changeView(FriendsItemFragment.getInstance());
-                }
-                else if (menuItemId == R.id.comments_view)
-                {
+                } else if (menuItemId == R.id.comments_view) {
                     changeView(CommentViewFragment.getInstance());
-                }
-                else if (menuItemId == R.id.stared_item)
-                {
+                } else if (menuItemId == R.id.stared_item) {
                     changeView(StaredItemFragment.getInstance());
-                }
-                else if (menuItemId == R.id.notification)
-                {
+                } else if (menuItemId == R.id.notification) {
                     changeView(NotificationsFragment.getInstance());
                 }
             }
 
             @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId)
-            {
+            public void onMenuTabReSelected(@IdRes int menuItemId) {
 
             }
         });
@@ -194,128 +165,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         unreadMessages.show();
 
-
-        // TODO get new access token then connect
-        // TODO check notif number every 15 min to prevent token expire
         userInfo = DatabaseHelper.getInstance(this).getUserInfo();
-        if (userInfo != null)
-        {
-            // user exist
-            try
-            {
-                showWaitingDialog();
-                requestAccessCode(userInfo.getUsername(),
-                        Crypto.getMD5BASE64(new String(Crypto.decrypt(userInfo.getPassword(), this))));
-
-
-
-
-                //TODO test
-                RequestBuilder gooder = new RequestBuilder();
-
-                QueryBuilder queryBuilder = new QueryBuilder();
-                queryBuilder.setUserName(userInfo.getUsername());
-                queryBuilder.setPassword(Crypto.getMD5BASE64(new String(Crypto.decrypt(userInfo.getPassword(), this))));
-
-                gooder.getUserInfo(queryBuilder)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<com.mehdok.models.UserInfo>() {
-                            @Override
-                            public void onCompleted() {
-                                Logger.d("onCompleted");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                Logger.e(e, "onError");
-                            }
-
-                            @Override
-                            public void onNext(com.mehdok.models.UserInfo userInfo) {
-                                Logger.d(userInfo.getFullname());
-
-                            }
-                        });
-
-                queryBuilder.setStart(10);
-                queryBuilder.setUnreadOnly(QueryBuilder.Value.YES);
-                gooder.getAllFriendsItem(queryBuilder)
-                        .subscribeOn(Schedulers.newThread())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new Observer<Posts>() {
-                            @Override
-                            public void onCompleted() {
-                                Logger.d("onCompleted");
-                            }
-
-                            @Override
-                            public void onError(Throwable e) {
-                                if (e instanceof HttpException)
-                                {
-                                    Logger.e("onError: " + ((HttpException) e).response().body().toString());
-                                }
-                                else {
-                                    Logger.e(e, "onError");
-                                }
-                            }
-
-                            @Override
-                            public void onNext(Posts posts) {
-                                Logger.d("onNext -- size: " + posts.getPosts().size());
-                            }
-                        });
-
-
-
-
-
-
-
-
-            } catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        else
-        {
+        if (userInfo != null) {
+            initFirstView();
+        } else {
             showLoginDialog();
         }
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START))
-        {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else
-        {
+        } else {
             super.onBackPressed();
         }
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
+    public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search)
-        {
+        if (id == R.id.action_search) {
             return true;
         }
 
@@ -324,30 +207,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
-    {
+    public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         //TODO
-        if (id == R.id.nav_people_you_follow)
-        {
+        if (id == R.id.nav_people_you_follow) {
 
-        }
-        else if (id == R.id.nav_special_item)
-        {
+        } else if (id == R.id.nav_special_item) {
 
-        }
-        else if (id == R.id.nav_bug_report)
-        {
-            Util.sendBugReport(this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
-        }
-        else if (id == R.id.nav_about_app)
-        {
+        } else if (id == R.id.nav_bug_report) {
+            Util.sendBugReport(this, getString(R.string.bug_email_subject),
+                    getString(R.string.bug_email_context));
+        } else if (id == R.id.nav_about_app) {
 
-        }
-        else if (id == R.id.nav_log_out)
-        {
+        } else if (id == R.id.nav_log_out) {
 
         }
 
@@ -357,8 +231,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
+    protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
         // Necessary to restore the BottomBar's state, otherwise we would
@@ -367,37 +240,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
-        JsonHandler.getInstance().removeAccessCodeListener(this);
-        JsonHandler.getInstance().removeUserInfoListener();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
         MainActivityDelegate.unSubscribe(this);
     }
 
-    private void addNewPost()
-    {
+    private void addNewPost() {
 
     }
 
-    private void initFirstView()
-    {
+    private void initFirstView() {
         setUserInfoInUI(userInfo);
 
         Bundle bundle = new Bundle();
-        bundle.putString(TAG_ACCESS_CODE, mAccessCode);
         FriendsItemFragment.getInstance().setArguments(bundle);
 
         getSupportFragmentManager()
@@ -406,12 +271,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
-    private void changeView(Fragment fragment)
-    {
-        if (fragment.getArguments() == null)
-        {
+    private void changeView(Fragment fragment) {
+        if (fragment.getArguments() == null) {
             Bundle bundle = new Bundle();
-            bundle.putString(TAG_ACCESS_CODE, mAccessCode);
             fragment.setArguments(bundle);
         }
 
@@ -421,12 +283,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
-    private void handleFirstRun()
-    {
+    private void handleFirstRun() {
         PreferencesManager pref = new PreferencesManager(this);
 
-        if (pref.isFirstRun())
-        {
+        if (pref.isFirstRun()) {
             // set private key for any encryption, this will run once
             KeyManager keyManager = new KeyManager();
             keyManager.setId(UUID.randomUUID().toString().substring(0, 32).getBytes(), this);
@@ -436,33 +296,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void showLoginDialog()
-    {
+    private void showLoginDialog() {
         loginDialog = new Dialog(this, R.style.DialogStyle);
         loginDialog.setContentView(R.layout.dialog_login);
         loginDialog.setCancelable(false);
         loginDialog.show();
-        loginDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        loginDialog.getWindow()
+                .setLayout(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        final VazirEditText name = (VazirEditText)loginDialog.findViewById(R.id.login_user_name);
-        final VazirEditText password = (VazirEditText)loginDialog.findViewById(R.id.login_password);
-        final VazirButton loginButton = (VazirButton)loginDialog.findViewById(R.id.login_do);
+        final VazirEditText name = (VazirEditText) loginDialog.findViewById(R.id.login_user_name);
+        final VazirEditText password =
+                (VazirEditText) loginDialog.findViewById(R.id.login_password);
+        final VazirButton loginButton = (VazirButton) loginDialog.findViewById(R.id.login_do);
 
-        loginButton.setOnClickListener(new View.OnClickListener()
-        {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 boolean error = false;
 
-                if (name.getText().toString().equals(""))
-                {
+                if (name.getText().toString().equals("")) {
                     name.setError(getString(R.string.error_required_field));
                     error = true;
                 }
 
-                if (password.getText().toString().equals(""))
-                {
+                if (password.getText().toString().equals("")) {
                     password.setError(getString(R.string.error_required_field));
                     error = true;
                 }
@@ -477,133 +335,68 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    private void loginWithUserPass(String userName, String password)
-    {
-        try
-        {
+    private void loginWithUserPass(String userName, String password) {
+        try {
             mPassword = Crypto.encrypt(password.getBytes(), this);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
+        //requestAccessCode(userName, Crypto.getMD5BASE64(password));
         showWaitingDialog();
 
-        requestAccessCode(userName, Crypto.getMD5BASE64(password));
+        // build qquery
+        RequestBuilder requestBuilder = new RequestBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userName);
+        queryBuilder.setPassword(Crypto.getMD5BASE64(password));
+
+        // exe request for user info
+        requestBuilder.getUserInfo(queryBuilder)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserInfo>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        waitingDialog.dismiss();
+                        e.printStackTrace();
+                        String error;
+                        if (e instanceof HttpException) {
+                            error = ((HttpException) e).response().body().toString();
+                        } else {
+                            error = e.getMessage();
+                        }
+                        showBugSnackBar(error);
+                    }
+
+                    @Override
+                    public void onNext(UserInfo userInfo) {
+                        waitingDialog.dismiss();
+                        userInfo.setPassword(mPassword);
+                        putUserInfo(userInfo);
+                        initFirstView();
+                    }
+                });
     }
 
-    private void showWaitingDialog()
-    {
+    private void showWaitingDialog() {
         waitingDialog = new ProgressDialog(this, AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
         waitingDialog.setTitle(R.string.wait_for_server_title);
         waitingDialog.setMessage(getResources().getString(R.string.wait_for_server_body));
         waitingDialog.show();
     }
 
-    private void requestAccessCode(String userName, String password)
-    {
-        try
-        {
-            JsonHandler.getInstance().requestAccessCode(this, userName, password);
-        } catch (UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onAccessCodeReceive(String accessCode)
-    {
-        mAccessCode = accessCode;
-
-        if (userInfo != null)
-        {
-            // this is a token renew
-            waitingDialog.dismiss();
-
-            initFirstView();
-        }
-        else
-        {
-            JsonHandler.getInstance().requestUserInfo(this, mAccessCode);
-        }
-    }
-
-    private void putUserInfo(UserInfo userInfo)
-    {
+    private void putUserInfo(UserInfo userInfo) {
         this.userInfo = userInfo;
         DatabaseHelper.getInstance(this).putUserInfo(userInfo);
     }
 
-    @Override
-    public void onAccessCodeFailure(Exception exception)
-    {
-        waitingDialog.dismiss();
-
-        if (exception instanceof NoInternetException)
-        {
-            showNoInternetError((NoInternetException) exception);
-        }
-        else if (exception instanceof InvalidUserNamePasswordException)
-        {
-            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
-            showLoginDialog();
-        }
-        else
-        {
-            Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.send_report, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Util.sendBugReport(MainActivity.this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
-                        }
-                    }).show();
-        }
-    }
-
-    @Override
-    public void onUserInfoReceive(UserInfo userInfo)
-    {
-        waitingDialog.dismiss();
-
-        userInfo.setPassword(mPassword);
-        putUserInfo(userInfo);
-        initFirstView();
-    }
-
-    @Override
-    public void onUserInfoFailure(Exception exception)
-    {
-        waitingDialog.dismiss();
-
-        if (exception instanceof NoInternetException)
-        {
-            showNoInternetError((NoInternetException) exception);
-        }
-        else if (exception instanceof UserInfoException)
-        {
-            Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_LONG).show();
-        }
-        else
-        {
-            Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.send_report, new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(View view)
-                        {
-                            Util.sendBugReport(MainActivity.this, getString(R.string.bug_email_subject), getString(R.string.bug_email_context));
-                        }
-                    }).show();
-        }
-    }
-
-    private void setUserInfoInUI(UserInfo userInfo)
-    {
-        tvUserName.setText(userInfo.getFullName());
+    private void setUserInfoInUI(UserInfo userInfo) {
+        tvUserName.setText(userInfo.getFullname());
 
         Glide
                 .with(this)
@@ -611,53 +404,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .asBitmap()
                 .centerCrop()
                 .placeholder(R.mipmap.ic_launcher)
-                .into(new BitmapImageViewTarget(userImage)
-                {
+                .into(new BitmapImageViewTarget(userImage) {
                     @Override
-                    protected void setResource(Bitmap resource)
-                    {
+                    protected void setResource(Bitmap resource) {
                         RoundedBitmapDrawable circularBitmapDrawable =
                                 RoundedBitmapDrawableFactory.create(getResources(), resource);
                         circularBitmapDrawable.setCircular(true);
                         userImage.setImageDrawable(circularBitmapDrawable);
-            }
-        });
+                    }
+                });
     }
 
-    public void showNoInternetError(NoInternetException exception)
-    {
-        Snackbar.make(mRootLayout, exception.getMessage(), Snackbar.LENGTH_LONG).show();
-    }
-
-    private void setupCrashReporter()
-    {
-        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler))
-        {
+    private void setupCrashReporter() {
+        if (!(Thread.getDefaultUncaughtExceptionHandler() instanceof CustomExceptionHandler)) {
             Intent intent = new Intent(this, CrashReporterActivity.class);
-            if (android.os.Build.VERSION.SDK_INT >= 11)
+            if (android.os.Build.VERSION.SDK_INT >= 11) {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            }
 
-            Thread.setDefaultUncaughtExceptionHandler(new CustomExceptionHandler(this, getResources().getString(R.string.app_name), intent));
+            Thread.setDefaultUncaughtExceptionHandler(
+                    new CustomExceptionHandler(this, getResources().getString(R.string.app_name),
+                            intent));
         }
     }
 
     @Override
-    public void onClick(View view)
-    {
+    public void onClick(View view) {
         int id = view.getId();
 
-        if (id == R.id.nav_header)
-        {
-            if (userInfo!= null)
+        if (id == R.id.nav_header) {
+            if (userInfo != null) {
                 openProfilePage();
-            else
+            } else {
                 showLoginDialog();
+            }
         }
     }
 
-    private void openProfilePage()
-    {
+    private void openProfilePage() {
         //TODO
         Logger.t("openProfilePage").e("openProfilePage");
+    }
+
+    public void showBugSnackBar(String message) {
+        Snackbar.make(mRootLayout, message, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.send_report, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Util.sendBugReport(MainActivity.this, getString(R.string.bug_email_subject),
+                                getString(R.string.bug_email_context));
+                    }
+                }).show();
     }
 }

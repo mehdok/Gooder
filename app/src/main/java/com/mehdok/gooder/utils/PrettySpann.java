@@ -76,12 +76,12 @@ public class PrettySpann
         }
         @Override
         public void onClick(View v) {
-            mListener.onClick(tag);
+            mListener.onTagClick(tag);
         }
     }
 
     public static interface TagClickListener
     {
-        void onClick(CharSequence tag);
+        void onTagClick(CharSequence tag);
     }
 }

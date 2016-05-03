@@ -15,27 +15,37 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.mehdok.gooder.R;
-import com.mehdok.gooder.network.JsonHandler;
-import com.mehdok.gooder.network.exceptions.NoInternetException;
-import com.mehdok.gooder.network.interfaces.FriendsPostListener;
-import com.mehdok.gooder.network.model.Post;
-import com.mehdok.gooder.ui.home.MainActivity;
+import com.mehdok.gooder.crypto.Crypto;
+import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
+import com.mehdok.gooder.ui.home.models.PrettyPost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.views.VerticalSpaceItemDecoration;
+import com.mehdok.gooderapilib.QueryBuilder;
+import com.mehdok.gooderapilib.RequestBuilder;
+import com.mehdok.gooderapilib.models.post.Post;
+import com.mehdok.gooderapilib.models.post.Posts;
+import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+
+import retrofit2.adapter.rxjava.HttpException;
+import rx.Observable;
+import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsItemFragment extends Fragment implements FriendsPostListener {
+public class FriendsItemFragment extends Fragment {
     private static FriendsItemFragment mInstance;
-    private String accessCode;
     private RecyclerView mRecyclerView;
     private ProgressBar mProgress;
     private SinglePostAdapter mAdapter;
-    private ArrayList<Post> mPosts;
+    private ArrayList<PrettyPost> mPosts;
 
     public static FriendsItemFragment getInstance() {
         if (mInstance == null) {
@@ -52,7 +62,6 @@ public class FriendsItemFragment extends Fragment implements FriendsPostListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        accessCode = getArguments().getString(MainActivity.TAG_ACCESS_CODE);
 
         View v = inflater.inflate(R.layout.fragment_friends_item, container, false);
 
@@ -91,42 +100,76 @@ public class FriendsItemFragment extends Fragment implements FriendsPostListener
     private void getData() {
         showProgress(true);
 
-        //TODO do something about this fucking access code
-        JsonHandler.getInstance()
-                .requestFriendsPost(getActivity(), accessCode, null, mPosts.size(), 0, 0);
-    }
+        UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
 
-    @Override
-    public void onFriendsPostReceive(ArrayList<Post> posts) {
-        showProgress(false);
-
-        if (posts != null) {
-            mPosts.addAll(posts);
-            mAdapter.notifyDataSetChanged();
+        RequestBuilder requestBuilder = new RequestBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userInfo.getUsername());
+        try {
+            queryBuilder.setPassword(Crypto.getMD5BASE64(
+                    new String(Crypto.decrypt(userInfo.getPassword(), getActivity()))));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-    }
 
-    @Override
-    public void onFriendsPostFailure(Exception exception) {
-        showProgress(false);
+        //        queryBuilder.setGid("");
+        //        queryBuilder.setUnreadOnly(QueryBuilder.Value.YES);
+        //        queryBuilder.setReverseOrder(QueryBuilder.Value.NO);
+        queryBuilder.setStart(mPosts.size());
+        requestBuilder.getAllFriendsItem(queryBuilder)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                // map returned list to pretty span
+                .flatMap(new Func1<Posts, Observable<ArrayList<PrettyPost>>>() {
+                    @Override
+                    public Observable<ArrayList<PrettyPost>> call(Posts posts) {
+                        Logger.e("Observable<ArrayList<PrettyPost>> call");
+                        ArrayList<PrettyPost> prettyPosts =
+                                new ArrayList<PrettyPost>(posts.getPosts().size());
+                        for (Post post : posts.getPosts())
+                            prettyPosts.add(new PrettyPost(post));
+                        return Observable.just(prettyPosts);
+                    }
+                })
+                .subscribe(new Observer<ArrayList<PrettyPost>>() {
+                    @Override
+                    public void onCompleted() {
+                    }
 
-        //TODO handle other exceptions
-        if (exception instanceof NoInternetException) {
-            MainActivityDelegate.getInstance().getActivity().
-                    showNoInternetError((NoInternetException) exception);
-        }
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showProgress(false);
+                        String error;
+                        if (e instanceof HttpException) {
+                            error = ((HttpException) e).response().body().toString();
+                        } else {
+                            error = e.getMessage();
+                        }
+                        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(error);
+                    }
+
+                    @Override
+                    public void onNext(ArrayList<PrettyPost> posts) {
+                        Logger.e("ArrayList<PrettyPost> posts");
+                        showProgress(false);
+
+                        if (posts != null) {
+                            mPosts.addAll(posts);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
+                });
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        JsonHandler.getInstance().setFriendsPostListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        JsonHandler.getInstance().removeFriendsPostListener();
     }
 
 }
