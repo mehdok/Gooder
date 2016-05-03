@@ -39,7 +39,7 @@ public class PrettyPost implements PrettySpann.TagClickListener {
         this.parentPid = post.getParentPid();
         this.title = post.getTitle();
         this.postBody =
-                PrettySpann.getPrettyString(post.getPostBody(), TAG, this);//TODO image handler
+                PrettySpann.getPrettyString(post.getPostBody(), null, this);//TODO image handler
         this.commentCount = post.getCommentCount();
         this.sharesCount = post.getSharesCount();
         this.likeCounts = post.getLikeCounts();

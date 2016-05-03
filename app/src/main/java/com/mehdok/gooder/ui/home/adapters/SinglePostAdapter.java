@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.ui.home.models.PrettyPost;
+import com.mehdok.gooder.views.LinkifyTextView;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         holder.postAuthor.setText(mPosts.get(position).getAuthor().getFullName());
         holder.postTitle.setText(mPosts.get(position).getTitle());
         holder.postDate.setText(mPosts.get(position).getTime());
-        holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
+        //holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
+        holder.postBody.setPrettyText(mPosts.get(position).getPostBody());
         holder.likeCount.setText(getCount(mPosts.get(position).getLikeCounts()));
         holder.shareCount.setText(getCount(mPosts.get(position).getSharesCount()));
         holder.commentCount.setText(getCount(mPosts.get(position).getCommentCount()));
@@ -58,7 +60,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public TextView postAuthor;
         public TextView postTitle;
         public TextView postDate;
-        public TextView postBody;
+        public LinkifyTextView postBody;
         public TextView likeCount;
         public TextView shareCount;
         public TextView commentCount;
@@ -70,7 +72,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             postAuthor = (TextView)view.findViewById(R.id.post_author);
             postTitle = (TextView)view.findViewById(R.id.post_title);
             postDate = (TextView)view.findViewById(R.id.post_date);
-            postBody = (TextView)view.findViewById(R.id.post_body);
+            postBody = (LinkifyTextView) view.findViewById(R.id.post_body);
             likeCount = (TextView)view.findViewById(R.id.like_count);
             shareCount = (TextView)view.findViewById(R.id.share_count);
             commentCount = (TextView)view.findViewById(R.id.comment_count);

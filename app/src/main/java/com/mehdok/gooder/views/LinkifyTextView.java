@@ -6,6 +6,7 @@ package com.mehdok.gooder.views;
 
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 
@@ -34,9 +35,8 @@ public class LinkifyTextView extends AppCompatTextView {
         setTypeface(TypefaceUtil.getInstance().getTypeFaceForName(context, "fonts/Vazir.ttf"));
     }
 
-    @Override
-    public void setText(CharSequence text, BufferType type) {
+    public void setPrettyText(SpannableString str) {
         this.setMovementMethod(LinkMovementMethod.getInstance());
-        super.setText(text, BufferType.SPANNABLE);
+        super.setText(str, BufferType.SPANNABLE);
     }
 }

@@ -10,14 +10,15 @@ import android.text.Spanned;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
+import com.orhanobut.logger.Logger;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * Created by mehdok on 4/29/2016.
  */
-public class PrettySpann
-{
+public class PrettySpann {
     public enum TagType {
         TAG(0),
         USER(1),
@@ -39,46 +40,58 @@ public class PrettySpann
     public static final String USER_TAG = "#!user/";
     public static final String POST_TAG = "#!post/";
 
-    public static SpannableString getPrettyString(String str, String tagScheme, TagClickListener clickListener)
-    {
+    public static SpannableString getPrettyString(String str, Html.ImageGetter imageGetter,
+                                                  TagClickListener clickListener) {
         str = Util.getCleanString(str);
         str = replaceForumUrl(str);
-        //str = replaceForumTag(str, tagScheme);
-        Spanned spanned = linkifyHtml(str);
+        str = replaceForumImage(str);
+        Logger.e(str);
+        Spanned spanned = linkifyHtml(str, imageGetter);
         return linkifyTags(spanned, clickListener);
     }
 
-    private static String replaceForumUrl(String str)
-    {
+    private static String replaceForumUrl(String str) {
         int openTagIndex;
-        while ((openTagIndex = str.indexOf("[url=")) != -1)
-        {
-            str = str.subSequence(0, openTagIndex) + "<a href=\"" + str.substring(openTagIndex + 5, str.length());
+        while ((openTagIndex = str.indexOf("[url=")) != -1) {
+            str = str.subSequence(0, openTagIndex) +
+                    "<a href=\"" +
+                    str.substring(openTagIndex + 5, str.length());
             int secondOpenTagIndex = str.indexOf("]", openTagIndex);
-            str = str.subSequence(0, secondOpenTagIndex) + "\">" + str.substring(secondOpenTagIndex +1, str.length());
+            str = str.subSequence(0, secondOpenTagIndex) +
+                    "\">" +
+                    str.substring(secondOpenTagIndex + 1, str.length());
             str = str.replace("[/url]", "</a>");
         }
 
         return str;
     }
 
-    private static Spanned linkifyHtml(String cs/* add image handler and so on*/)
-    {
-        return Html.fromHtml(cs);
+    private static String replaceForumImage(String str) {
+        str = str.replace("[img]", "<img src=\"");
+        str = str.replace("[/img]", "\" alt=\"image\">");
+        //        int openTagIndex;
+        //        while ((openTagIndex = str.indexOf("[img]")) != -1) {
+        //            str = str.subSequence(0, openTagIndex) +
+        //                    "<img src=\"" +
+        //                    str.substring(openTagIndex + 5, str.length());
+        //        }
+
+        return str;
     }
 
-    private static String replaceForumTag(String str, String tagScheme)
-    {
+    private static Spanned linkifyHtml(String cs, Html.ImageGetter imageGetter/* add image handler and so on*/) {
+        return Html.fromHtml(cs, imageGetter, null);
+    }
+
+    private static String replaceForumTag(String str, String tagScheme) {
         return str.replace(tagScheme, "#");
     }
 
-    private static SpannableString linkifyTags(CharSequence cs, TagClickListener clickListener)
-    {
+    private static SpannableString linkifyTags(CharSequence cs, TagClickListener clickListener) {
         SpannableString spannableString = new SpannableString(cs);
 
         Matcher matcher = Pattern.compile(HASH_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
-        while (matcher.find())
-        {
+        while (matcher.find()) {
             spannableString.setSpan(new ClickableString(clickListener,
                             cs.subSequence(matcher.start() + HASH_TAG.length(), matcher.end()),
                             TagType.TAG),
@@ -110,8 +123,7 @@ public class PrettySpann
         return spannableString;
     }
 
-    private static class ClickableString extends ClickableSpan
-    {
+    private static class ClickableString extends ClickableSpan {
         private TagClickListener mListener;
         private CharSequence tag;
         private TagType tagType;
@@ -121,14 +133,14 @@ public class PrettySpann
             this.tag = tag;
             this.tagType = tagType;
         }
+
         @Override
         public void onClick(View v) {
             mListener.onTagClick(tag, tagType);
         }
     }
 
-    public static interface TagClickListener
-    {
+    public static interface TagClickListener {
         void onTagClick(CharSequence tag, TagType tagType);
     }
 }

@@ -71,10 +71,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/post_title"
-            android:text="2016/04/13"
             android:gravity="right"
             android:ellipsize="end"
-            android:maxLines="4"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:layout_marginTop="@dimen/standard_padding"
             />
