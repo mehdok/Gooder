@@ -8,7 +8,6 @@ package com.mehdok.gooder.ui.home.fragments;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,8 @@ import android.widget.ProgressBar;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
+import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
+import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
 import com.mehdok.gooder.ui.home.models.PrettyPost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
@@ -26,7 +27,6 @@ import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.Post;
 import com.mehdok.gooderapilib.models.post.Posts;
 import com.mehdok.gooderapilib.models.user.UserInfo;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -40,12 +40,14 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsItemFragment extends Fragment {
+public class FriendsItemFragment extends Fragment implements InfiniteScrollListener {
     private static FriendsItemFragment mInstance;
-    private RecyclerView mRecyclerView;
+    private InfiniteRecyclerView mRecyclerView;
     private ProgressBar mProgress;
     private SinglePostAdapter mAdapter;
     private ArrayList<PrettyPost> mPosts;
+
+    private boolean loadingFlag = false;
 
     public static FriendsItemFragment getInstance() {
         if (mInstance == null) {
@@ -66,11 +68,12 @@ public class FriendsItemFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_friends_item, container, false);
 
         // init recycler
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.friends_item_recycler);
+        mRecyclerView = (InfiniteRecyclerView) v.findViewById(R.id.friends_item_recycler);
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.standard_padding)));
+        mRecyclerView.setListener(this);
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
@@ -90,6 +93,8 @@ public class FriendsItemFragment extends Fragment {
     }
 
     private void showProgress(boolean show) {
+        loadingFlag = show;
+
         if (show) {
             mProgress.setVisibility(View.VISIBLE);
         } else {
@@ -123,7 +128,6 @@ public class FriendsItemFragment extends Fragment {
                 .flatMap(new Func1<Posts, Observable<ArrayList<PrettyPost>>>() {
                     @Override
                     public Observable<ArrayList<PrettyPost>> call(Posts posts) {
-                        Logger.e("Observable<ArrayList<PrettyPost>> call");
                         ArrayList<PrettyPost> prettyPosts =
                                 new ArrayList<PrettyPost>(posts.getPosts().size());
                         for (Post post : posts.getPosts())
@@ -151,9 +155,7 @@ public class FriendsItemFragment extends Fragment {
 
                     @Override
                     public void onNext(ArrayList<PrettyPost> posts) {
-                        Logger.e("ArrayList<PrettyPost> posts");
                         showProgress(false);
-
                         if (posts != null) {
                             mPosts.addAll(posts);
                             mAdapter.notifyDataSetChanged();
@@ -172,4 +174,10 @@ public class FriendsItemFragment extends Fragment {
         super.onPause();
     }
 
+    @Override
+    public void loadMore() {
+        if (!loadingFlag) {
+            getData();
+        }
+    }
 }

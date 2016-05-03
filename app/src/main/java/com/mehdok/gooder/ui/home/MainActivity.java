@@ -32,8 +32,6 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.mehdok.gooderapilib.QueryBuilder;
-import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
@@ -49,6 +47,8 @@ import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooder.views.VazirTextView;
+import com.mehdok.gooderapilib.QueryBuilder;
+import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
@@ -123,6 +123,17 @@ public class MainActivity extends AppCompatActivity implements
         userImage = (ImageView) headerLayout.findViewById(R.id.user_photo);
         tvUserName = (VazirTextView) headerLayout.findViewById(R.id.user_name);
 
+        setupBottomBar(savedInstanceState);
+
+        userInfo = DatabaseHelper.getInstance(this).getUserInfo();
+        if (userInfo != null) {
+            initFirstView();
+        } else {
+            showLoginDialog();
+        }
+    }
+
+    private void setupBottomBar(Bundle savedInstanceState) {
         // setup bottom navigation
         mBottomBar = BottomBar.attach(this, savedInstanceState);
         mBottomBar.noTabletGoodness();
@@ -164,13 +175,6 @@ public class MainActivity extends AppCompatActivity implements
         BottomBarBadge unreadMessages = mBottomBar.makeBadgeForTabAt(3, "#FF0000", 6);
 
         unreadMessages.show();
-
-        userInfo = DatabaseHelper.getInstance(this).getUserInfo();
-        if (userInfo != null) {
-            initFirstView();
-        } else {
-            showLoginDialog();
-        }
     }
 
     @Override
@@ -222,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.nav_about_app) {
 
         } else if (id == R.id.nav_log_out) {
-
+            logOut();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -455,5 +459,9 @@ public class MainActivity extends AppCompatActivity implements
                                 getString(R.string.bug_email_context));
                     }
                 }).show();
+    }
+
+    private void logOut() {
+
     }
 }
