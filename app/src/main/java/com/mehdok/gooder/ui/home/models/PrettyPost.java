@@ -92,7 +92,7 @@ public class PrettyPost implements PrettySpann.TagClickListener {
     }
 
     @Override
-    public void onTagClick(CharSequence tag) {
+    public void onTagClick(CharSequence tag, PrettySpann.TagType tagType) {
         Logger.t("onTagClick").d(tag.toString());
     }
 }

@@ -18,11 +18,32 @@ import java.util.regex.Pattern;
  */
 public class PrettySpann
 {
+    public enum TagType {
+        TAG(0),
+        USER(1),
+        POST(2);
+
+        private int mValue;
+
+        private TagType(int value) {
+            mValue = value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(mValue);
+        }
+    }
+
+    public static final String HASH_TAG = "#!tag/";
+    public static final String USER_TAG = "#!user/";
+    public static final String POST_TAG = "#!post/";
+
     public static SpannableString getPrettyString(String str, String tagScheme, TagClickListener clickListener)
     {
         str = Util.getCleanString(str);
         str = replaceForumUrl(str);
-        str = replaceForumTag(str, tagScheme);
+        //str = replaceForumTag(str, tagScheme);
         Spanned spanned = linkifyHtml(str);
         return linkifyTags(spanned, clickListener);
     }
@@ -55,10 +76,34 @@ public class PrettySpann
     {
         SpannableString spannableString = new SpannableString(cs);
 
-        Matcher matcher = Pattern.compile("#([ا-یA-Za-z0-9_-]+)").matcher(cs);
+        Matcher matcher = Pattern.compile(HASH_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
         while (matcher.find())
         {
-            spannableString.setSpan(new ClickableString(clickListener, cs.subSequence(matcher.start() + 1, matcher.end())), matcher.start(), matcher.end(),
+            spannableString.setSpan(new ClickableString(clickListener,
+                            cs.subSequence(matcher.start() + HASH_TAG.length(), matcher.end()),
+                            TagType.TAG),
+                    matcher.start(),
+                    matcher.end(),
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        matcher = Pattern.compile(USER_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
+        while (matcher.find()) {
+            spannableString.setSpan(new ClickableString(clickListener,
+                            cs.subSequence(matcher.start() + USER_TAG.length(), matcher.end()),
+                            TagType.USER),
+                    matcher.start(),
+                    matcher.end(),
+                    SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        matcher = Pattern.compile(POST_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
+        while (matcher.find()) {
+            spannableString.setSpan(new ClickableString(clickListener,
+                            cs.subSequence(matcher.start() + POST_TAG.length(), matcher.end()),
+                            TagType.POST),
+                    matcher.start(),
+                    matcher.end(),
                     SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
@@ -69,19 +114,21 @@ public class PrettySpann
     {
         private TagClickListener mListener;
         private CharSequence tag;
+        private TagType tagType;
 
-        public ClickableString(TagClickListener listener, CharSequence tag) {
+        public ClickableString(TagClickListener listener, CharSequence tag, TagType tagType) {
             mListener = listener;
             this.tag = tag;
+            this.tagType = tagType;
         }
         @Override
         public void onClick(View v) {
-            mListener.onTagClick(tag);
+            mListener.onTagClick(tag, tagType);
         }
     }
 
     public static interface TagClickListener
     {
-        void onTagClick(CharSequence tag);
+        void onTagClick(CharSequence tag, TagType tagType);
     }
 }

@@ -66,7 +66,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             />
 
-        <com.mehdok.gooder.views.CustomTextView
+        <com.mehdok.gooder.views.LinkifyTextView
             android:id="@+id/post_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
