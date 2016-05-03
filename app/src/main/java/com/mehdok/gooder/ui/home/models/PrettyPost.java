@@ -4,6 +4,7 @@
 
 package com.mehdok.gooder.ui.home.models;
 
+import android.text.Html;
 import android.text.SpannableString;
 
 import com.mehdok.gooder.utils.PrettySpann;
@@ -32,14 +33,15 @@ public class PrettyPost implements PrettySpann.TagClickListener {
     private Flag flags;
     private Extra extra;
 
-    public PrettyPost(Post post) {
+    public PrettyPost(Post post, Html.ImageGetter imageGetter)
+    {
         this.pid = post.getPid();
         this.author = post.getAuthor();
         this.time = TimeUtil.getInstance().getReadableDate(post.getTime());
         this.parentPid = post.getParentPid();
         this.title = post.getTitle();
         this.postBody =
-                PrettySpann.getPrettyString(post.getPostBody(), null, this);//TODO image handler
+                PrettySpann.getPrettyString(post.getPostBody(), this, imageGetter);//TODO image handler
         this.commentCount = post.getCommentCount();
         this.sharesCount = post.getSharesCount();
         this.likeCounts = post.getLikeCounts();

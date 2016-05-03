@@ -10,8 +10,6 @@ import android.text.Spanned;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
-import com.orhanobut.logger.Logger;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,12 +38,12 @@ public class PrettySpann {
     public static final String USER_TAG = "#!user/";
     public static final String POST_TAG = "#!post/";
 
-    public static SpannableString getPrettyString(String str, Html.ImageGetter imageGetter,
-                                                  TagClickListener clickListener) {
+    public static SpannableString getPrettyString(String str, TagClickListener clickListener,
+                                                  Html.ImageGetter imageGetter)
+    {
         str = Util.getCleanString(str);
         str = replaceForumUrl(str);
         str = replaceForumImage(str);
-        Logger.e(str);
         Spanned spanned = linkifyHtml(str, imageGetter);
         return linkifyTags(spanned, clickListener);
     }
@@ -69,18 +67,15 @@ public class PrettySpann {
     private static String replaceForumImage(String str) {
         str = str.replace("[img]", "<img src=\"");
         str = str.replace("[/img]", "\" alt=\"image\">");
-        //        int openTagIndex;
-        //        while ((openTagIndex = str.indexOf("[img]")) != -1) {
-        //            str = str.subSequence(0, openTagIndex) +
-        //                    "<img src=\"" +
-        //                    str.substring(openTagIndex + 5, str.length());
-        //        }
 
         return str;
     }
 
     private static Spanned linkifyHtml(String cs, Html.ImageGetter imageGetter/* add image handler and so on*/) {
-        return Html.fromHtml(cs, imageGetter, null);
+        if (imageGetter != null)
+            return Html.fromHtml(cs, imageGetter, null);
+        else
+            return Html.fromHtml(cs);
     }
 
     private static String replaceForumTag(String str, String tagScheme) {

@@ -131,7 +131,7 @@ public class FriendsItemFragment extends Fragment implements InfiniteScrollListe
                         ArrayList<PrettyPost> prettyPosts =
                                 new ArrayList<PrettyPost>(posts.getPosts().size());
                         for (Post post : posts.getPosts())
-                            prettyPosts.add(new PrettyPost(post));
+                            prettyPosts.add(new PrettyPost(post, null));
                         return Observable.just(prettyPosts);
                     }
                 })
