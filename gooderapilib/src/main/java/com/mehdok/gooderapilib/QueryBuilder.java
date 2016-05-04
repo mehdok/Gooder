@@ -573,4 +573,8 @@ public class QueryBuilder {
         }
         return query;
     }
+
+    public void resetGetParams() {
+
+    }
 }

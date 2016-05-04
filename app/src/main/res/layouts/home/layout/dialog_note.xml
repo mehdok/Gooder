@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/standard_margin"
+    >
+
+    <com.mehdok.gooder.views.VazirTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/re_share"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/dialog_title_text_size"
+        android:layout_marginBottom="@dimen/standard_padding"
+        android:gravity="center"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.mehdok.gooder.views.VazirEditText
+            android:id="@+id/reshare_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/reshare_note"
+            android:lines="4"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/standard_margin"
+        >
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/reshare_do"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/re_share"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/colorPrimaryDark"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/reshare_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_toLeftOf="@id/reshare_do"
+            />
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -461,6 +461,11 @@ public class MainActivity extends AppCompatActivity implements
                 }).show();
     }
 
+    public void showSimpleMessage(String str) {
+        Snackbar.make(mRootLayout, str, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
     private void logOut() {
 
     }

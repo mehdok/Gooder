@@ -32,5 +32,9 @@
     <string name="crash_email_context">Please say something about the crash</string>
     <string name="crash_report_text">Unfortunately the app getting crashed, Would you like to send a crash report?</string>
     <string name="ok">OK</string>
+    <string name="re_share">Reshare</string>
+    <string name="reshare_note">Reshare Note</string>
+    <string name="cancel">Cancel</string>
+
 
 </resources>

@@ -18,6 +18,7 @@ import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
 import com.mehdok.gooder.ui.home.models.PrettyPost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.views.LinkifyTextView;
+import com.mehdok.gooderapilib.models.post.AddPost;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -121,8 +122,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
         @Override
         public void onClick(View view) {
+            int pos = getAdapterPosition();
+
             if (view.getId() == R.id.like_button) {
-                final int pos = getAdapterPosition();
                 if (toggleLike(pos)) {
                     functionHandler.likePost(pos, mPosts.get(pos).getPid());
                 } else {
@@ -131,7 +133,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
                 Logger.t("ItemViewHolder").d("like_button - pos :" + pos);
             } else if (view.getId() == R.id.star_button) {
-                final int pos = getAdapterPosition();
                 if (toggleStar(pos)) {
                     functionHandler.starPost(pos, mPosts.get(pos).getPid());
                 } else {
@@ -140,6 +141,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
                 Logger.t("ItemViewHolder").d("star_button - pos :" + pos);
             } else if (view.getId() == R.id.share_button) {
+                functionHandler.showNoteDialog(view.getContext(), pos, mPosts.get(pos).getPid());
+
                 Logger.t("ItemViewHolder").d("share_button - pos :" + getAdapterPosition());
             } else {
                 Logger.t("ItemViewHolder").d("pos :" + getAdapterPosition());
@@ -202,6 +205,17 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     @Override
     public void onStarError(int position, Throwable e) {
         toggleStar(position);
+        e.printStackTrace();
+        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
+    }
+
+    @Override
+    public void onReShare(int position, AddPost result) {
+        MainActivityDelegate.getInstance().getActivity().showSimpleMessage(result.getMsgText());
+    }
+
+    @Override
+    public void onReShareError(int position, Throwable e) {
         e.printStackTrace();
         MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
     }
