@@ -1,0 +1,8 @@
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<resources>
+    <string name="app_name">SinglePostViewLib</string>
+    <string name="comment_hint">Add Comment</string>
+</resources>
