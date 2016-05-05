@@ -12,6 +12,7 @@ import com.mehdok.gooderapilib.models.addgroup.GroupResponse;
 import com.mehdok.gooderapilib.models.block.BlockResponse;
 import com.mehdok.gooderapilib.models.block.BlockedUser;
 import com.mehdok.gooderapilib.models.comment.Comment;
+import com.mehdok.gooderapilib.models.comment.CommentResponse;
 import com.mehdok.gooderapilib.models.follow.FollowCount;
 import com.mehdok.gooderapilib.models.follow.FollowResponse;
 import com.mehdok.gooderapilib.models.follow.Followed;
@@ -736,6 +737,18 @@ public class RequestBuilder {
                     public Observable<PostReadsCount> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getMyPostReadsCount(pid, queryBuilder.getPostParams());
+                    }
+                });
+    }
+
+    public Observable<CommentResponse> getPostComments(final String pid,
+                                                       final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+        return getAccessCode(queryBuilder)
+                .flatMap(new Func1<String, Observable<CommentResponse>>() {
+                    @Override
+                    public Observable<CommentResponse> call(String accessCode) {
+                        queryBuilder.setAccessCode(accessCode);
+                        return mGooderApi.getPostComments(pid, queryBuilder.getPostParams());
                     }
                 });
     }
