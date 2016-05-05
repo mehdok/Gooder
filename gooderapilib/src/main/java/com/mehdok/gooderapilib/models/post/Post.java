@@ -41,6 +41,12 @@ public class Post {
     @SerializedName("flags")
     @Expose
     private Flag flags;
+    @SerializedName("starred")
+    @Expose
+    private boolean starred;
+    @SerializedName("liked")
+    @Expose
+    private boolean liked;
     @SerializedName("extra")
     @Expose
     private Extra extra;
@@ -98,6 +104,22 @@ public class Post {
 
     public Flag getFlags() {
         return flags;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
     }
 
     public Extra getExtra() {

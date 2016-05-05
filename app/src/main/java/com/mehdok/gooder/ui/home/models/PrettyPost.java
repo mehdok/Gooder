@@ -48,6 +48,8 @@ public class PrettyPost implements PrettySpann.TagClickListener {
         this.sharesCount = post.getSharesCount();
         this.likeCounts = post.getLikeCounts();
         this.flags = post.getFlags();
+        this.liked = post.isLiked();
+        this.stared = post.isStarred();
         this.extra = post.getExtra();
     }
 
