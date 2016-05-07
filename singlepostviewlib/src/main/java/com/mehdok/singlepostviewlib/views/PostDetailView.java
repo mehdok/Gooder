@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.models.PostDetail;
+import com.mehdok.singlepostviewlib.utils.TimeUtil;
 
 /**
  * Created by mehdok on 5/4/2016.
@@ -58,7 +59,7 @@ public class PostDetailView extends RelativeLayout {
 
     public void setPostDetail(PostDetail postDetail) {
         tvAuthor.setText(postDetail.getAuthor());
-        tvDate.setText(postDetail.getDate());
+        tvDate.setText(TimeUtil.getInstance().getReadableDate(postDetail.getDate()));
     }
 
     public void loadAuthorPhoto(String url) {

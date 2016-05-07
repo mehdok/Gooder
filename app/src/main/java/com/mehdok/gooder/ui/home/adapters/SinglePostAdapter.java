@@ -22,6 +22,7 @@ import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.Post;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
+import com.mehdok.singlepostviewlib.utils.TimeUtil;
 import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
 import com.mehdok.singlepostviewlib.views.PostTextView;
 import com.orhanobut.logger.Logger;
@@ -54,7 +55,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.postAuthor.setText(mPosts.get(position).getAuthor().getFullName());
         holder.postTitle.setText(mPosts.get(position).getTitle());
-        holder.postDate.setText(mPosts.get(position).getTime());
+        holder.postDate.setText(
+                TimeUtil.getInstance().getReadableDate(mPosts.get(position).getTime()));
         //holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
         //        holder.postBody.setPrettyText(mPosts.get(position).getPostBody());
         holder.postBody.setPrettyText(
