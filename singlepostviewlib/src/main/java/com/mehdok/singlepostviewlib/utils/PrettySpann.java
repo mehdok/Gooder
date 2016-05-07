@@ -2,7 +2,7 @@
  * Copyright (c) 2016. Mehdi Sohrabi
  */
 
-package com.mehdok.gooder.utils;
+package com.mehdok.singlepostviewlib.utils;
 
 import android.text.Html;
 import android.text.SpannableString;
@@ -41,11 +41,19 @@ public class PrettySpann {
     public static SpannableString getPrettyString(String str, TagClickListener clickListener,
                                                   Html.ImageGetter imageGetter)
     {
-        str = Util.getCleanString(str);
+        if (str == null) return new SpannableString("");
+
+        str = getCleanString(str);
         str = replaceForumUrl(str);
         str = replaceForumImage(str);
         Spanned spanned = linkifyHtml(str, imageGetter);
         return linkifyTags(spanned, clickListener);
+    }
+
+    public static String getCleanString(String str) {
+        str = str.replace("\\r\\n", "<br\\>");
+        str = str.replace("\\n", "<br\\>");
+        return str;
     }
 
     private static String replaceForumUrl(String str) {
@@ -66,7 +74,7 @@ public class PrettySpann {
 
     private static String replaceForumImage(String str) {
         str = str.replace("[img]", "<img src=\"");
-        str = str.replace("[/img]", "\" alt=\"image\">");
+        str = str.replace("[/img]", "\" alt=\"image\" align=\"middle\">");
 
         return str;
     }

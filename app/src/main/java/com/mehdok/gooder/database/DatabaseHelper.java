@@ -15,8 +15,7 @@ import com.mehdok.gooderapilib.models.user.UserInfo;
 /**
  * Created by mehdok on 4/10/2016.
  */
-public class DatabaseHelper extends SQLiteOpenHelper
-{
+public class DatabaseHelper extends SQLiteOpenHelper {
     private static DatabaseHelper mInstance;
     private static final String MAIN_DB_NAME = "mehdok_gooder_db";
 
@@ -40,50 +39,43 @@ public class DatabaseHelper extends SQLiteOpenHelper
             + COLUMN_WEB + " TEXT, "
             + COLUMN_PASSWORD + " BLOB);";
 
-    public static DatabaseHelper getInstance(Context context)
-    {
-        if (mInstance == null)
-        {
+    public static DatabaseHelper getInstance(Context context) {
+        if (mInstance == null) {
             mInstance = new DatabaseHelper(context.getApplicationContext());
         }
         return mInstance;
     }
 
-    private DatabaseHelper(Context context)
-    {
+    private DatabaseHelper(Context context) {
         super(context, MAIN_DB_NAME, null, 1);
         getWritableDatabase();
     }
 
     @Override
-    public void onCreate(SQLiteDatabase sqLiteDatabase)
-    {
+    public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_USER_TABLE);
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1)
-    {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
 
     }
 
     /**
-     *
      * @return stored user info in database or null
      */
-    public UserInfo getUserInfo()
-    {
+    public UserInfo getUserInfo() {
         String query = "SELECT * FROM " + TBL_USER + ";";
         Cursor cursor = getReadableDatabase().rawQuery(query, null);
-        if (cursor.moveToFirst())
-        {
-            UserInfo userInfo = new UserInfo(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_FULL_NAME)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_ABOUT)),
-                    cursor.getString(cursor.getColumnIndex(COLUMN_WEB)),
-                    cursor.getBlob(cursor.getColumnIndex(COLUMN_PASSWORD)));
+        if (cursor.moveToFirst()) {
+            UserInfo userInfo =
+                    new UserInfo(cursor.getString(cursor.getColumnIndex(COLUMN_USER_ID)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_USER_NAME)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_FULL_NAME)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_AVATAR)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_ABOUT)),
+                            cursor.getString(cursor.getColumnIndex(COLUMN_WEB)),
+                            cursor.getBlob(cursor.getColumnIndex(COLUMN_PASSWORD)));
 
             cursor.close();
 
@@ -93,8 +85,12 @@ public class DatabaseHelper extends SQLiteOpenHelper
         return null;
     }
 
-    public boolean putUserInfo(UserInfo userInfo)
-    {
+    public boolean deleteUserInfo() {
+        int result = getWritableDatabase().delete(TBL_USER, null, null);
+        return result > 0;
+    }
+
+    public boolean putUserInfo(UserInfo userInfo) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_USER_ID, userInfo.getUid());
         values.put(COLUMN_USER_NAME, userInfo.getUsername());

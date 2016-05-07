@@ -59,10 +59,12 @@ public class PostDetailView extends RelativeLayout {
     public void setPostDetail(PostDetail postDetail) {
         tvAuthor.setText(postDetail.getAuthor());
         tvDate.setText(postDetail.getDate());
+    }
 
+    public void loadAuthorPhoto(String url) {
         Glide
                 .with(getContext())
-                .load(postDetail.getAuthorPhotoUrl())
+                .load(url)
                 .asBitmap()
                 .centerCrop()
                 .into(new BitmapImageViewTarget(imvAuthor) {

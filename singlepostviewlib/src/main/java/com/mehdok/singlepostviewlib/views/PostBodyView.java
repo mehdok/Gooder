@@ -7,6 +7,7 @@ package com.mehdok.singlepostviewlib.views;
 import android.content.Context;
 import android.os.Build;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import android.widget.LinearLayout;
 
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.models.PostBody;
+import com.mehdok.singlepostviewlib.utils.PrettySpann;
+import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
 
 /**
  * Created by mehdok on 5/4/2016.
@@ -54,10 +57,14 @@ public class PostBodyView extends LinearLayout {
 
     public void setPostBody(PostBody postBody) {
         if (postBody.getNote() == null) {
-            tvNote.setPrettyText(postBody.getBody());
+            SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
+                    postBody.getTagClickListener(), new GlideGetter(tvNote.getContext(), tvNote));
+            tvNote.setPrettyText(body);
             tvBody.setVisibility(View.GONE);
         } else {
-            tvNote.setPrettyText(postBody.getNote());
+            SpannableString note = PrettySpann.getPrettyString(postBody.getNote(),
+                    postBody.getTagClickListener(), new GlideGetter(tvNote.getContext(), tvNote));
+            tvNote.setPrettyText(note);
 
             BackgroundColorSpan backgroundColorSpan;
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -68,8 +75,12 @@ public class PostBodyView extends LinearLayout {
                         .getColor(R.color.shared_background_color));
             }
 
-            postBody.getBody().setSpan(backgroundColorSpan, 0, postBody.getBody().length(),
+            SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
+                    postBody.getTagClickListener(), new GlideGetter(tvBody.getContext(), tvBody));
+            body.setSpan(backgroundColorSpan, 0, postBody.getBody().length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            tvBody.setPrettyText(body);
         }
     }
 }

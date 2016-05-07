@@ -96,4 +96,13 @@
         android:padding="@dimen/mini_padding"
         />
 
+    <View
+        android:id="@+id/separator2"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/comment_button"
+        android:background="@color/selection_color"
+        android:layout_marginTop="@dimen/mini_padding"
+        />
+
 </RelativeLayout>

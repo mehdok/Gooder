@@ -5,7 +5,6 @@
 package com.mehdok.singlepostviewlib.views;
 
 import android.content.Context;
-import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
@@ -36,15 +35,17 @@ public class PostCommentsView extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
     }
 
-    private void addComment(String author, String date, SpannableString body) {
+    private void addComment(String author, String date, String body, String imgUrl) {
         PostCommentView commentView = new PostCommentView(getContext());
-        commentView.setComment(author, date, body);
+        commentView.setComment(author, date, body, imgUrl);
         addView(commentView);
+
     }
 
     public void addComments(ArrayList<PostComment> comments) {
         for (PostComment comment : comments) {
-            addComment(comment.getAuthor(), comment.getDate(), comment.getBody());
+            addComment(comment.getAuthor(), comment.getDate(), comment.getBody(),
+                    comment.getAuthorUrl());
         }
     }
 }

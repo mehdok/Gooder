@@ -5,6 +5,7 @@
 package com.mehdok.gooder.ui.home.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,14 @@ import android.widget.TextView;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.ui.home.PostFunctionHandler;
 import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
-import com.mehdok.gooder.ui.home.models.PrettyPost;
+import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
-import com.mehdok.gooder.views.LinkifyTextView;
+import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.models.post.AddPost;
+import com.mehdok.gooderapilib.models.post.Post;
+import com.mehdok.singlepostviewlib.utils.PrettySpann;
+import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
+import com.mehdok.singlepostviewlib.views.PostTextView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -27,34 +32,35 @@ import java.util.ArrayList;
  * Created by mehdok on 4/13/2016.
  */
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ItemViewHolder>
-        implements PostFunctionListener
-{
-    private ArrayList<PrettyPost> mPosts;
+        implements PostFunctionListener, PrettySpann.TagClickListener {
+    private ArrayList<Post> mPosts;
     private int BODY_COUNT = 200;
     PostFunctionHandler functionHandler;
 
-    public SinglePostAdapter(Context ctx, ArrayList<PrettyPost> posts)
-    {
+    public SinglePostAdapter(Context ctx, ArrayList<Post> posts) {
         mPosts = posts;
         functionHandler = new PostFunctionHandler(ctx);
         functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
     }
 
     @Override
-    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_single_post, parent, false);
+    public ItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_single_post, parent, false);
         return new ItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(ItemViewHolder holder, int position)
-    {
+    public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.postAuthor.setText(mPosts.get(position).getAuthor().getFullName());
         holder.postTitle.setText(mPosts.get(position).getTitle());
         holder.postDate.setText(mPosts.get(position).getTime());
         //holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
-        holder.postBody.setPrettyText(mPosts.get(position).getPostBody());
+        //        holder.postBody.setPrettyText(mPosts.get(position).getPostBody());
+        holder.postBody.setPrettyText(
+                PrettySpann.getPrettyString(mPosts.get(position).getPostBody(),
+                        this,
+                        new GlideGetter(holder.postBody.getContext(), holder.postBody)));
         holder.likeCount.setText(getCount(mPosts.get(position).getLikeCounts()));
         holder.shareCount.setText(getCount(mPosts.get(position).getSharesCount()));
         holder.commentCount.setText(getCount(mPosts.get(position).getCommentCount()));
@@ -65,7 +71,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             holder.likeButton.setImageResource(R.drawable.ic_favorite_outline_grey600_24dp);
         }
 
-        if (mPosts.get(position).isStared()) {
+        if (mPosts.get(position).isStarred()) {
             holder.starButton.setImageResource(R.drawable.ic_star_grey600_24dp);
         } else {
             holder.starButton.setImageResource(R.drawable.ic_star_outline_grey600_24dp);
@@ -73,13 +79,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         return mPosts.size();
     }
 
-    private String getCount(String count)
-    {
+    private String getCount(String count) {
         if (count.equals("0")) {
             return "";
         } else {
@@ -91,7 +95,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public TextView postAuthor;
         public TextView postTitle;
         public TextView postDate;
-        public LinkifyTextView postBody;
+        public PostTextView postBody;
         public TextView likeCount;
         public TextView shareCount;
         public TextView commentCount;
@@ -99,14 +103,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public ImageButton starButton;
         public ImageButton shareButton;
 
-        public ItemViewHolder(View view)
-        {
+        public ItemViewHolder(View view) {
             super(view);
 
             postAuthor = (TextView) view.findViewById(R.id.post_author);
             postTitle = (TextView) view.findViewById(R.id.post_title);
             postDate = (TextView) view.findViewById(R.id.post_date);
-            postBody = (LinkifyTextView) view.findViewById(R.id.post_body);
+            postBody = (PostTextView) view.findViewById(R.id.post_body);
             likeCount = (TextView) view.findViewById(R.id.like_count);
             shareCount = (TextView) view.findViewById(R.id.share_count);
             commentCount = (TextView) view.findViewById(R.id.comment_count);
@@ -130,21 +133,19 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                 } else {
                     functionHandler.unLikePost(pos, mPosts.get(pos).getPid());
                 }
-
-                Logger.t("ItemViewHolder").d("like_button - pos :" + pos);
             } else if (view.getId() == R.id.star_button) {
                 if (toggleStar(pos)) {
                     functionHandler.starPost(pos, mPosts.get(pos).getPid());
                 } else {
                     functionHandler.unStarPost(pos, mPosts.get(pos).getPid());
                 }
-
-                Logger.t("ItemViewHolder").d("star_button - pos :" + pos);
             } else if (view.getId() == R.id.share_button) {
                 functionHandler.showNoteDialog(view.getContext(), pos, mPosts.get(pos).getPid());
-
-                Logger.t("ItemViewHolder").d("share_button - pos :" + getAdapterPosition());
             } else {
+                Intent intent = new Intent(view.getContext(), SinglePostActivity.class);
+                intent.putExtra(SinglePostActivity.PARCELABLE_POST_EXTRA,
+                        new ParcelablePost(mPosts.get(pos)));
+                view.getContext().startActivity(intent);
                 Logger.t("ItemViewHolder").d("pos :" + getAdapterPosition());
             }
         }
@@ -157,7 +158,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     }
 
     private void star(int pos, boolean star) {
-        mPosts.get(pos).setStared(star);
+        mPosts.get(pos).setStarred(star);
         notifyDataSetChanged();
     }
 
@@ -169,8 +170,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     }
 
     private boolean toggleStar(int pos) {
-        boolean star = !mPosts.get(pos).isStared();
-        mPosts.get(pos).setStared(star);
+        boolean star = !mPosts.get(pos).isStarred();
+        mPosts.get(pos).setStarred(star);
         notifyDataSetChanged();
         return star;
     }
@@ -219,4 +220,10 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         e.printStackTrace();
         MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
     }
+
+    @Override
+    public void onTagClick(CharSequence tag, PrettySpann.TagType tagType) {
+        Logger.t("SinglePostAdapter").d(tag.toString());
+    }
+
 }

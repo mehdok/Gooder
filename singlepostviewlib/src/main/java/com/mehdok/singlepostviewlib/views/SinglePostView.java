@@ -11,6 +11,9 @@ import android.widget.RelativeLayout;
 
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.models.Post;
+import com.mehdok.singlepostviewlib.models.PostComment;
+
+import java.util.ArrayList;
 
 /**
  * Created by mehdok on 5/4/2016.
@@ -59,7 +62,15 @@ public class SinglePostView extends RelativeLayout {
         postDetailView.setPostDetail(post.getPostDetail());
         postBodyView.setPostBody(post.getPostBody());
         postFunctionView.setPostFunction(post.getPostFunction());
-        postCommentsView.addComments(post.getPostComment());
+        //postCommentsView.addComments(post.getPostComment());
         addCommentView.setSendCommentListener(post.getSendCommentClickListener());
+    }
+
+    public void addComments(ArrayList<PostComment> postComment) {
+        postCommentsView.addComments(postComment);
+    }
+
+    public void addUserPhoto(String authorPhoto) {
+        postDetailView.loadAuthorPhoto(authorPhoto);
     }
 }

@@ -4,20 +4,20 @@
 
 package com.mehdok.singlepostviewlib.models;
 
-import android.text.SpannableString;
-
 /**
  * Created by mehdok on 5/4/2016.
  */
 public class PostComment {
     private String author;
     private String date;
-    private SpannableString body;
+    private String body;
+    private String authorUrl;
 
-    public PostComment(String author, String date, SpannableString body) {
+    public PostComment(String author, String date, String body, String authorUrl) {
         this.author = author;
         this.date = date;
         this.body = body;
+        this.authorUrl = authorUrl;
     }
 
     public String getAuthor() {
@@ -28,7 +28,11 @@ public class PostComment {
         return date;
     }
 
-    public SpannableString getBody() {
+    public String getBody() {
         return body;
+    }
+
+    public String getAuthorUrl() {
+        return authorUrl;
     }
 }

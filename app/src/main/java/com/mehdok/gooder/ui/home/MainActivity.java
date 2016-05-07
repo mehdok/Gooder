@@ -16,6 +16,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
@@ -37,6 +38,7 @@ import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.preferences.PreferencesManager;
+import com.mehdok.gooder.ui.home.fragments.BaseFragment;
 import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
 import com.mehdok.gooder.ui.home.fragments.NotificationsFragment;
@@ -125,6 +127,10 @@ public class MainActivity extends AppCompatActivity implements
 
         setupBottomBar(savedInstanceState);
 
+        startApp();
+    }
+
+    private void startApp() {
         userInfo = DatabaseHelper.getInstance(this).getUserInfo();
         if (userInfo != null) {
             initFirstView();
@@ -467,6 +473,17 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void logOut() {
+        DatabaseHelper.getInstance(this).deleteUserInfo();
 
+        FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof BaseFragment) {
+                ((BaseFragment) fragment).clearViews();
+                trans.remove(fragment);
+            }
+        }
+
+        trans.commit();
+        startApp();
     }
 }

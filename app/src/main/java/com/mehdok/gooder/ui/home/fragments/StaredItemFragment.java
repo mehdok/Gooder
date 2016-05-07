@@ -16,7 +16,7 @@ import com.mehdok.gooder.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StaredItemFragment extends Fragment
+public class StaredItemFragment extends BaseFragment
 {
     private static StaredItemFragment mInstance;
 
@@ -42,4 +42,10 @@ public class StaredItemFragment extends Fragment
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_stared_item, container, false);
     }
+
+    @Override
+    public void clearViews() {
+
+    }
+
 }

@@ -16,7 +16,7 @@ import com.mehdok.gooder.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CommentViewFragment extends Fragment {
+public class CommentViewFragment extends BaseFragment {
     private static CommentViewFragment mInstance;
 
     public CommentViewFragment() {
@@ -37,4 +37,10 @@ public class CommentViewFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_comment_view, container, false);
     }
+
+    @Override
+    public void clearViews() {
+
+    }
+
 }

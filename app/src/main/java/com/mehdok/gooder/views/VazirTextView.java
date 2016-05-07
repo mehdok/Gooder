@@ -8,7 +8,7 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
-import com.mehdok.gooder.utils.TypefaceUtil;
+import com.mehdok.singlepostviewlib.utils.TypefaceUtil;
 
 /**
  * Created by mehdok on 4/11/2016.

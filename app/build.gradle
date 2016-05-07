@@ -25,6 +25,7 @@ android {
     sourceSets {
         main {
             res.srcDirs = ['src/main/res/layouts/home',
+                           'src/main/res/layouts/singlepost',
                            'src/main/res/layouts',
                            'src/main/res']
         }

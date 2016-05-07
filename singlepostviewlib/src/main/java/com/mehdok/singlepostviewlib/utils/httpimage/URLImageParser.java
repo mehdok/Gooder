@@ -2,7 +2,7 @@
  * Copyright (c) 2016. Mehdi Sohrabi
  */
 
-package com.mehdok.gooder.utils.httpimage;
+package com.mehdok.singlepostviewlib.utils.httpimage;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -30,12 +30,14 @@ public class URLImageParser implements Html.ImageGetter
 
     public URLImageParser(TextView v)
     {
+        Log.e("URLImageParser", "URLImageParser");
         this.container = v;
     }
 
     @Override
     public Drawable getDrawable(String url)
     {
+        Log.e("URLImageParser", "getDrawable");
         final UrlDrawable urlDrawable = new UrlDrawable();
         final String source = url;
 
@@ -61,6 +63,8 @@ public class URLImageParser implements Html.ImageGetter
                     @Override
                     public boolean onResourceReady(GlideDrawable glideDrawable, String s, Target<GlideDrawable> glideDrawableTarget, boolean b, boolean b2)
                     {
+                        debug("onResourceReady");
+
                         return false;
                     }
                 }).
@@ -69,6 +73,8 @@ public class URLImageParser implements Html.ImageGetter
                     @Override
                     public void onResourceReady(GlideDrawable d, GlideAnimation<? super GlideDrawable> glideAnimation)
                     {
+                        Log.e("URLImageParser", "onResourceReady");
+
                         int width = (int) (d.getIntrinsicWidth() * dpi);
                         int height = (int) (d.getIntrinsicHeight() * dpi);
                         d.setBounds(0, 0, width, height);
@@ -79,19 +85,19 @@ public class URLImageParser implements Html.ImageGetter
                             @Override
                             public void invalidateDrawable(Drawable who)
                             {
-
+                                debug("invalidateDrawable");
                             }
 
                             @Override
                             public void scheduleDrawable(Drawable who, Runnable what, long when)
                             {
-
+                                debug("scheduleDrawable");
                             }
 
                             @Override
                             public void unscheduleDrawable(Drawable who, Runnable what)
                             {
-
+                                debug("unscheduleDrawable");
                             }
                         });
 
@@ -114,6 +120,6 @@ public class URLImageParser implements Html.ImageGetter
 
     private void debug(String msg)
     {
-        Log.d("AAA", msg);
+        Log.e("AAA", msg);
     }
 }

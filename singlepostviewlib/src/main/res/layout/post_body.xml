@@ -3,7 +3,11 @@
   ~ Copyright (c) 2016. Mehdi Sohrabi
   -->
 
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
     <com.mehdok.singlepostviewlib.views.PostTextView
         android:id="@+id/note_text"
@@ -22,8 +26,6 @@
         android:ellipsize="end"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:background="@color/shared_background_color"
-        android:layout_marginLeft="@dimen/mini_padding"
-        android:layout_marginRight="@dimen/mini_padding"
         />
 
-</merge>
+</LinearLayout>

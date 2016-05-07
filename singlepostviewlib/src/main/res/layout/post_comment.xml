@@ -8,36 +8,64 @@
     android:layout_height="match_parent"
     >
 
-    <com.mehdok.singlepostviewlib.views.PostTextView
-        android:id="@+id/comment_author"
+    <RelativeLayout
+        android:id="@+id/commenter_detail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="commenter"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="@dimen/standard_padding"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        android:textStyle="bold"
-        />
+        >
 
-    <com.mehdok.singlepostviewlib.views.PostTextView
-        android:id="@+id/comment_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="date"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="@dimen/standard_padding"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-        />
+        <ImageView
+            android:id="@+id/commenter_photo"
+            android:layout_width="@dimen/user_pic_size_comment"
+            android:layout_height="@dimen/user_pic_size_comment"
+            android:layout_alignParentRight="true"
+            />
+
+        <com.mehdok.singlepostviewlib.views.PostTextView
+            android:id="@+id/comment_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="commenter"
+            android:layout_toLeftOf="@id/commenter_photo"
+            android:layout_marginRight="@dimen/standard_padding"
+            android:layout_centerVertical="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textStyle="bold"
+            />
+
+        <com.mehdok.singlepostviewlib.views.PostTextView
+            android:id="@+id/comment_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/mini_padding"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            />
+
+    </RelativeLayout>
+
 
     <com.mehdok.singlepostviewlib.views.PostTextView
         android:id="@+id/comment_body"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="date"
-        android:layout_below="@id/comment_author"
+        android:text="body"
+        android:layout_below="@id/commenter_detail"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:gravity="right"
         android:layout_margin="@dimen/standard_margin"
+        />
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/comment_body"
+        android:background="@color/selection_color"
+        android:layout_marginTop="@dimen/mini_padding"
+        android:layout_marginBottom="@dimen/mini_padding"
         />
 
 </RelativeLayout>

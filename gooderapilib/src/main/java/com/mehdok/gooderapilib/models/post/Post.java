@@ -125,4 +125,16 @@ public class Post {
     public Extra getExtra() {
         return extra;
     }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public void setSharesCount(String sharesCount) {
+        this.sharesCount = sharesCount;
+    }
+
+    public void setLikeCounts(String likeCounts) {
+        this.likeCounts = likeCounts;
+    }
 }

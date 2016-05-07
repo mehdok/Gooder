@@ -16,7 +16,7 @@ import com.mehdok.gooder.R;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NotificationsFragment extends Fragment {
+public class NotificationsFragment extends BaseFragment {
     private static NotificationsFragment mInstance;
 
     public static NotificationsFragment getInstance() {
@@ -37,4 +37,10 @@ public class NotificationsFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notifications, container, false);
     }
+
+    @Override
+    public void clearViews() {
+
+    }
+
 }

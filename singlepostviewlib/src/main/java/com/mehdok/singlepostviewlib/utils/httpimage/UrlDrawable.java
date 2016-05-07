@@ -2,13 +2,14 @@
  * Copyright (c) 2016. Mehdi Sohrabi
  */
 
-package com.mehdok.gooder.utils.httpimage;
+package com.mehdok.singlepostviewlib.utils.httpimage;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 
@@ -27,6 +28,8 @@ public class UrlDrawable extends Drawable
     @Override
     public void setAlpha(int alpha)
     {
+        Log.e("URLImageParser", "setAlpha");
+
         if (drawable != null)
         {
             drawable.setAlpha(alpha);
@@ -36,6 +39,8 @@ public class UrlDrawable extends Drawable
     @Override
     public void setColorFilter(ColorFilter cf)
     {
+        Log.e("URLImageParser", "setColorFilter");
+
         if (drawable != null)
         {
             drawable.setColorFilter(cf);
@@ -45,6 +50,8 @@ public class UrlDrawable extends Drawable
     @Override
     public int getOpacity()
     {
+        Log.e("URLImageParser", "getOpacity");
+
         if (drawable != null)
         {
             return drawable.getOpacity();
@@ -56,6 +63,8 @@ public class UrlDrawable extends Drawable
     public void draw(Canvas canvas)
     {
         // override the draw to facilitate refresh function later
+        Log.e("URLImageParser", "onResourceReady");
+
         if (drawable != null)
         {
             Paint p = new Paint();

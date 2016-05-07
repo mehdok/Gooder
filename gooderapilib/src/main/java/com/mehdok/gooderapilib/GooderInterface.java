@@ -256,7 +256,7 @@ public interface GooderInterface {
                                                    @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
-    @POST("?method=my-post-reads-count")
+    @POST("?method=comments")
     Observable<CommentResponse> getPostComments(@Query("pid") String pid,
                                                 @FieldMap Map<String, String> query);
 

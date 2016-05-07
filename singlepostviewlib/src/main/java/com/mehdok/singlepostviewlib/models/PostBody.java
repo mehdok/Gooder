@@ -4,25 +4,31 @@
 
 package com.mehdok.singlepostviewlib.models;
 
-import android.text.SpannableString;
+import com.mehdok.singlepostviewlib.utils.PrettySpann;
 
 /**
  * Created by mehdok on 5/4/2016.
  */
 public class PostBody {
-    private SpannableString body;
-    private SpannableString note;
+    private String body;
+    private String note;
+    private PrettySpann.TagClickListener tagClickListener;
 
-    public PostBody(SpannableString body, SpannableString note) {
+    public PostBody(String body, String note, PrettySpann.TagClickListener tagClickListener) {
         this.body = body;
         this.note = note;
+        this.tagClickListener = tagClickListener;
     }
 
-    public SpannableString getBody() {
+    public String getBody() {
         return body;
     }
 
-    public SpannableString getNote() {
+    public String getNote() {
         return note;
+    }
+
+    public PrettySpann.TagClickListener getTagClickListener() {
+        return tagClickListener;
     }
 }

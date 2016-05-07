@@ -18,4 +18,8 @@ public class CommentResponse extends BaseResponse {
     @SerializedName("msg_data")
     @Expose
     private List<CommentContent> commentList = new ArrayList<CommentContent>();
+
+    public List<CommentContent> getCommentList() {
+        return commentList;
+    }
 }
