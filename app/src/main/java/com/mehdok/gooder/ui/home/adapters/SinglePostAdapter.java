@@ -121,6 +121,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             likeButton.setOnClickListener(this);
             starButton.setOnClickListener(this);
             shareButton.setOnClickListener(this);
+            postBody.setOnClickListener(this);
         }
 
         @Override
@@ -146,7 +147,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                 intent.putExtra(SinglePostActivity.PARCELABLE_POST_EXTRA,
                         new ParcelablePost(mPosts.get(pos)));
                 view.getContext().startActivity(intent);
-                Logger.t("ItemViewHolder").d("pos :" + getAdapterPosition());
             }
         }
     }
