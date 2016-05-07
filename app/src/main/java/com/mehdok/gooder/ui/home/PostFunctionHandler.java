@@ -17,6 +17,7 @@ import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
+import com.mehdok.gooderapilib.models.comment.Comment;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.Like;
 import com.mehdok.gooderapilib.models.user.UserInfo;
@@ -169,6 +170,34 @@ public class PostFunctionHandler {
                     public void onNext(AddPost addPost) {
                         if (listener != null) {
                             listener.onReShare(position, addPost);
+                        }
+                    }
+                });
+    }
+
+    public void addComment(String pid, final String commentBody) {
+        queryBuilder.setPid(pid);
+        queryBuilder.setCommentBody(commentBody);
+        requestBuilder.addComment(pid, queryBuilder)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Comment>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (listener != null) {
+                            listener.onAddCommentError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Comment comment) {
+                        if (listener != null) {
+                            listener.onAddComment(commentBody);
                         }
                     }
                 });

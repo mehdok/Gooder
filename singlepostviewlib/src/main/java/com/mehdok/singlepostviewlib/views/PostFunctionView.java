@@ -57,6 +57,9 @@ public class PostFunctionView extends RelativeLayout implements View.OnClickList
         btnLike = (ImageButton) findViewById(R.id.like_button);
         btnShare = (ImageButton) findViewById(R.id.share_button);
         btnStar = (ImageButton) findViewById(R.id.star_button);
+        btnLike.setOnClickListener(this);
+        btnShare.setOnClickListener(this);
+        btnStar.setOnClickListener(this);
         tvLikeCount = (TextView) findViewById(R.id.like_count);
         tvCommentCount = (TextView) findViewById(R.id.comment_count);
         tvShareCount = (TextView) findViewById(R.id.share_count);
@@ -89,5 +92,25 @@ public class PostFunctionView extends RelativeLayout implements View.OnClickList
                 listener.starClicked();
             }
         }
+    }
+
+    public void changeLikeIcon(int resourceId) {
+        btnLike.setImageResource(resourceId);
+    }
+
+    public void changeStarIcon(int resourceId) {
+        btnStar.setImageResource(resourceId);
+    }
+
+    public void changeLikeCount(int count) {
+        tvLikeCount.setText(getCount(count));
+    }
+
+    public void changeShareCount(int count) {
+        tvShareCount.setText(getCount(count));
+    }
+
+    public void changeCommentCount(int count) {
+        tvCommentCount.setText(getCount(count));
     }
 }

@@ -6,6 +6,7 @@ package com.mehdok.singlepostviewlib.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -33,6 +34,11 @@ public class TimeUtil {
     public String getReadableDate(String date) {
         long time = Long.parseLong(date);
         calendar.setTimeInMillis(time * 1000);
+        return dateFormat.format(calendar.getTime());
+    }
+
+    public String getNow() {
+        calendar.setTime(new Date());
         return dateFormat.format(calendar.getTime());
     }
 }

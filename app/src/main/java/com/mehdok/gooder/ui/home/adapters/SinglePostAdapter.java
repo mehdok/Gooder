@@ -35,7 +35,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         implements PostFunctionListener, PrettySpann.TagClickListener {
     private ArrayList<Post> mPosts;
     private int BODY_COUNT = 200;
-    PostFunctionHandler functionHandler;
+    private PostFunctionHandler functionHandler;
 
     public SinglePostAdapter(Context ctx, ArrayList<Post> posts) {
         mPosts = posts;
@@ -219,6 +219,16 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     public void onReShareError(int position, Throwable e) {
         e.printStackTrace();
         MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
+    }
+
+    @Override
+    public void onAddComment(String commentBody) {
+        // not used
+    }
+
+    @Override
+    public void onAddCommentError(Throwable e) {
+        // not used
     }
 
     @Override

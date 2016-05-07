@@ -14,12 +14,15 @@ import android.view.View;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
+import com.mehdok.gooder.ui.home.PostFunctionHandler;
+import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.comment.CommentContent;
 import com.mehdok.gooderapilib.models.comment.CommentResponse;
+import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
@@ -42,12 +45,14 @@ import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
-        SendCommentClickListener, PrettySpann.TagClickListener {
+        SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener {
 
     public static final String PARCELABLE_POST_EXTRA = "parcelable_post_extra";
 
     private SinglePostView singlePostView;
     private CoordinatorLayout mRootLayout;
+    private PostFunctionHandler functionHandler;
+    private ParcelablePost post;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,12 +63,16 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         mRootLayout = (CoordinatorLayout) findViewById(R.id.single_post_root_layout);
 
         setUpToolbar();
-        ParcelablePost post = getExtra();
+        post = getExtra();
         showPost(post);
+
+        functionHandler = new PostFunctionHandler(this);
+        functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
     }
 
     private void setUpToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.single_post_toolbar);
+        toolbar.setTitle("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -96,26 +105,37 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
         requestUserInfo(post.getAuthor().getUid(), userInfo.getUsername(), pass, requestBuilder);
         requestComment(post.getPid(), userInfo.getUsername(), pass, requestBuilder);
+
+        correctLikeIcon(post.isLiked());
+        correctStarIcon(post.isStared());
     }
 
     @Override
     public void likeClicked() {
-        //TODO
+        if (toggleLike()) {
+            functionHandler.likePost(0, post.getPid());
+        } else {
+            functionHandler.unLikePost(0, post.getPid());
+        }
     }
 
     @Override
     public void shareClicked() {
-        //TODO
+        functionHandler.showNoteDialog(this, 0, post.getPid());
     }
 
     @Override
     public void starClicked() {
-        //TODO
+        if (toggleStar()) {
+            functionHandler.starPost(0, post.getPid());
+        } else {
+            functionHandler.unStarPost(0, post.getPid());
+        }
     }
 
     @Override
     public void sendComment(String comment) {
-        //TODO
+        functionHandler.addComment(post.getPid(), comment);
     }
 
     private void requestUserInfo(String uid, String userName, String password,
@@ -223,8 +243,115 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                 }).show();
     }
 
+    public void showSimpleMessage(String str) {
+        Snackbar.make(mRootLayout, str, Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
     @Override
     public void onTagClick(CharSequence tag, PrettySpann.TagType tagType) {
         Logger.t("SinglePostActivity").d(tag.toString());
+    }
+
+    @Override
+    public void onLike(int position, boolean like) {
+        like(like);
+    }
+
+    @Override
+    public void onStar(int position, boolean star) {
+        star(star);
+    }
+
+    @Override
+    public void onLikeError(int position, Throwable e) {
+        toggleLike();
+        e.printStackTrace();
+        showBugSnackBar(e);
+    }
+
+    @Override
+    public void onStarError(int position, Throwable e) {
+        toggleStar();
+        e.printStackTrace();
+        showBugSnackBar(e);
+    }
+
+    @Override
+    public void onReShare(int position, AddPost result) {
+        showSimpleMessage(result.getMsgText());
+    }
+
+    @Override
+    public void onReShareError(int position, Throwable e) {
+        e.printStackTrace();
+        showBugSnackBar(e);
+    }
+
+    @Override
+    public void onAddComment(String commentBody) {
+        post.setCommentCount(Integer.valueOf(post.getCommentCount()) + 1 + "");
+        singlePostView.changeCommentCount(Integer.valueOf(post.getCommentCount()));
+        //TODO add comment to view
+        UserInfo userInfo = DatabaseHelper.getInstance(this).getUserInfo();
+        PostComment postComment =
+                new PostComment(userInfo.getFullname(), System.currentTimeMillis() + "",
+                        commentBody, userInfo.getAvatar());
+        singlePostView.addComment(postComment);
+    }
+
+    @Override
+    public void onAddCommentError(Throwable e) {
+        e.printStackTrace();
+        showBugSnackBar(e);
+    }
+
+    private void like(boolean like) {
+        post.setLiked(like);
+        changeLikeCount(like);
+    }
+
+    private void changeLikeCount(boolean increase) {
+        if (increase) {
+            post.setLikeCounts(Integer.valueOf(post.getLikeCounts()) + 1 + "");
+        } else {
+            post.setLikeCounts(Integer.valueOf(post.getLikeCounts()) - 1 + "");
+        }
+
+        singlePostView.changeLikeCount(Integer.valueOf(post.getLikeCounts()));
+    }
+
+    private boolean toggleLike() {
+        boolean like = !post.isLiked();
+        post.setLiked(like);
+        correctLikeIcon(like);
+        return like;
+    }
+
+    private void star(boolean star) {
+        post.setStared(star);
+    }
+
+    private boolean toggleStar() {
+        boolean star = !post.isStared();
+        post.setStared(star);
+        correctStarIcon(star);
+        return star;
+    }
+
+    private void correctStarIcon(boolean star) {
+        if (star) {
+            singlePostView.changeStarIcon(R.drawable.ic_star_grey600_24dp);
+        } else {
+            singlePostView.changeStarIcon(R.drawable.ic_star_outline_grey600_24dp);
+        }
+    }
+
+    private void correctLikeIcon(boolean like) {
+        if (like) {
+            singlePostView.changeLikeIcon(R.drawable.ic_favorite_grey600_24dp);
+        } else {
+            singlePostView.changeLikeIcon(R.drawable.ic_favorite_outline_grey600_24dp);
+        }
     }
 }

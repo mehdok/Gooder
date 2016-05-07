@@ -35,7 +35,7 @@ public class PostCommentsView extends LinearLayout {
         setOrientation(LinearLayout.VERTICAL);
     }
 
-    private void addComment(String author, String date, String body, String imgUrl) {
+    public void addComment(String author, String date, String body, String imgUrl) {
         PostCommentView commentView = new PostCommentView(getContext());
         commentView.setComment(author, date, body, imgUrl);
         addView(commentView);

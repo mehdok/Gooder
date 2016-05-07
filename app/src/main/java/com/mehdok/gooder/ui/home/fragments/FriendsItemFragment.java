@@ -19,7 +19,6 @@ import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
 import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
-import com.mehdok.gooder.ui.home.models.PrettyPost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.views.VerticalSpaceItemDecoration;
 import com.mehdok.gooderapilib.QueryBuilder;
@@ -30,21 +29,19 @@ import com.mehdok.gooderapilib.models.user.UserInfo;
 
 import java.util.ArrayList;
 
-import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsItemFragment extends Fragment implements InfiniteScrollListener {
+public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener {
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
     private ProgressBar mProgress;
     private SinglePostAdapter mAdapter;
-    private ArrayList<PrettyPost> mPosts;
+    private ArrayList<Post> mPosts;
 
     private boolean loadingFlag = false;
 
@@ -123,20 +120,10 @@ public class FriendsItemFragment extends Fragment implements InfiniteScrollListe
         requestBuilder.getAllFriendsItem(queryBuilder)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                // map returned list to pretty span
-                .flatMap(new Func1<Posts, Observable<ArrayList<PrettyPost>>>() {
-                    @Override
-                    public Observable<ArrayList<PrettyPost>> call(Posts posts) {
-                        ArrayList<PrettyPost> prettyPosts =
-                                new ArrayList<PrettyPost>(posts.getPosts().size());
-                        for (Post post : posts.getPosts())
-                            prettyPosts.add(new PrettyPost(post, null));
-                        return Observable.just(prettyPosts);
-                    }
-                })
-                .subscribe(new Observer<ArrayList<PrettyPost>>() {
+                .subscribe(new Observer<Posts>() {
                     @Override
                     public void onCompleted() {
+
                     }
 
                     @Override
@@ -146,10 +133,10 @@ public class FriendsItemFragment extends Fragment implements InfiniteScrollListe
                     }
 
                     @Override
-                    public void onNext(ArrayList<PrettyPost> posts) {
+                    public void onNext(Posts posts) {
                         showProgress(false);
                         if (posts != null) {
-                            mPosts.addAll(posts);
+                            mPosts.addAll(posts.getPosts());
                             mAdapter.notifyDataSetChanged();
                         }
                     }
@@ -171,5 +158,11 @@ public class FriendsItemFragment extends Fragment implements InfiniteScrollListe
         if (!loadingFlag) {
             getData();
         }
+    }
+
+    @Override
+    public void clearViews() {
+        mPosts.clear();
+        mAdapter = null;
     }
 }

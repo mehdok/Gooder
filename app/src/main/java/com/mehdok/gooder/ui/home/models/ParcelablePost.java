@@ -95,6 +95,25 @@ public class ParcelablePost implements Parcelable {
         return stared;
     }
 
+    public void setStared(boolean stared) {
+        this.stared = stared;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public void setCommentCount(String commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public void setSharesCount(String sharesCount) {
+        this.sharesCount = sharesCount;
+    }
+
+    public void setLikeCounts(String likeCounts) {
+        this.likeCounts = likeCounts;
+    }
 
     @Override
     public int describeContents() {

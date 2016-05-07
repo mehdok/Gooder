@@ -70,7 +70,33 @@ public class SinglePostView extends RelativeLayout {
         postCommentsView.addComments(postComment);
     }
 
+    public void addComment(PostComment postComment) {
+        postCommentsView.addComment(postComment.getAuthor(), postComment.getDate(),
+                postComment.getBody(),
+                postComment.getAuthorUrl());
+    }
+
     public void addUserPhoto(String authorPhoto) {
         postDetailView.loadAuthorPhoto(authorPhoto);
+    }
+
+    public void changeLikeIcon(int resourceId) {
+        postFunctionView.changeLikeIcon(resourceId);
+    }
+
+    public void changeStarIcon(int resourceId) {
+        postFunctionView.changeStarIcon(resourceId);
+    }
+
+    public void changeLikeCount(int count) {
+        postFunctionView.changeLikeCount(count);
+    }
+
+    public void changeShareCount(int count) {
+        postFunctionView.changeShareCount(count);
+    }
+
+    public void changeCommentCount(int count) {
+        postFunctionView.changeCommentCount(count);
     }
 }
