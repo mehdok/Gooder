@@ -38,6 +38,15 @@ public class PrettySpann {
     public static final String USER_TAG = "#!user/";
     public static final String POST_TAG = "#!post/";
 
+    /**
+     * This method clean the input, replace the specific forum tag, handle http link and tag and
+     * showing image, the result is cleaned Spannable that handle all of mentioned specific
+     *
+     * @param str           the input
+     * @param clickListener this is fo later you, NOW the tag handle manually
+     * @param imageGetter   Html image getter with glide handler to load images in TextView
+     * @return the cleaned text
+     */
     public static SpannableString getPrettyString(String str, TagClickListener clickListener,
                                                   Html.ImageGetter imageGetter)
     {
@@ -50,12 +59,24 @@ public class PrettySpann {
         return linkifyTags(spanned, clickListener);
     }
 
+    /**
+     * Replace the \r\n with html tag
+     *
+     * @param str the input
+     * @return
+     */
     public static String getCleanString(String str) {
         str = str.replace("\\r\\n", "<br\\>");
         str = str.replace("\\n", "<br\\>");
         return str;
     }
 
+    /**
+     * Replace [url=http://google.com][/url] with <a href="http://google.com"></a>
+     *
+     * @param str the input
+     * @return
+     */
     private static String replaceForumUrl(String str) {
         int openTagIndex;
         while ((openTagIndex = str.indexOf("[url=")) != -1) {
@@ -72,6 +93,13 @@ public class PrettySpann {
         return str;
     }
 
+    /**
+     * Replace [img]http://google.com/image.jpg[/img] With
+     * <img src="http://google.com/image.jpg" alt="image" align="middle">
+     *
+     * @param str the input
+     * @return
+     */
     private static String replaceForumImage(String str) {
         str = str.replace("[img]", "<img src=\"");
         str = str.replace("[/img]", "\" alt=\"image\" align=\"middle\">");
@@ -79,6 +107,13 @@ public class PrettySpann {
         return str;
     }
 
+    /**
+     * Use Html.fromHtml to linkify url and handle image loading process
+     *
+     * @param cs the input String
+     * @param imageGetter image getter instance
+     * @return
+     */
     private static Spanned linkifyHtml(String cs, Html.ImageGetter imageGetter/* add image handler and so on*/) {
         if (imageGetter != null)
             return Html.fromHtml(cs, imageGetter, null);
@@ -90,6 +125,14 @@ public class PrettySpann {
         return str.replace(tagScheme, "#");
     }
 
+    /**
+     * Because There is several tag (user, post, real tag) we need to handle all of them manually
+     * This method find all of 3 mentioned tag and set a click listener for it.
+     *
+     * @param cs the input CharSequence, this may be an Spannable
+     * @param clickListener clickListener to handle click
+     * @return
+     */
     private static SpannableString linkifyTags(CharSequence cs, TagClickListener clickListener) {
         SpannableString spannableString = new SpannableString(cs);
 

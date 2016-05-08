@@ -17,6 +17,7 @@ import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
+import com.mehdok.gooder.infinitescroll.interfaces.UiToggleListener;
 import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
@@ -36,7 +37,8 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener {
+public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener,
+        UiToggleListener {
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
     private ProgressBar mProgress;
@@ -69,7 +71,8 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(
                 getActivity().getResources().getDimensionPixelSize(R.dimen.standard_padding)));
-        mRecyclerView.setListener(this);
+        mRecyclerView.setInfiniteScrollListener(this);
+        mRecyclerView.setUiToggleListener(this);
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
@@ -164,5 +167,15 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
     public void clearViews() {
         mPosts.clear();
         mAdapter = null;
+    }
+
+    @Override
+    public void show() {
+        MainActivityDelegate.getInstance().getActivity().showUI();
+    }
+
+    @Override
+    public void hide() {
+        MainActivityDelegate.getInstance().getActivity().hideUI();
     }
 }

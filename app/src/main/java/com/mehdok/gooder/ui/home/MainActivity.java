@@ -73,10 +73,14 @@ public class MainActivity extends AppCompatActivity implements
     private ProgressDialog waitingDialog;
     // used for database storage
     private byte[] mPassword;
+    private boolean showFlag = true;
+    private boolean hideFlag = true;
+    private int bottomBarSize = 0;
 
     private CoordinatorLayout mRootLayout;
     private ImageView userImage;
     private VazirTextView tvUserName;
+    private FloatingActionButton addPostFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +102,8 @@ public class MainActivity extends AppCompatActivity implements
         setSupportActionBar(toolbar);
 
         // setup add new post
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        addPostFab = (FloatingActionButton) findViewById(R.id.add_new_post);
+        addPostFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addNewPost();
@@ -485,5 +489,47 @@ public class MainActivity extends AppCompatActivity implements
 
         trans.commit();
         startApp();
+    }
+
+    public void showUI() {
+        if (showFlag && addPostFab.getVisibility() != View.VISIBLE) {
+            showFlag = false;
+
+            //show fab
+            addPostFab.show(new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onShown(FloatingActionButton fab) {
+                    super.onShown(fab);
+                    showFlag = true;
+                }
+            });
+
+            //show bottom bar
+            //            mBottomBar.show();
+
+            //show actionbar
+            //            getSupportActionBar().show();
+        }
+    }
+
+    public void hideUI() {
+        if (hideFlag && addPostFab.getVisibility() == View.VISIBLE) {
+            hideFlag = false;
+
+            //hide fab
+            addPostFab.hide(new FloatingActionButton.OnVisibilityChangedListener() {
+                @Override
+                public void onHidden(FloatingActionButton fab) {
+                    super.onHidden(fab);
+                    hideFlag = true;
+                }
+            });
+
+            //hide bottom bar
+            //            mBottomBar.hide();
+
+            //hide actionbar
+            //            getSupportActionBar().hide();
+        }
     }
 }

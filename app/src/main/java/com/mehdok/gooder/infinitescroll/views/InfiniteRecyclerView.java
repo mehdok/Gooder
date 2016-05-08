@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
+import com.mehdok.gooder.infinitescroll.interfaces.UiToggleListener;
 
 /**
  * Created by mehdok on 5/3/2016.
@@ -18,7 +19,8 @@ import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
 public class InfiniteRecyclerView extends RecyclerView {
     private final float SCROLL_AMOUNT = 3 / 4f;
     private int pastVisiblesItems, visibleItemCount, totalItemCount;
-    private InfiniteScrollListener listener;
+    private InfiniteScrollListener infiniteScrollListener;
+    private UiToggleListener uiToggleListener;
 
     public InfiniteRecyclerView(Context context) {
         super(context);
@@ -36,26 +38,43 @@ public class InfiniteRecyclerView extends RecyclerView {
         init();
     }
 
-    public void setListener(InfiniteScrollListener listener) {
-        this.listener = listener;
+    public void setInfiniteScrollListener(InfiniteScrollListener infiniteScrollListener) {
+        this.infiniteScrollListener = infiniteScrollListener;
     }
 
-    public void removeListener() {
-        listener = null;
+    public void removeInfiniteScrollListener() {
+        infiniteScrollListener = null;
+    }
+
+    public void setUiToggleListener(
+            UiToggleListener uiToggleListener) {
+        this.uiToggleListener = uiToggleListener;
+    }
+
+    public void removeUiToggleListener() {
+        uiToggleListener = null;
     }
 
     private void init() {
         addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (uiToggleListener != null) {
+                    if (dy > 0) {
+                        uiToggleListener.hide();
+                    } else {
+                        uiToggleListener.show();
+                    }
+                }
+
                 visibleItemCount = getLayoutManager().getChildCount();
                 totalItemCount = getLayoutManager().getItemCount();
                 pastVisiblesItems =
                         ((LinearLayoutManager) getLayoutManager()).findFirstVisibleItemPosition();
-                if ((listener != null) &&
+                if ((infiniteScrollListener != null) &&
                         ((visibleItemCount + pastVisiblesItems) >=
                                 totalItemCount * SCROLL_AMOUNT)) {
-                    listener.loadMore();
+                    infiniteScrollListener.loadMore();
                 }
                 super.onScrolled(recyclerView, dx, dy);
             }

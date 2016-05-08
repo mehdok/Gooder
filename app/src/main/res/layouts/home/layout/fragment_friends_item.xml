@@ -9,9 +9,7 @@
         android:id="@+id/friends_item_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-
-    </com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView>
+        />
 
     <ProgressBar
         style="?android:attr/progressBarStyleHorizontal"
