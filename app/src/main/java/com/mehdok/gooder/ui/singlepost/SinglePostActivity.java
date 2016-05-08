@@ -4,13 +4,16 @@
 
 package com.mehdok.gooder.ui.singlepost;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -210,24 +213,6 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                         singlePostView.addComments(postComments);
                     }
                 });
-        //                .subscribeOn(Schedulers.newThread())
-        //                .observeOn(AndroidSchedulers.mainThread())
-        //                .subscribe(new Observer<CommentResponse>() {
-        //                    @Override
-        //                    public void onCompleted() {
-        //
-        //                    }
-        //
-        //                    @Override
-        //                    public void onError(Throwable e) {
-        //                        showBugSnackBar(e);
-        //                    }
-        //
-        //                    @Override
-        //                    public void onNext(CommentResponse commentResponse) {
-        //
-        //                    }
-        //                });
     }
 
     private void markPostAsRead(String pid, String userName, String password,
@@ -386,5 +371,15 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         } else {
             singlePostView.changeLikeIcon(R.drawable.ic_favorite_outline_grey600_24dp);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Intent intent = new Intent();
+        intent.setAction(Globals.POST_CONTENT_CHANGED);
+        intent.putExtra(Globals.CHANGED_POST, post);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }
