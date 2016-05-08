@@ -23,6 +23,7 @@ import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.comment.CommentContent;
 import com.mehdok.gooderapilib.models.comment.CommentResponse;
 import com.mehdok.gooderapilib.models.post.AddPost;
+import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
@@ -44,6 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
+//TODO mark post as unread
+//TODO copy post body
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
         SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener {
 
@@ -105,6 +108,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
         requestUserInfo(post.getAuthor().getUid(), userInfo.getUsername(), pass, requestBuilder);
         requestComment(post.getPid(), userInfo.getUsername(), pass, requestBuilder);
+        markPostAsRead(post.getPid(), userInfo.getUsername(), pass, requestBuilder);
 
         correctLikeIcon(post.isLiked());
         correctStarIcon(post.isStared());
@@ -145,7 +149,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         queryBuilder.setPassword(password);
         queryBuilder.setUid(uid);
         requestBuilder.getUserInfo(queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserInfo>() {
                     @Override
@@ -155,6 +159,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         showBugSnackBar(e);
                     }
 
@@ -171,7 +176,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         queryBuilder.setUserName(userName);
         queryBuilder.setPassword(password);
         requestBuilder.getPostComments(pid, queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap(new Func1<CommentResponse, Observable<ArrayList<PostComment>>>() {
                     @Override
@@ -196,6 +201,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                         showBugSnackBar(e);
                     }
 
@@ -222,6 +228,33 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         //
         //                    }
         //                });
+    }
+
+    private void markPostAsRead(String pid, String userName, String password,
+                                RequestBuilder requestBuilder) {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userName);
+        queryBuilder.setPassword(password);
+        requestBuilder.markPostAsRead(pid, queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PostReadResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showBugSnackBar(e);
+                    }
+
+                    @Override
+                    public void onNext(PostReadResponse postReadResponse) {
+
+                    }
+                });
     }
 
     public void showBugSnackBar(Throwable e) {
