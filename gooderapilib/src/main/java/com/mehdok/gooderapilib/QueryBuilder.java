@@ -533,6 +533,11 @@ public class QueryBuilder {
         return query;
     }
 
+    /**
+     * commentBody : this is required for sending comment
+     *
+     * @return
+     */
     public Map<String, String> getAddCommentParamsPost() {
         Map<String, String> query = new HashMap<>();
 
@@ -546,6 +551,12 @@ public class QueryBuilder {
         return query;
     }
 
+    /**
+     * pid : pid is required
+     * uid : is optional
+     *
+     * @return
+     */
     public Map<String, String> getDidLikePostParams() {
         Map<String, String> query = new HashMap<>();
 
@@ -560,6 +571,12 @@ public class QueryBuilder {
         return query;
     }
 
+    /**
+     * uid : is required
+     * pid : is optional
+     *
+     * @return
+     */
     public Map<String, String> getMarkUserAsReadParams() {
         Map<String, String> query = new HashMap<>();
 
