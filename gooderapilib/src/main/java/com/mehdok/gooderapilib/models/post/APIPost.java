@@ -10,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * Created by mehdok on 5/1/2016.
  */
-public class Post {
+public class APIPost {
     @SerializedName("pid")
     @Expose
     private String pid;
@@ -63,7 +63,7 @@ public class Post {
         return time;
     }
 
-    //    public Post(String pid, Author author, String time, String parentPid, String title, SpannableString postBody, String commentsCount, String sharesCount, String likesCount, Flags flags, Extra extra)
+    //    public APIPost(String pid, Author author, String time, String parentPid, String title, SpannableString postBody, String commentsCount, String sharesCount, String likesCount, Flags flags, Extra extra)
     //    {
     //        this.pid = pid;
     //        this.author = author;

@@ -20,7 +20,7 @@ import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.models.post.AddPost;
-import com.mehdok.gooderapilib.models.post.Post;
+import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.utils.TimeUtil;
 import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
@@ -34,11 +34,11 @@ import java.util.ArrayList;
  */
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ItemViewHolder>
         implements PostFunctionListener, PrettySpann.TagClickListener {
-    private ArrayList<Post> mPosts;
+    private ArrayList<APIPost> mPosts;
     private int BODY_COUNT = 200;
     private PostFunctionHandler functionHandler;
 
-    public SinglePostAdapter(Context ctx, ArrayList<Post> posts) {
+    public SinglePostAdapter(Context ctx, ArrayList<APIPost> posts) {
         mPosts = posts;
         functionHandler = new PostFunctionHandler(ctx);
         functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE

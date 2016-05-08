@@ -8,10 +8,14 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
@@ -58,12 +62,29 @@ public class AddCommentView extends RelativeLayout implements View.OnClickListen
 
         etComment = (PostEditText) findViewById(R.id.comment_field);
         etComment.addTextChangedListener(this);
+        etComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                if (i == EditorInfo.IME_ACTION_SEND ||
+                        keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    onClick(textView);
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
     public void onClick(View view) {
+        InputMethodManager imm = (InputMethodManager) view.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
         if (listener != null) {
             listener.sendComment(etComment.getText().toString());
+            etComment.clearFocus();
+            etComment.setText("");
         }
     }
 

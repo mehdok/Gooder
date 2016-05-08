@@ -201,7 +201,7 @@ public class JsonHandler
                         postParams);
                 //Logger.t("requestFriendsPost").e(response);
                 //TODO handle server Exceptions
-                ArrayList<Post> posts = parser.parsePostJson(response);
+                ArrayList<APIPost> posts = parser.parsePostJson(response);
 
                 // the list might be too large so bundle may produce error
 //                sendFriendsPostBack(posts);
@@ -234,7 +234,7 @@ public class JsonHandler
     //        friendsPostListener = null;
     //    }
 
-    //    private void sendFriendsPostBack(final ArrayList<Post> posts)
+    //    private void sendFriendsPostBack(final ArrayList<APIPost> posts)
     //    {
     //        if (friendsPostListener != null)
     //        {

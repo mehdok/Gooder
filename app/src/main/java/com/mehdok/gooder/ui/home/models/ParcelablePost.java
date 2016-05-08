@@ -7,7 +7,7 @@ package com.mehdok.gooder.ui.home.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.mehdok.gooderapilib.models.post.Post;
+import com.mehdok.gooderapilib.models.post.APIPost;
 
 /**
  * Created by mehdok on 5/5/2016.
@@ -27,7 +27,7 @@ public class ParcelablePost implements Parcelable {
     private boolean liked;
     private boolean stared;
 
-    public ParcelablePost(Post post) {
+    public ParcelablePost(APIPost post) {
         pid = post.getPid();
         author = new ParcelableAuthor(post.getAuthor());
         time = post.getTime();

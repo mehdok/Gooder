@@ -13,9 +13,9 @@ import com.google.gson.annotations.SerializedName;
 public class SinglePost extends com.mehdok.gooderapilib.models.BaseResponse {
     @SerializedName("msg_data")
     @Expose
-    private Post post;
+    private APIPost post;
 
-    public Post getPost() {
+    public APIPost getPost() {
         return post;
     }
 }

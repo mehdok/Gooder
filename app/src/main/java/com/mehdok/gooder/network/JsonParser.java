@@ -115,9 +115,9 @@ public class JsonParser
         return null;
     }
 */
-    /*public ArrayList<Post> parsePostJson(String json)
+    /*public ArrayList<APIPost> parsePostJson(String json)
     {
-        ArrayList<Post> result = new ArrayList<>();
+        ArrayList<APIPost> result = new ArrayList<>();
 
         String pid;
         Author author;
@@ -157,7 +157,7 @@ public class JsonParser
                     JSONObject extraObj = post.getJSONObject(EXTRA);
                     extra = parseExtra(extraObj);
 
-                    result.add(new Post(pid,
+                    result.add(new APIPost(pid,
                             author,
                             getReadableDate(time),
                             parentPid,

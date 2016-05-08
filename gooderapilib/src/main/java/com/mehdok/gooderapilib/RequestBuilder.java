@@ -23,7 +23,7 @@ import com.mehdok.gooderapilib.models.post.Like;
 import com.mehdok.gooderapilib.models.post.NewPostsCount;
 import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.post.PostReadsCount;
-import com.mehdok.gooderapilib.models.post.Posts;
+import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.gooderapilib.models.user.UserSearchInfo;
@@ -63,12 +63,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return n number of friends item
      */
-    public Observable<Posts> getAllFriendsItem(
+    public Observable<APIPosts> getAllFriendsItem(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getAllFriendsItem(queryBuilder.getUsersTimeLineParams(),
                                 queryBuilder.getPostParams());
@@ -440,11 +440,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> getUserPosts(final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+    public Observable<APIPosts> getUserPosts(
+            final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getUserPosts(queryBuilder.getUserPostsParams(),
                                 queryBuilder.getPostParams());
@@ -461,12 +462,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> getRecommendedPosts(
+    public Observable<APIPosts> getRecommendedPosts(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getRecommendedPosts(
                                 queryBuilder.getRecommendedPostsParams(),
@@ -484,12 +485,12 @@ public class RequestBuilder {
      * @return
      */
     //TODO this is not working du to site bug
-    public Observable<Posts> getRandomPosts(
+    public Observable<APIPosts> getRandomPosts(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getRandomPosts(queryBuilder.getRandomPostsParams(),
                                 queryBuilder.getPostParams());
@@ -506,12 +507,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> getCommentedPosts(
+    public Observable<APIPosts> getCommentedPosts(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getCommentedPosts(queryBuilder.getCommentedPostsParams(),
                                 queryBuilder.getPostParams());
@@ -525,12 +526,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> getStaredPosts(
+    public Observable<APIPosts> getStaredPosts(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getStaredPosts(queryBuilder.getStaredItemParams(),
                                 queryBuilder.getPostParams());
@@ -546,12 +547,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> getGeneralTimeLine(
+    public Observable<APIPosts> getGeneralTimeLine(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getGeneralTimeLine(
                                 queryBuilder.getGeneralTimeLineParams(),
@@ -568,12 +569,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> getFeedTimeLine(
+    public Observable<APIPosts> getFeedTimeLine(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getFeedTimeLine(queryBuilder.getGeneralTimeLineParams(),
                                 queryBuilder.getPostParams());
@@ -589,11 +590,12 @@ public class RequestBuilder {
      * @param queryBuilder
      * @return
      */
-    public Observable<Posts> searchPosts(final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+    public Observable<APIPosts> searchPosts(
+            final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.searchPosts(queryBuilder.getSearchPostsParams(),
                                 queryBuilder.getPostParams());
@@ -629,11 +631,12 @@ public class RequestBuilder {
      * @return
      */
     // TODO this is not working due to sit bug
-    public Observable<Posts> searchTags(final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+    public Observable<APIPosts> searchTags(
+            final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.searchTags(queryBuilder.getSearchTagsParams(),
                                 queryBuilder.getPostParams());
@@ -789,12 +792,12 @@ public class RequestBuilder {
                 });
     }
 
-    public Observable<Posts> getPostReshares(final String pid,
-                                             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+    public Observable<APIPosts> getPostReshares(final String pid,
+                                                final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
         return getAccessCode(queryBuilder)
-                .flatMap(new Func1<String, Observable<Posts>>() {
+                .flatMap(new Func1<String, Observable<APIPosts>>() {
                     @Override
-                    public Observable<Posts> call(String accessCode) {
+                    public Observable<APIPosts> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getPostReshares(pid, queryBuilder.getPostParams());
                     }

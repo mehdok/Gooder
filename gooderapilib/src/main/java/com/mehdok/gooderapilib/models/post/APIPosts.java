@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * Created by mehdok on 5/1/2016.
  */
-public class Posts extends com.mehdok.gooderapilib.models.BaseResponse {
+public class APIPosts extends com.mehdok.gooderapilib.models.BaseResponse {
     @SerializedName("msg_data")
     @Expose
-    private List<Post> posts;
+    private List<APIPost> posts;
 
-    public List<Post> getPosts() {
+    public List<APIPost> getPosts() {
         return posts;
     }
 }

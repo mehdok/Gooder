@@ -23,7 +23,7 @@ import com.mehdok.gooderapilib.models.post.Like;
 import com.mehdok.gooderapilib.models.post.NewPostsCount;
 import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.post.PostReadsCount;
-import com.mehdok.gooderapilib.models.post.Posts;
+import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.gooderapilib.models.user.UserSearchInfo;
@@ -53,8 +53,8 @@ public interface GooderInterface {
 
     @FormUrlEncoded
     @POST("?method=users-timeline")
-    Observable<Posts> getAllFriendsItem(@QueryMap Map<String, String> params,
-                                        @FieldMap Map<String, String> query);
+    Observable<APIPosts> getAllFriendsItem(@QueryMap Map<String, String> params,
+                                           @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
     @POST("?method=users-info")
@@ -168,43 +168,43 @@ public interface GooderInterface {
 
     @FormUrlEncoded
     @POST("?method=user-posts")
-    Observable<Posts> getUserPosts(@QueryMap Map<String, String> params,
-                                   @FieldMap Map<String, String> query);
-
-    @FormUrlEncoded
-    @POST("?method=recommended-posts")
-    Observable<Posts> getRecommendedPosts(@QueryMap Map<String, String> params,
-                                          @FieldMap Map<String, String> query);
-
-    @FormUrlEncoded
-    @POST("?method=random-posts")
-    Observable<Posts> getRandomPosts(@QueryMap Map<String, String> params,
-                                     @FieldMap Map<String, String> query);
-
-    @FormUrlEncoded
-    @POST("?method=commented-posts")
-    Observable<Posts> getCommentedPosts(@QueryMap Map<String, String> params,
-                                        @FieldMap Map<String, String> query);
-
-    @FormUrlEncoded
-    @POST("?method=starred-posts")
-    Observable<Posts> getStaredPosts(@QueryMap Map<String, String> params,
-                                     @FieldMap Map<String, String> query);
-
-    @FormUrlEncoded
-    @POST("?method=general-timeline")
-    Observable<Posts> getGeneralTimeLine(@QueryMap Map<String, String> params,
-                                         @FieldMap Map<String, String> query);
-
-    @FormUrlEncoded
-    @POST("?method=feeds-timeline")
-    Observable<Posts> getFeedTimeLine(@QueryMap Map<String, String> params,
+    Observable<APIPosts> getUserPosts(@QueryMap Map<String, String> params,
                                       @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
+    @POST("?method=recommended-posts")
+    Observable<APIPosts> getRecommendedPosts(@QueryMap Map<String, String> params,
+                                             @FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
+    @POST("?method=random-posts")
+    Observable<APIPosts> getRandomPosts(@QueryMap Map<String, String> params,
+                                        @FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
+    @POST("?method=commented-posts")
+    Observable<APIPosts> getCommentedPosts(@QueryMap Map<String, String> params,
+                                           @FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
+    @POST("?method=starred-posts")
+    Observable<APIPosts> getStaredPosts(@QueryMap Map<String, String> params,
+                                        @FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
+    @POST("?method=general-timeline")
+    Observable<APIPosts> getGeneralTimeLine(@QueryMap Map<String, String> params,
+                                            @FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
+    @POST("?method=feeds-timeline")
+    Observable<APIPosts> getFeedTimeLine(@QueryMap Map<String, String> params,
+                                         @FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
     @POST("?method=search-posts")
-    Observable<Posts> searchPosts(@QueryMap Map<String, String> params,
-                                  @FieldMap Map<String, String> query);
+    Observable<APIPosts> searchPosts(@QueryMap Map<String, String> params,
+                                     @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
     @POST("?method=search-users")
@@ -213,8 +213,8 @@ public interface GooderInterface {
 
     @FormUrlEncoded
     @POST("?method=search-tags")
-    Observable<Posts> searchTags(@QueryMap Map<String, String> params,
-                                 @FieldMap Map<String, String> query);
+    Observable<APIPosts> searchTags(@QueryMap Map<String, String> params,
+                                    @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
     @POST("?method=add-post")
@@ -277,8 +277,8 @@ public interface GooderInterface {
 
     @FormUrlEncoded
     @POST("?method=post-shares")
-    Observable<Posts> getPostReshares(@Query("pid") String pid,
-                                      @FieldMap Map<String, String> query);
+    Observable<APIPosts> getPostReshares(@Query("pid") String pid,
+                                         @FieldMap Map<String, String> query);
 
     @FormUrlEncoded
     @POST("?method=post-likers")
