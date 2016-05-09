@@ -145,6 +145,20 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
             e.printStackTrace();
         }
 
+        boolean error = false;
+
+        if (etTitle.getText().toString().isEmpty()) {
+            etTitle.setError(getActivity().getString(R.string.required_field));
+            error = true;
+        }
+
+        if (etBody.getText().toString().isEmpty()) {
+            etBody.setError(getActivity().getString(R.string.required_field));
+            error = true;
+        }
+
+        if (error) return;
+
         queryBuilder.setPostTitle(etTitle.getText().toString());
         queryBuilder.setPostBody(etBody.getText().toString());
 

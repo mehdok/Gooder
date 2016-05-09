@@ -42,5 +42,6 @@
     <string name="disable_draft">Don\'t publish this post (draft)</string>
     <string name="send">Send</string>
     <string name="add_post_title">Add New Post</string>
+    <string name="required_field">This field is required</string>
 
 </resources>
