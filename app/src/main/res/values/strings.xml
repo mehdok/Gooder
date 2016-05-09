@@ -35,6 +35,12 @@
     <string name="re_share">Reshare</string>
     <string name="reshare_note">Reshare Note</string>
     <string name="cancel">Cancel</string>
-
+    <string name="title">Title</string>
+    <string name="body">Body</string>
+    <string name="disable_comment">Disable Comment on this post</string>
+    <string name="disable_reshare">Disable Reshare Option for This Post</string>
+    <string name="disable_draft">Don\'t publish this post (draft)</string>
+    <string name="send">Send</string>
+    <string name="add_post_title">Add New Post</string>
 
 </resources>

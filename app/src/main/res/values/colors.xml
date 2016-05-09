@@ -10,5 +10,6 @@
     <color name="black">#454444</color>
     <color name="holo_text_color">#2895a4</color>
     <color name="selection_color">#ebebeb</color>
+    <color name="separator_color">#a6a6a6</color>
 
 </resources>

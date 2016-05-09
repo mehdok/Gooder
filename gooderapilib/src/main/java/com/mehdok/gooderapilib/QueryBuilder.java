@@ -97,9 +97,9 @@ public class QueryBuilder {
     private String typeFactor;
     private String onlyMyPosts;
     private String term;
-    private String disableComments;
-    private String disableReshares;
-    private String draft;
+    private Value disableComments;
+    private Value disableReshares;
+    private Value draft;
     private String postTitle;
     private String postBody;
     private String pid;
@@ -158,15 +158,15 @@ public class QueryBuilder {
         this.term = term;
     }
 
-    public void setDisableComments(String disableComments) {
+    public void setDisableComments(Value disableComments) {
         this.disableComments = disableComments;
     }
 
-    public void setDisableReshares(String disableReshares) {
+    public void setDisableReshares(Value disableReshares) {
         this.disableReshares = disableReshares;
     }
 
-    public void setDraft(String draft) {
+    public void setDraft(Value draft) {
         this.draft = draft;
     }
 
@@ -456,13 +456,13 @@ public class QueryBuilder {
     public Map<String, String> getAddPostParams() {
         Map<String, String> query = new HashMap<>();
         if (disableComments != null) {
-            query.put(KEY_DISABLE_COMMENTS, disableComments);
+            query.put(KEY_DISABLE_COMMENTS, disableComments.toString());
         }
         if (disableReshares != null) {
-            query.put(KEY_DISABLE_RESHARES, disableReshares);
+            query.put(KEY_DISABLE_RESHARES, disableReshares.toString());
         }
         if (draft != null) {
-            query.put(KEY_DRAFT, draft);
+            query.put(KEY_DRAFT, draft.toString());
         }
         return query;
     }
@@ -503,13 +503,13 @@ public class QueryBuilder {
 
         query.put(KEY_PID, pid);
         if (disableComments != null) {
-            query.put(KEY_DISABLE_COMMENTS, disableComments);
+            query.put(KEY_DISABLE_COMMENTS, disableComments.toString());
         }
         if (disableReshares != null) {
-            query.put(KEY_DISABLE_RESHARES, disableReshares);
+            query.put(KEY_DISABLE_RESHARES, disableReshares.toString());
         }
         if (draft != null) {
-            query.put(KEY_DRAFT, draft);
+            query.put(KEY_DRAFT, draft.toString());
         }
         return query;
     }

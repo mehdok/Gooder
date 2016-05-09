@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <com.mehdok.gooder.views.VazirTextView
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@drawable/top_round_background"
+        android:text="@string/add_post_title"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.mehdok.gooder.views.VazirEditText
+            android:id="@+id/add_post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/title"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <LinearLayout
+        android:id="@+id/add_post_edit_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="B"
+            android:textStyle="bold"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_italic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I"
+            android:textStyle="italic"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_underline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="U"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_s"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:background="@color/separator_color"
+            android:layout_gravity="center"
+            >
+
+        </LinearLayout>
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IMG"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_url"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="URL"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#User"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_post"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#Post"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="#Tag"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            />
+
+    </LinearLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.mehdok.gooder.views.VazirEditText
+            android:id="@+id/add_post_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/body"
+            android:lines="4"
+            />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/add_post_disable_comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/disable_comment"
+        />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/add_post_disable_reshare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/disable_reshare"
+        />
+
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/add_post_draft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/disable_draft"
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send"
+            />
+
+        <com.mehdok.gooder.views.VazirButton
+            android:id="@+id/add_post_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

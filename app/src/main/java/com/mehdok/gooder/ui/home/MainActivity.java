@@ -38,6 +38,7 @@ import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.preferences.PreferencesManager;
+import com.mehdok.gooder.ui.addpost.dialogs.AddPostDialog;
 import com.mehdok.gooder.ui.home.fragments.BaseFragment;
 import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
@@ -270,7 +271,8 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void addNewPost() {
-
+        AddPostDialog dialogFragment = new AddPostDialog();
+        dialogFragment.show(getSupportFragmentManager(), "add_post_dialog");
     }
 
     private void initFirstView() {
