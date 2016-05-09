@@ -22,6 +22,7 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/mini_padding"
         >
 
         <com.mehdok.gooder.views.VazirEditText
@@ -37,6 +38,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/mini_padding"
+        android:layout_marginRight="@dimen/mini_padding"
         >
 
         <com.mehdok.gooder.views.VazirButton
@@ -109,6 +112,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/mini_padding"
+        android:layout_marginRight="@dimen/mini_padding"
         >
 
         <com.mehdok.gooder.views.VazirButton
@@ -143,6 +149,8 @@
     <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="@dimen/mini_padding"
         >
 
         <com.mehdok.gooder.views.VazirEditText
@@ -159,6 +167,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/disable_comment"
+        android:layout_marginLeft="@dimen/mini_padding"
+        android:layout_marginRight="@dimen/mini_padding"
         />
 
     <android.support.v7.widget.AppCompatCheckBox
@@ -166,6 +176,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/disable_reshare"
+        android:layout_marginLeft="@dimen/mini_padding"
+        android:layout_marginRight="@dimen/mini_padding"
         />
 
     <android.support.v7.widget.AppCompatCheckBox
@@ -173,12 +185,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/disable_draft"
+        android:layout_marginLeft="@dimen/mini_padding"
+        android:layout_marginRight="@dimen/mini_padding"
         />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/mini_padding"
         >
 
         <com.mehdok.gooder.views.VazirButton
