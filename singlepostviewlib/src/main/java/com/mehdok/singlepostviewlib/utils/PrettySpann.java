@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -66,8 +67,10 @@ public class PrettySpann {
      * @return
      */
     public static String getCleanString(String str) {
-        str = str.replace("\\r\\n", "<br\\>");
-        str = str.replace("\\n", "<br\\>");
+        str = str.replaceAll("(?i)" + Pattern.quote("\\r\\n"), "<br\\>");
+        //        target.replaceAll("(?i)"+Pattern.quote("foo"), "");
+        str = str.replaceAll("(?i)" + Pattern.quote("\\n"), "<br\\>");
+
         return str;
     }
 
@@ -79,11 +82,11 @@ public class PrettySpann {
      */
     private static String replaceForumUrl(String str) {
         int openTagIndex;
-        while ((openTagIndex = str.indexOf("[url=")) != -1) {
+        while ((openTagIndex = str.toLowerCase(Locale.US).indexOf("[url=")) != -1) {
             str = str.subSequence(0, openTagIndex) +
                     "<a href=\"" +
                     str.substring(openTagIndex + 5, str.length());
-            int secondOpenTagIndex = str.indexOf("]", openTagIndex);
+            int secondOpenTagIndex = str.toLowerCase(Locale.US).indexOf("]", openTagIndex);
             str = str.subSequence(0, secondOpenTagIndex) +
                     "\">" +
                     str.substring(secondOpenTagIndex + 1, str.length());
@@ -101,8 +104,9 @@ public class PrettySpann {
      * @return
      */
     private static String replaceForumImage(String str) {
-        str = str.replace("[img]", "<img src=\"");
-        str = str.replace("[/img]", "\" alt=\"image\" align=\"middle\">");
+        str = str.replaceAll("(?i)" + Pattern.quote("[img]"), "<img src=\"");
+        str = str.replaceAll("(?i)" + Pattern.quote("[/img]"),
+                "\" alt=\"image\" align=\"middle\">");
 
         return str;
     }
@@ -136,7 +140,7 @@ public class PrettySpann {
     private static SpannableString linkifyTags(CharSequence cs, TagClickListener clickListener) {
         SpannableString spannableString = new SpannableString(cs);
 
-        Matcher matcher = Pattern.compile(HASH_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
+        Matcher matcher = Pattern.compile("(?i)" + HASH_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
         while (matcher.find()) {
             spannableString.setSpan(new ClickableString(clickListener,
                             cs.subSequence(matcher.start() + HASH_TAG.length(), matcher.end()),
@@ -146,7 +150,7 @@ public class PrettySpann {
                     SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        matcher = Pattern.compile(USER_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
+        matcher = Pattern.compile("(?i)" + USER_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
         while (matcher.find()) {
             spannableString.setSpan(new ClickableString(clickListener,
                             cs.subSequence(matcher.start() + USER_TAG.length(), matcher.end()),
@@ -156,7 +160,7 @@ public class PrettySpann {
                     SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
         }
 
-        matcher = Pattern.compile(POST_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
+        matcher = Pattern.compile("(?i)" + POST_TAG + "([ا-یA-Za-z0-9_-]+)").matcher(cs);
         while (matcher.find()) {
             spannableString.setSpan(new ClickableString(clickListener,
                             cs.subSequence(matcher.start() + POST_TAG.length(), matcher.end()),
