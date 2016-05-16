@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // exe request for user info
         requestBuilder.getUserInfo(queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<UserInfo>() {
                     @Override

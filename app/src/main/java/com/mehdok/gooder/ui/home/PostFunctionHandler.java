@@ -49,7 +49,7 @@ public class PostFunctionHandler {
 
     public void likePost(final int position, String pid) {
         requestBuilder.likePost(pid, queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AddPost>() {
                     @Override
@@ -74,7 +74,7 @@ public class PostFunctionHandler {
 
     public void unLikePost(final int position, String pid) {
         requestBuilder.unLikePost(pid, queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AddPost>() {
                     @Override
@@ -99,7 +99,7 @@ public class PostFunctionHandler {
 
     public void starPost(final int position, String pid) {
         requestBuilder.starPost(pid, queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Like>() {
                     @Override
@@ -124,7 +124,7 @@ public class PostFunctionHandler {
 
     public void unStarPost(final int position, String pid) {
         requestBuilder.unStarPost(pid, queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Like>() {
                     @Override
@@ -151,7 +151,7 @@ public class PostFunctionHandler {
         queryBuilder.setPid(pid);
         queryBuilder.setNoteBody(noteBody);
         requestBuilder.resharePost(queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AddPost>() {
                     @Override
@@ -179,7 +179,7 @@ public class PostFunctionHandler {
         queryBuilder.setPid(pid);
         queryBuilder.setCommentBody(commentBody);
         requestBuilder.addComment(pid, queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Comment>() {
                     @Override

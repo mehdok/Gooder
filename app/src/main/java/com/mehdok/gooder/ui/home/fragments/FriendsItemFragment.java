@@ -33,10 +33,15 @@ import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
+import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.mehdok.singlepostviewlib.utils.PrettySpann;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -86,8 +91,6 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
             mAdapter = new SinglePostAdapter(getActivity(), mPosts);
             mRecyclerView.setAdapter(mAdapter);
 
-            //TODO set recycler listener
-
             mProgress = (ProgressBar) v.findViewById(R.id.friends_item_progress);
 
             getData();
@@ -128,12 +131,11 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         //        queryBuilder.setReverseOrder(QueryBuilder.Value.NO);
         queryBuilder.setStart(mPosts.size());
         requestBuilder.getAllFriendsItem(queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<APIPosts>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -148,6 +150,9 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                         if (posts != null) {
                             mPosts.addAll(posts.getPosts());
                             mAdapter.notifyDataSetChanged();
+
+                            //TODO test
+                            checkForReshares(mPosts.size() - posts.getPosts().size());
                         }
                     }
                 });
@@ -214,4 +219,93 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
             }
         }
     };
+
+    private void checkForReshares(int from) {
+        for (int i = from; i < mPosts.size(); i++) {
+            if (!mPosts.get(i).getParentPid().equals("0")) {
+                getResharedPost(i, mPosts.get(i).getAuthor().getFullName(),
+                        mPosts.get(i).getPostBody(), mPosts.get(i).getParentPid());
+            }
+        }
+    }
+
+    private void checkForReshares(List<APIPost> posts) {
+        Observable.from(posts)
+                .subscribe(new Observer<APIPost>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(APIPost apiPost) {
+                        if (apiPost.getParentPid().equals("0")) {
+
+                        }
+                    }
+                });
+    }
+
+    private void getResharedPost(final int pos, final String userName, final String postBody,
+                                 String parentId) {
+        Logger.t("getResharedPost").d("parentId: " + parentId);
+        UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
+
+        RequestBuilder requestBuilder = new RequestBuilder();
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userInfo.getUsername());
+        try {
+            queryBuilder.setPassword(Crypto.getMD5BASE64(
+                    new String(Crypto.decrypt(userInfo.getPassword(), getActivity()))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        requestBuilder.getPost(parentId, queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SinglePost>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onNext(SinglePost singlePost) {
+                        if (!singlePost.getPost().getParentPid().equals("0")) {
+                            getResharedPost(pos, singlePost.getPost().getAuthor().getFullName(),
+                                    singlePost.getPost().getPostBody(),
+                                    singlePost.getPost().getParentPid());
+                        } else {
+                            APIPost apiPost = mPosts.get(pos);
+                            String editedPost = String.format("%s%s%s%s%s%s%s", postBody,
+                                    postBody.isEmpty() ? "" : "<br\\>",
+                                    PrettySpann.SHARE_PARAGRAPH_INDICATOR_START +
+                                            PrettySpann.SHARE_PARAGRAPH_START,
+                                    singlePost.getPost().getAuthor().getFullName(),
+                                    "</font>",
+                                    "<br\\>",
+                                    singlePost.getPost().getPostBody() +
+                                            "</p>" +
+                                            PrettySpann.SHARE_PARAGRAPH_INDICATOR_END);
+                            apiPost.setPostBody(editedPost);
+                            //                            apiPost.setPostBody("\\n" + postBody +
+                            //                                    "\\n" +
+                            //                                    singlePost.getPost().getAuthor().getFullName() +
+                            //                                    "\\n" +
+                            //                                    singlePost.getPost().getPostBody());
+
+                            mAdapter.notifyItemChanged(pos);
+                        }
+                    }
+                });
+    }
 }

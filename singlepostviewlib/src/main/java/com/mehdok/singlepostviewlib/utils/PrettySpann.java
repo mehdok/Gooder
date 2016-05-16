@@ -4,9 +4,13 @@
 
 package com.mehdok.singlepostviewlib.utils;
 
+import android.graphics.Color;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
 import android.view.View;
 
@@ -38,6 +42,11 @@ public class PrettySpann {
     public static final String HASH_TAG = "#!tag/";
     public static final String USER_TAG = "#!user/";
     public static final String POST_TAG = "#!post/";
+    public static final String SHARE_PARAGRAPH_START = "<p><font color=\"red\">";
+    public static final String SHARE_PARAGRAPH_END = "</p>";
+    public static final String SHARE_PARAGRAPH_INDICATOR_START = "__SHARE_INDICATOR_START__";
+    public static final String SHARE_PARAGRAPH_INDICATOR_END = "__SHARE_INDICATOR_END__";
+    public static final String BACKGROUND_COLOR = "#a6a6a6";
 
     /**
      * This method clean the input, replace the specific forum tag, handle http link and tag and
@@ -49,14 +58,14 @@ public class PrettySpann {
      * @return the cleaned text
      */
     public static SpannableString getPrettyString(String str, TagClickListener clickListener,
-                                                  Html.ImageGetter imageGetter)
-    {
+                                                  Html.ImageGetter imageGetter) {
         if (str == null) return new SpannableString("");
 
         str = getCleanString(str);
         str = replaceForumUrl(str);
         str = replaceForumImage(str);
         Spanned spanned = linkifyHtml(str, imageGetter);
+        spanned = setBackgroundForShare(spanned);
         return linkifyTags(spanned, clickListener);
     }
 
@@ -97,8 +106,8 @@ public class PrettySpann {
     }
 
     /**
-     * Replace [img]http://google.com/image.jpg[/img] With
-     * <img src="http://google.com/image.jpg" alt="image" align="middle">
+     * Replace [img]http://google.com/image.jpg[/img] With <img src="http://google.com/image.jpg"
+     * alt="image" align="middle">
      *
      * @param str the input
      * @return
@@ -114,15 +123,16 @@ public class PrettySpann {
     /**
      * Use Html.fromHtml to linkify url and handle image loading process
      *
-     * @param cs the input String
+     * @param cs          the input String
      * @param imageGetter image getter instance
      * @return
      */
     private static Spanned linkifyHtml(String cs, Html.ImageGetter imageGetter/* add image handler and so on*/) {
-        if (imageGetter != null)
+        if (imageGetter != null) {
             return Html.fromHtml(cs, imageGetter, null);
-        else
+        } else {
             return Html.fromHtml(cs);
+        }
     }
 
     private static String replaceForumTag(String str, String tagScheme) {
@@ -133,7 +143,7 @@ public class PrettySpann {
      * Because There is several tag (user, post, real tag) we need to handle all of them manually
      * This method find all of 3 mentioned tag and set a click listener for it.
      *
-     * @param cs the input CharSequence, this may be an Spannable
+     * @param cs            the input CharSequence, this may be an Spannable
      * @param clickListener clickListener to handle click
      * @return
      */
@@ -168,6 +178,39 @@ public class PrettySpann {
                     matcher.start(),
                     matcher.end(),
                     SpannableString.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        return spannableString;
+    }
+
+    /**
+     * the shared body starts with <p><font color="red"> so set a background color for whole share
+     * content
+     *
+     * @param cs
+     * @return
+     */
+    private static SpannableString setBackgroundForShare(CharSequence cs) {
+        SpannableString spannableString = new SpannableString(cs);
+        BackgroundColorSpan backgroundColorSpan =
+                new BackgroundColorSpan(Color.parseColor(BACKGROUND_COLOR));
+
+        Matcher startMatcher = Pattern.compile(SHARE_PARAGRAPH_INDICATOR_START).matcher(cs);
+        if (startMatcher.find()) {
+            Matcher endMatcher = Pattern.compile(SHARE_PARAGRAPH_INDICATOR_END).matcher(cs);
+            if (endMatcher.find()) {
+                spannableString =
+                        new SpannableString(TextUtils.concat(
+                                spannableString.subSequence(0, startMatcher.start()),
+                                spannableString.subSequence(startMatcher.end(), endMatcher.start()),
+                                spannableString.subSequence(endMatcher.end(),
+                                        spannableString.length())));
+
+                spannableString.setSpan(backgroundColorSpan,
+                        startMatcher.end() - SHARE_PARAGRAPH_INDICATOR_START.length(),
+                        endMatcher.start() - SHARE_PARAGRAPH_INDICATOR_END.length() - 2,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
         }
 
         return spannableString;

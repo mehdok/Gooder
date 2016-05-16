@@ -181,7 +181,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         }
 
         requestBuilder.addPost(queryBuilder)
-                .subscribeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<AddPost>() {
                     @Override

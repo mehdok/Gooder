@@ -54,6 +54,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
         holder.postAuthor.setText(mPosts.get(position).getAuthor().getFullName());
+
+        if (mPosts.get(position).getTitle().isEmpty()) {
+            holder.postTitle.setVisibility(View.GONE);
+        } else {
+            holder.postTitle.setVisibility(View.VISIBLE);
+        }
+
         holder.postTitle.setText(mPosts.get(position).getTitle());
         holder.postDate.setText(
                 TimeUtil.getInstance().getReadableDate(mPosts.get(position).getTime()));

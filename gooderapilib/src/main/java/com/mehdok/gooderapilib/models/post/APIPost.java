@@ -137,4 +137,8 @@ public class APIPost {
     public void setLikeCounts(String likeCounts) {
         this.likeCounts = likeCounts;
     }
+
+    public void setPostBody(String postBody) {
+        this.postBody = postBody;
+    }
 }
