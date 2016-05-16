@@ -288,15 +288,23 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                     @Override
                     public void onNext(SinglePost singlePost) {
                         if (!singlePost.getPost().getParentPid().equals("0")) {
-                            getResharedPost(pos, singlePost.getPost().getAuthor().getFullName(),
-                                    singlePost.getPost().getPostBody(),
+                            String body = postBody +
+                                    PrettySpann.SHARE_PARAGRAPH_START +
+                                    singlePost.getPost().getAuthor().getFullName() +
+                                    "</font>" +
+                                    "<br\\>" +
+                                    singlePost.getPost().getPostBody() +
+                                    "</p><br\\><br\\>";
+
+                            getResharedPost(pos, "",
+                                    body,
                                     singlePost.getPost().getParentPid(), finalCount + 1);
                         } else {
                             APIPost apiPost = mPosts.get(pos);
                             String editedPost = "";
                             if (finalCount > 1) {
                                 // more than 1 reshare
-
+                                editedPost += postBody;
                             }
 
                             editedPost += String.format("%s%s%s%s%s",

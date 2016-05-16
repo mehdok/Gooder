@@ -7,7 +7,6 @@ package com.mehdok.gooder.ui.home.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +81,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         //                            new GlideGetter(holder.postNote.getContext(), holder.postNote)));
         //        }
 
-        Log.e("onBindViewHolder", "position: " + position);
         holder.postBody.setPostBody(new PostBody(mPosts.get(position).getPostBody(),
                 mPosts.get(position).getExtra().getNote(),
                 this));
