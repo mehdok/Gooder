@@ -25,4 +25,8 @@ public class Extra {
     public String getUrl() {
         return url;
     }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

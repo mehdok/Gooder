@@ -65,7 +65,7 @@ public class PrettySpann {
         str = replaceForumUrl(str);
         str = replaceForumImage(str);
         Spanned spanned = linkifyHtml(str, imageGetter);
-        spanned = setBackgroundForShare(spanned);
+        //spanned = setBackgroundForShare(spanned);
         return linkifyTags(spanned, clickListener);
     }
 

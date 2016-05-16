@@ -7,6 +7,7 @@ package com.mehdok.gooder.ui.home.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,12 +20,12 @@ import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
-import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.APIPost;
+import com.mehdok.gooderapilib.models.post.AddPost;
+import com.mehdok.singlepostviewlib.models.PostBody;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.utils.TimeUtil;
-import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
-import com.mehdok.singlepostviewlib.views.PostTextView;
+import com.mehdok.singlepostviewlib.views.PostBodyView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -66,10 +67,26 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                 TimeUtil.getInstance().getReadableDate(mPosts.get(position).getTime()));
         //holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
         //        holder.postBody.setPrettyText(mPosts.get(position).getPostBody());
-        holder.postBody.setPrettyText(
-                PrettySpann.getPrettyString(mPosts.get(position).getPostBody(),
-                        this,
-                        new GlideGetter(holder.postBody.getContext(), holder.postBody)));
+
+        //        holder.postBody.setPrettyText(
+        //                PrettySpann.getPrettyString(mPosts.get(position).getPostBody(),
+        //                        this,
+        //                        new GlideGetter(holder.postBody.getContext(), holder.postBody)));
+        //        if (mPosts.get(position).getExtra().getNote() == null ||
+        //                mPosts.get(position).getExtra().getNote().isEmpty()) {
+        //            holder.postNote.setVisibility(View.GONE);
+        //        } else {
+        //            holder.postNote.setPrettyText(
+        //                    PrettySpann.getPrettyString(mPosts.get(position).getExtra().getNote(),
+        //                            this,
+        //                            new GlideGetter(holder.postNote.getContext(), holder.postNote)));
+        //        }
+
+        Log.e("onBindViewHolder", "position: " + position);
+        holder.postBody.setPostBody(new PostBody(mPosts.get(position).getPostBody(),
+                mPosts.get(position).getExtra().getNote(),
+                this));
+
         holder.likeCount.setText(getCount(mPosts.get(position).getLikeCounts()));
         holder.shareCount.setText(getCount(mPosts.get(position).getSharesCount()));
         holder.commentCount.setText(getCount(mPosts.get(position).getCommentCount()));
@@ -104,7 +121,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public TextView postAuthor;
         public TextView postTitle;
         public TextView postDate;
-        public PostTextView postBody;
+        public PostBodyView postBody;
         public TextView likeCount;
         public TextView shareCount;
         public TextView commentCount;
@@ -118,7 +135,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             postAuthor = (TextView) view.findViewById(R.id.post_author);
             postTitle = (TextView) view.findViewById(R.id.post_title);
             postDate = (TextView) view.findViewById(R.id.post_date);
-            postBody = (PostTextView) view.findViewById(R.id.post_body);
+            postBody = (PostBodyView) view.findViewById(R.id.post_body);
             likeCount = (TextView) view.findViewById(R.id.like_count);
             shareCount = (TextView) view.findViewById(R.id.share_count);
             commentCount = (TextView) view.findViewById(R.id.comment_count);
@@ -130,7 +147,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             likeButton.setOnClickListener(this);
             starButton.setOnClickListener(this);
             shareButton.setOnClickListener(this);
-            postBody.setOnClickListener(this);
+            postBody.setClickListener(this);
         }
 
         @Override

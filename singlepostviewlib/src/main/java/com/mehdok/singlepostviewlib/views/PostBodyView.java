@@ -5,10 +5,7 @@
 package com.mehdok.singlepostviewlib.views;
 
 import android.content.Context;
-import android.os.Build;
-import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,31 +53,39 @@ public class PostBodyView extends LinearLayout {
     }
 
     public void setPostBody(PostBody postBody) {
+        tvNote.setVisibility(View.GONE);
+        tvBody.setVisibility(View.VISIBLE);
         if (postBody.getNote() == null) {
             SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
-                    postBody.getTagClickListener(), new GlideGetter(tvNote.getContext(), tvNote));
-            tvNote.setPrettyText(body);
-            tvBody.setVisibility(View.GONE);
+                    postBody.getTagClickListener(), new GlideGetter(tvBody.getContext(), tvBody));
+            tvBody.setPrettyText(body);
         } else {
+            tvNote.setVisibility(View.VISIBLE);
+            tvBody.setVisibility(View.VISIBLE);
             SpannableString note = PrettySpann.getPrettyString(postBody.getNote(),
                     postBody.getTagClickListener(), new GlideGetter(tvNote.getContext(), tvNote));
             tvNote.setPrettyText(note);
 
-            BackgroundColorSpan backgroundColorSpan;
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                backgroundColorSpan = new BackgroundColorSpan(getResources()
-                        .getColor(R.color.shared_background_color, null));
-            } else {
-                backgroundColorSpan = new BackgroundColorSpan(getResources()
-                        .getColor(R.color.shared_background_color));
-            }
+            //            BackgroundColorSpan backgroundColorSpan;
+            //            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //                backgroundColorSpan = new BackgroundColorSpan(getResources()
+            //                        .getColor(R.color.shared_background_color, null));
+            //            } else {
+            //                backgroundColorSpan = new BackgroundColorSpan(getResources()
+            //                        .getColor(R.color.shared_background_color));
+            //            }
 
             SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
                     postBody.getTagClickListener(), new GlideGetter(tvBody.getContext(), tvBody));
-            body.setSpan(backgroundColorSpan, 0, postBody.getBody().length(),
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //            body.setSpan(backgroundColorSpan, 0, postBody.getBody().length(),
+            //                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             tvBody.setPrettyText(body);
         }
+    }
+
+    public void setClickListener(OnClickListener clickListener) {
+        tvBody.setOnClickListener(clickListener);
+        tvNote.setOnClickListener(clickListener);
     }
 }

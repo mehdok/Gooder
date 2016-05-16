@@ -36,7 +36,6 @@ import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -224,7 +223,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         for (int i = from; i < mPosts.size(); i++) {
             if (!mPosts.get(i).getParentPid().equals("0")) {
                 getResharedPost(i, mPosts.get(i).getAuthor().getFullName(),
-                        mPosts.get(i).getPostBody(), mPosts.get(i).getParentPid());
+                        mPosts.get(i).getPostBody(), mPosts.get(i).getParentPid(), 0);
             }
         }
     }
@@ -251,9 +250,16 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                 });
     }
 
+    /**
+     * @param pos
+     * @param userName
+     * @param postBody
+     * @param parentId
+     * @param count    if count > 1 then include body an name of second resharer
+     */
     private void getResharedPost(final int pos, final String userName, final String postBody,
-                                 String parentId) {
-        Logger.t("getResharedPost").d("parentId: " + parentId);
+                                 String parentId, int count) {
+        ++count;
         UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
 
         RequestBuilder requestBuilder = new RequestBuilder();
@@ -266,6 +272,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
             e.printStackTrace();
         }
 
+        final int finalCount = count;
         requestBuilder.getPost(parentId, queryBuilder)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -283,20 +290,23 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                         if (!singlePost.getPost().getParentPid().equals("0")) {
                             getResharedPost(pos, singlePost.getPost().getAuthor().getFullName(),
                                     singlePost.getPost().getPostBody(),
-                                    singlePost.getPost().getParentPid());
+                                    singlePost.getPost().getParentPid(), finalCount + 1);
                         } else {
                             APIPost apiPost = mPosts.get(pos);
-                            String editedPost = String.format("%s%s%s%s%s%s%s", postBody,
-                                    postBody.isEmpty() ? "" : "<br\\>",
-                                    PrettySpann.SHARE_PARAGRAPH_INDICATOR_START +
-                                            PrettySpann.SHARE_PARAGRAPH_START,
+                            String editedPost = "";
+                            if (finalCount > 1) {
+                                // more than 1 reshare
+
+                            }
+
+                            editedPost += String.format("%s%s%s%s%s",
+                                    PrettySpann.SHARE_PARAGRAPH_START,
                                     singlePost.getPost().getAuthor().getFullName(),
                                     "</font>",
                                     "<br\\>",
                                     singlePost.getPost().getPostBody() +
-                                            "</p>" +
-                                            PrettySpann.SHARE_PARAGRAPH_INDICATOR_END);
-                            apiPost.setPostBody(editedPost);
+                                            "</p>");
+                            apiPost.getExtra().setNote(editedPost);
                             //                            apiPost.setPostBody("\\n" + postBody +
                             //                                    "\\n" +
                             //                                    singlePost.getPost().getAuthor().getFullName() +

@@ -66,7 +66,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             />
 
-        <com.mehdok.singlepostviewlib.views.PostTextView
+        <com.mehdok.singlepostviewlib.views.PostBodyView
             android:id="@+id/post_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
