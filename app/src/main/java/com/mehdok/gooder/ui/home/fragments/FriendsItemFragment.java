@@ -302,10 +302,10 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                         } else {
                             APIPost apiPost = mPosts.get(pos);
                             String editedPost = "";
-                            if (finalCount > 1) {
-                                // more than 1 reshare
-                                editedPost += postBody;
-                            }
+                            //                            if (finalCount > 1) {
+                            //                                // more than 1 reshare
+                            //                                editedPost += postBody;
+                            //                            }
 
                             editedPost += String.format("%s%s%s%s%s",
                                     PrettySpann.SHARE_PARAGRAPH_START,
