@@ -412,7 +412,7 @@ public class MainActivity extends AppCompatActivity implements
                 .load(userInfo.getAvatar())
                 .asBitmap()
                 .centerCrop()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.mipmap.logo)
                 .into(new BitmapImageViewTarget(userImage) {
                     @Override
                     protected void setResource(Bitmap resource) {

@@ -255,7 +255,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
      * @param userName
      * @param postBody
      * @param parentId
-     * @param count    if count > 1 then include body an name of second resharer
+     * @param count
      */
     private void getResharedPost(final int pos, final String userName, final String postBody,
                                  String parentId, int count) {
