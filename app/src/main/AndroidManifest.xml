@@ -59,6 +59,17 @@
                 android:value="com.mehdok.gooder.ui.home.MainActivity"
                 />
         </activity>
+        <activity
+            android:name=".ui.profile.ProfileActivity"
+            android:label="title_activity_profile"
+            android:parentActivityName=".ui.home.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mehdok.gooder.ui.home.MainActivity"
+                />
+        </activity>
     </application>
 
 </manifest>
