@@ -81,8 +81,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         //                            new GlideGetter(holder.postNote.getContext(), holder.postNote)));
         //        }
 
-        holder.postBody.setPostBody(new PostBody(mPosts.get(position).getPostBody(),
-                mPosts.get(position).getExtra().getNote(),
+        holder.postBody.setPostBody(new PostBody(getLimitedText(mPosts.get(position).getPostBody()),
+                getLimitedText(mPosts.get(position).getExtra().getNote()),
                 this));
 
         holder.likeCount.setText(getCount(mPosts.get(position).getLikeCounts()));
@@ -258,6 +258,16 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     @Override
     public void onTagClick(CharSequence tag, PrettySpann.TagType tagType) {
         Logger.t("SinglePostAdapter").d(tag.toString());
+    }
+
+    private String getLimitedText(String str) {
+        if (str == null) return null;
+
+        if (str.length() <= BODY_COUNT) {
+            return str;
+        } else {
+            return str.substring(0, BODY_COUNT) + "<br/>&#x25BC;";
+        }
     }
 
 }
