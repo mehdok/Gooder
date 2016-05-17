@@ -35,22 +35,19 @@ public class TimeUtil {
 
     public String getReadableDate(String date) {
         long time = Long.parseLong(date);
-        Calendar smsTime = Calendar.getInstance();
-        smsTime.setTimeInMillis(time * 1000);
         calendar.setTimeInMillis(time * 1000);
 
         Calendar now = Calendar.getInstance();
         final String timeFormatString = "h:mm aa";
         final String dateTimeFormatString = "EEEE, MMMM d, h:mm aa";
-        final long HOURS = 60 * 60 * 60;
-        if (now.get(Calendar.DATE) == smsTime.get(Calendar.DATE)) {
-            return "Today " + DateFormat.format(timeFormatString, smsTime);
-        } else if (now.get(Calendar.DATE) - smsTime.get(Calendar.DATE) == 1) {
-            return "Yesterday " + DateFormat.format(timeFormatString, smsTime);
-        } else if (now.get(Calendar.YEAR) == smsTime.get(Calendar.YEAR)) {
-            return DateFormat.format(dateTimeFormatString, smsTime).toString();
+        if (now.get(Calendar.DATE) == calendar.get(Calendar.DATE)) {
+            return "Today " + DateFormat.format(timeFormatString, calendar);
+        } else if (now.get(Calendar.DATE) - calendar.get(Calendar.DATE) == 1) {
+            return "Yesterday " + DateFormat.format(timeFormatString, calendar);
+        } else if (now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR)) {
+            return DateFormat.format(dateTimeFormatString, calendar).toString();
         } else {
-            return DateFormat.format("MMMM dd yyyy, h:mm aa", smsTime).toString();
+            return DateFormat.format("MMMM dd yyyy, h:mm aa", calendar).toString();
         }
 
 

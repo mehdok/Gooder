@@ -310,7 +310,6 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     public void onAddComment(String commentBody) {
         post.setCommentCount(Integer.valueOf(post.getCommentCount()) + 1 + "");
         singlePostView.changeCommentCount(Integer.valueOf(post.getCommentCount()));
-        //TODO add comment to view
         UserInfo userInfo = DatabaseHelper.getInstance(this).getUserInfo();
         PostComment postComment =
                 new PostComment(userInfo.getFullname(), System.currentTimeMillis() + "",
