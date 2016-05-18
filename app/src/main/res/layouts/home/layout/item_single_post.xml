@@ -24,7 +24,7 @@
         android:background="@color/white"
         >
 
-        <com.mehdok.gooder.views.VazirTextView
+        <!--<com.mehdok.gooder.views.VazirTextView
             android:id="@+id/post_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,20 +42,6 @@
             />
 
         <com.mehdok.gooder.views.VazirTextView
-            android:id="@+id/post_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/post_author"
-            android:text="Title"
-            android:gravity="right"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:lines="1"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginTop="@dimen/text_margin"
-            />
-
-        <com.mehdok.gooder.views.VazirTextView
             android:id="@+id/post_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,6 +50,26 @@
             android:layout_alignBaseline="@id/post_author"
             android:text="2016/04/13"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            />-->
+
+        <com.mehdok.singlepostviewlib.views.PostDetailView
+            android:id="@+id/post_detail_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <com.mehdok.gooder.views.VazirTextView
+            android:id="@+id/post_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/post_detail_view"
+            android:text="Title"
+            android:gravity="right"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:lines="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginTop="@dimen/text_margin"
             />
 
         <com.mehdok.singlepostviewlib.views.PostBodyView

@@ -10,8 +10,9 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -22,10 +23,11 @@ import com.mehdok.singlepostviewlib.utils.TimeUtil;
 /**
  * Created by mehdok on 5/4/2016.
  */
-public class PostDetailView extends RelativeLayout {
+public class PostDetailView extends LinearLayout implements View.OnClickListener {
     private PostTextView tvAuthor;
     private PostTextView tvDate;
     private ImageView imvAuthor;
+    private PostDetail mPostDetail;
 
     public PostDetailView(Context context) {
         super(context);
@@ -46,6 +48,8 @@ public class PostDetailView extends RelativeLayout {
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.post_detail, this);
+
+        setOnClickListener(this);
     }
 
     @Override
@@ -58,11 +62,14 @@ public class PostDetailView extends RelativeLayout {
     }
 
     public void setPostDetail(PostDetail postDetail) {
+        mPostDetail = postDetail;
         tvAuthor.setText(postDetail.getAuthor());
         tvDate.setText(TimeUtil.getInstance().getReadableDate(postDetail.getDate()));
     }
 
     public void loadAuthorPhoto(String url) {
+        imvAuthor.setVisibility(VISIBLE);
+
         Glide
                 .with(getContext())
                 .load(url)
@@ -77,5 +84,16 @@ public class PostDetailView extends RelativeLayout {
                         imvAuthor.setImageDrawable(circularBitmapDrawable);
                     }
                 });
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (mPostDetail.getProfileClickListener() != null) {
+            mPostDetail.getProfileClickListener().showUserProfile(mPostDetail.getUid());
+        }
+    }
+
+    public void hideUserPhoto() {
+        imvAuthor.setVisibility(GONE);
     }
 }

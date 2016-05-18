@@ -91,7 +91,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
-            mAdapter = new SinglePostAdapter(this, mPosts);
+            mAdapter = new SinglePostAdapter(this, mPosts, null);
             mRecyclerView.setAdapter(mAdapter);
 
             showProfile();

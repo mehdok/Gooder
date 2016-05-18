@@ -20,6 +20,7 @@ import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.ui.home.PostFunctionHandler;
 import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
+import com.mehdok.gooder.ui.profile.ProfileActivity;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
@@ -30,6 +31,7 @@ import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
+import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.Post;
 import com.mehdok.singlepostviewlib.models.PostBody;
 import com.mehdok.singlepostviewlib.models.PostComment;
@@ -51,7 +53,8 @@ import rx.schedulers.Schedulers;
 //TODO mark post as unread
 //TODO copy post body
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
-        SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener {
+        SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener,
+        UserProfileClickListener {
 
     public static final String PARCELABLE_POST_EXTRA = "parcelable_post_extra";
 
@@ -88,7 +91,9 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     }
 
     private void showPost(ParcelablePost post) {
-        PostDetail postDetail = new PostDetail(post.getAuthor().getFullName(), post.getTime());
+        PostDetail postDetail =
+                new PostDetail(post.getAuthor().getUid(), post.getAuthor().getFullName(),
+                        post.getTime(), this);
         PostBody postBody = new PostBody(post.getPostBody(), post.getExtra().getNote(), this);
         PostFunction postFunction = new PostFunction(Integer.valueOf(post.getLikeCounts()),
                 Integer.valueOf(post.getSharesCount()),
@@ -380,5 +385,12 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         intent.setAction(Globals.POST_CONTENT_CHANGED);
         intent.putExtra(Globals.CHANGED_POST, post);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    @Override
+    public void showUserProfile(String userID) {
+        Intent profileIntent = new Intent(SinglePostActivity.this, ProfileActivity.class);
+        profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
+        startActivity(profileIntent);
     }
 }

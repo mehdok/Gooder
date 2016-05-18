@@ -9,5 +9,6 @@
     <color name="selection_color">#ebebeb</color>
     <color name="colorPrimary">#6ca8d2</color>
     <color name="separator_color">#a6a6a6</color>
+    <color name="colorPrimaryDark">#4c7fb2</color>
 
 </resources>

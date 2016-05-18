@@ -21,10 +21,12 @@ import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
+import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.PostBody;
+import com.mehdok.singlepostviewlib.models.PostDetail;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
-import com.mehdok.singlepostviewlib.utils.TimeUtil;
 import com.mehdok.singlepostviewlib.views.PostBodyView;
+import com.mehdok.singlepostviewlib.views.PostDetailView;
 import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
@@ -37,11 +39,14 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     private ArrayList<APIPost> mPosts;
     private int BODY_COUNT = 200;
     private PostFunctionHandler functionHandler;
+    private UserProfileClickListener userProfileClickListener;
 
-    public SinglePostAdapter(Context ctx, ArrayList<APIPost> posts) {
+    public SinglePostAdapter(Context ctx, ArrayList<APIPost> posts,
+                             UserProfileClickListener userProfileClickListener) {
         mPosts = posts;
         functionHandler = new PostFunctionHandler(ctx);
         functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
+        this.userProfileClickListener = userProfileClickListener;
     }
 
     @Override
@@ -53,8 +58,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
-        holder.postAuthor.setText(mPosts.get(position).getAuthor().getFullName());
-
         if (mPosts.get(position).getTitle().isEmpty()) {
             holder.postTitle.setVisibility(View.GONE);
         } else {
@@ -62,24 +65,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         }
 
         holder.postTitle.setText(mPosts.get(position).getTitle());
-        holder.postDate.setText(
-                TimeUtil.getInstance().getReadableDate(mPosts.get(position).getTime()));
-        //holder.postBody.setText(mPosts.get(position).getPostBody());// TODO limit text size
-        //        holder.postBody.setPrettyText(mPosts.get(position).getPostBody());
 
-        //        holder.postBody.setPrettyText(
-        //                PrettySpann.getPrettyString(mPosts.get(position).getPostBody(),
-        //                        this,
-        //                        new GlideGetter(holder.postBody.getContext(), holder.postBody)));
-        //        if (mPosts.get(position).getExtra().getNote() == null ||
-        //                mPosts.get(position).getExtra().getNote().isEmpty()) {
-        //            holder.postNote.setVisibility(View.GONE);
-        //        } else {
-        //            holder.postNote.setPrettyText(
-        //                    PrettySpann.getPrettyString(mPosts.get(position).getExtra().getNote(),
-        //                            this,
-        //                            new GlideGetter(holder.postNote.getContext(), holder.postNote)));
-        //        }
+        holder.postDetail.hideUserPhoto();
+        holder.postDetail.setPostDetail(new PostDetail(mPosts.get(position).getAuthor().getUid(),
+                mPosts.get(position).getAuthor().getFullName(), mPosts.get(position).getTime(),
+                userProfileClickListener));
 
         holder.postBody.setPostBody(new PostBody(getLimitedText(mPosts.get(position).getPostBody()),
                 getLimitedText(mPosts.get(position).getExtra().getNote()),
@@ -116,9 +106,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        public TextView postAuthor;
+        public PostDetailView postDetail;
         public TextView postTitle;
-        public TextView postDate;
         public PostBodyView postBody;
         public TextView likeCount;
         public TextView shareCount;
@@ -130,9 +119,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public ItemViewHolder(View view) {
             super(view);
 
-            postAuthor = (TextView) view.findViewById(R.id.post_author);
+            postDetail = (PostDetailView) view.findViewById(R.id.post_detail_view);
             postTitle = (TextView) view.findViewById(R.id.post_title);
-            postDate = (TextView) view.findViewById(R.id.post_date);
             postBody = (PostBodyView) view.findViewById(R.id.post_body);
             likeCount = (TextView) view.findViewById(R.id.like_count);
             shareCount = (TextView) view.findViewById(R.id.share_count);

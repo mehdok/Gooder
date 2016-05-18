@@ -28,6 +28,7 @@ import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
+import com.mehdok.gooder.ui.profile.ProfileActivity;
 import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooder.views.VerticalSpaceItemDecoration;
 import com.mehdok.gooderapilib.QueryBuilder;
@@ -35,6 +36,7 @@ import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 
 import java.util.ArrayList;
 
@@ -46,7 +48,7 @@ import rx.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener,
-        UiToggleListener, ReshareUtil.ReshareUpdateListener {
+        UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener {
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
     private ProgressBar mProgress;
@@ -86,7 +88,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
-            mAdapter = new SinglePostAdapter(getActivity(), mPosts);
+            mAdapter = new SinglePostAdapter(getActivity(), mPosts, this);
             mRecyclerView.setAdapter(mAdapter);
 
             getData();
@@ -232,5 +234,12 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
     @Override
     public void ResharePostFetched(int position) {
         mAdapter.notifyItemChanged(position);
+    }
+
+    @Override
+    public void showUserProfile(String userID) {
+        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
+        profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
+        getActivity().startActivity(profileIntent);
     }
 }
