@@ -22,39 +22,42 @@
         >
 
         <android.support.design.widget.CollapsingToolbarLayout
-            android:id="@+id/toolbar_layout"
+            android:id="@+id/profile_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:expandedTitleGravity="bottom|left"
             >
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/profile_photo"
+                android:layout_width="@dimen/user_pic_size"
+                android:layout_height="@dimen/user_pic_size"
+                android:layout_marginLeft="?attr/actionBarSize"
+                android:layout_marginTop="?attr/actionBarSize"
                 android:src="@mipmap/logo"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.1"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:layout_marginLeft="?attr/actionBarSize"
                 />
 
-            <Button
-                android:id="@+id/fab"
+            <com.mehdok.gooder.ui.profile.views.FollowButton
+                android:id="@+id/profile_follow_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
                 android:layout_margin="@dimen/fab_margin"
-                android:src="@android:drawable/ic_dialog_email"
-                android:layout_gravity="bottom|end"
-                android:text="+ follow"
                 android:paddingBottom="-30dp"
+                android:text="@string/follow"
+                android:background="@color/white"
+                android:textColor="@color/colorPrimaryDark"
                 app:layout_collapseMode="parallax"
                 app:layout_collapseParallaxMultiplier="0.1"
                 />
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/profile_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"

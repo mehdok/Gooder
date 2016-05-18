@@ -45,6 +45,7 @@ import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
 import com.mehdok.gooder.ui.home.fragments.NotificationsFragment;
 import com.mehdok.gooder.ui.home.fragments.StaredItemFragment;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
+import com.mehdok.gooder.ui.profile.ProfileActivity;
 import com.mehdok.gooder.utils.CustomExceptionHandler;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
@@ -53,7 +54,6 @@ import com.mehdok.gooder.views.VazirTextView;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.user.UserInfo;
-import com.orhanobut.logger.Logger;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.OnMenuTabClickListener;
@@ -451,8 +451,11 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void openProfilePage() {
-        //TODO
-        Logger.t("openProfilePage").e("openProfilePage");
+        Intent profileIntent = new Intent(MainActivity.this, ProfileActivity.class);
+        if (userInfo != null) {
+            profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userInfo.getUid());
+        }
+        startActivity(profileIntent);
     }
 
     public void showBugSnackBar(Throwable e) {

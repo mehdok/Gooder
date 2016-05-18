@@ -44,5 +44,7 @@
     <string name="add_post_title">Add New Post</string>
     <string name="required_field">This field is required</string>
     <string name="no_title">بدون عنوان</string>
+    <string name="follow">+ Follow</string>
+    <string name="unfollow">- UnFollow</string>
 
 </resources>

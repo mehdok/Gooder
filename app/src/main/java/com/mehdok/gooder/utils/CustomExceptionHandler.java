@@ -61,8 +61,8 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
 
         extractLog(stacktrace, logDir.getAbsolutePath(), fullName);
 
-        //restartApp(logDir.getAbsolutePath() + "/" + fullName);
-        defaultUEH.uncaughtException(t, e);
+        restartApp(logDir.getAbsolutePath() + "/" + fullName);
+        //defaultUEH.uncaughtException(t, e);
     }
 
     public static File extractLog(String trace, String logDir, String fullName) {
