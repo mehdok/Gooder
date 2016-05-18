@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 public class FollowResponse extends com.mehdok.gooderapilib.models.BaseResponse {
     @SerializedName("msg_data")
     @Expose
-    public Boolean msgData;
+    private Boolean msgData;
 
     public Boolean getMsgData() {
         return msgData;

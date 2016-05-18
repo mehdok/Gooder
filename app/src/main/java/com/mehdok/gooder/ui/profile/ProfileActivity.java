@@ -7,6 +7,8 @@ package com.mehdok.gooder.ui.profile;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
@@ -27,21 +30,24 @@ import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.profile.views.FollowButton;
 import com.mehdok.gooder.utils.ReshareUtil;
+import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VerticalSpaceItemDecoration;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
+import com.mehdok.gooderapilib.models.follow.FollowResponse;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 
 import java.util.ArrayList;
 
+import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends AppCompatActivity implements InfiniteScrollListener,
-        ReshareUtil.ReshareUpdateListener {
+        ReshareUtil.ReshareUpdateListener, View.OnClickListener {
 
     private final String UNI_LTR = "\u200e";
     public static final String PROFILE_USER_ID = "profile_user_id";
@@ -57,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     private ProgressBar mProgress;
     private SinglePostAdapter mAdapter;
     private ArrayList<APIPost> mPosts;
+    private CoordinatorLayout mRootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         currentUserId = getIntent().getStringExtra(PROFILE_USER_ID);
 
         // find views
+        mRootLayout = (CoordinatorLayout) findViewById(R.id.profile_root_layout);
         imgUser = (AppCompatImageView) findViewById(R.id.profile_photo);
         followButton = (FollowButton) findViewById(R.id.profile_follow_button);
         collapsingToolbarLayout =
@@ -124,10 +132,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     }
 
     private void otherUI() {
-        collapsingToolbarLayout.setTitle("");
-        //TODO get UserInfo
-        // TODO get follow info
-        //TODO get User post
+        collapsingToolbarLayout.setTitle(" ");
+        getUserInfo();
+        getFollowedInfo();
+        getUserPosts();
     }
 
     private void fillUserInfo(String userName, String avatar) {
@@ -230,5 +238,167 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     @Override
     public void ResharePostFetched(int position) {
         mAdapter.notifyItemChanged(position);
+    }
+
+    private void getUserInfo() {
+        RequestBuilder requestBuilder = new RequestBuilder();
+        QueryBuilder queryBuilder = getQueryBuilder();
+        queryBuilder.setUid(currentUserId);
+
+        requestBuilder.getUserInfo(queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<UserInfo>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showBugSnackBar(e);
+                    }
+
+                    @Override
+                    public void onNext(UserInfo userInfo) {
+                        fillUserInfo(userInfo.getFullname(), userInfo.getAvatar());
+                    }
+                });
+    }
+
+    public void showBugSnackBar(Throwable e) {
+        e.printStackTrace();
+        String error;
+        if (e instanceof HttpException) {
+            error = ((HttpException) e).response().body().toString();
+        } else {
+            error = e.getMessage();
+        }
+        Snackbar.make(mRootLayout, error, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.send_report, new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Util.sendBugReport(ProfileActivity.this,
+                                getString(R.string.bug_email_subject),
+                                getString(R.string.bug_email_context));
+                    }
+                }).show();
+    }
+
+    private void getFollowedInfo() {
+        RequestBuilder requestBuilder = new RequestBuilder();
+        requestBuilder.isUserFollowed(Integer.valueOf(currentUserId), getQueryBuilder())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FollowResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(FollowResponse followResponse) {
+                        showFollowButton(followResponse.getMsgData());
+                    }
+                });
+    }
+
+    private void showFollowButton(boolean followed) {
+        followButton.setVisibility(View.VISIBLE);
+        followButton.setFollow(followed);
+        followButton.setOnClickListener(this);
+    }
+
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.profile_follow_button) {
+            if (followButton.isFollowed()) {
+                unfollowUser();
+            } else {
+                followUser();
+            }
+        }
+    }
+
+    private void unfollowUser() {
+        followButton.setFollow(false);
+        RequestBuilder requestBuilder = new RequestBuilder();
+        requestBuilder.unFollowUser(Integer.valueOf(currentUserId), getQueryBuilder())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FollowResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(FollowResponse followResponse) {
+                        if (followResponse.getMsgData()) {
+                            Toast.makeText(ProfileActivity.this, R.string.user_followed,
+                                    Toast.LENGTH_SHORT).show();
+                            followButton.setFollow(false);
+                        } else {
+                            Toast.makeText(ProfileActivity.this, R.string.can_not_do,
+                                    Toast.LENGTH_SHORT).show();
+                            followButton.setFollow(true);
+                        }
+                    }
+                });
+    }
+
+    private void followUser() {
+        RequestBuilder requestBuilder = new RequestBuilder();
+        requestBuilder.followUser(Integer.valueOf(currentUserId), getQueryBuilder())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<FollowResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(FollowResponse followResponse) {
+                        if (followResponse.getMsgData()) {
+                            Toast.makeText(ProfileActivity.this, R.string.user_unfollowed,
+                                    Toast.LENGTH_SHORT).show();
+                            followButton.setFollow(true);
+                        } else {
+                            Toast.makeText(ProfileActivity.this, R.string.can_not_do,
+                                    Toast.LENGTH_SHORT).show();
+                            followButton.setFollow(false);
+                        }
+                    }
+                });
+    }
+
+    private QueryBuilder getQueryBuilder() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(mUserInfo.getUsername());
+        try {
+            queryBuilder.setPassword(Crypto.getMD5BASE64(
+                    new String(Crypto.decrypt(mUserInfo.getPassword(), this))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return queryBuilder;
     }
 }

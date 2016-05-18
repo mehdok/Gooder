@@ -14,7 +14,7 @@ import com.mehdok.gooder.R;
  * Created by mehdok on 5/18/2016.
  */
 public class FollowButton extends AppCompatButton {
-    private boolean following;
+    private boolean followed;
 
     public FollowButton(Context context) {
         super(context);
@@ -36,15 +36,15 @@ public class FollowButton extends AppCompatButton {
     }
 
     public void setFollow(boolean follow) {
-        following = follow;
-        if (follow) {
+        followed = follow;
+        if (!follow) {
             setText(R.string.follow);
         } else {
             setText(R.string.unfollow);
         }
     }
 
-    public boolean isFollowing() {
-        return following;
+    public boolean isFollowed() {
+        return followed;
     }
 }

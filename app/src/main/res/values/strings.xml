@@ -46,5 +46,8 @@
     <string name="no_title">بدون عنوان</string>
     <string name="follow">+ Follow</string>
     <string name="unfollow">- UnFollow</string>
+    <string name="user_followed">User Followed</string>
+    <string name="user_unfollowed">User UnFollowed</string>
+    <string name="can_not_do">Can not do this operation right now.</string>
 
 </resources>
