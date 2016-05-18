@@ -346,7 +346,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                     @Override
                     public void onNext(FollowResponse followResponse) {
                         if (followResponse.getMsgData()) {
-                            Toast.makeText(ProfileActivity.this, R.string.user_followed,
+                            Toast.makeText(ProfileActivity.this, R.string.user_unfollowed,
                                     Toast.LENGTH_SHORT).show();
                             followButton.setFollow(false);
                         } else {
@@ -359,6 +359,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     }
 
     private void followUser() {
+        followButton.setFollow(true);
         RequestBuilder requestBuilder = new RequestBuilder();
         requestBuilder.followUser(Integer.valueOf(currentUserId), getQueryBuilder())
                 .subscribeOn(Schedulers.io())
@@ -377,7 +378,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                     @Override
                     public void onNext(FollowResponse followResponse) {
                         if (followResponse.getMsgData()) {
-                            Toast.makeText(ProfileActivity.this, R.string.user_unfollowed,
+                            Toast.makeText(ProfileActivity.this, R.string.user_followed,
                                     Toast.LENGTH_SHORT).show();
                             followButton.setFollow(true);
                         } else {
