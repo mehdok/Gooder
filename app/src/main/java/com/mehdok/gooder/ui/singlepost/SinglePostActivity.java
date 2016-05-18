@@ -100,7 +100,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                 Integer.valueOf(post.getCommentCount()),
                 this);
 
-        Post poster = new Post(postDetail, postBody, postFunction, this);
+        Post poster = new Post(postDetail, postBody, postFunction, this, post.getTitle());
 
         singlePostView.showPost(poster);
 

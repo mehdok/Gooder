@@ -24,7 +24,7 @@ public class SinglePostView extends RelativeLayout {
     private PostFunctionView postFunctionView;
     private PostCommentsView postCommentsView;
     private AddCommentView addCommentView;
-
+    private PostTextView postTitleTextView;
 
     public SinglePostView(Context context) {
         super(context);
@@ -56,13 +56,20 @@ public class SinglePostView extends RelativeLayout {
         postFunctionView = (PostFunctionView) findViewById(R.id.post_function);
         postCommentsView = (PostCommentsView) findViewById(R.id.post_comments);
         addCommentView = (AddCommentView) findViewById(R.id.add_comment);
+        postTitleTextView = (PostTextView) findViewById(R.id.single_post_title);
     }
 
     public void showPost(Post post) {
         postDetailView.setPostDetail(post.getPostDetail());
         postBodyView.setPostBody(post.getPostBody());
         postFunctionView.setPostFunction(post.getPostFunction());
-        //postCommentsView.addComments(post.getPostComment());
+
+        if (post.getPostTitle().isEmpty()) {
+            postTitleTextView.setVisibility(GONE);
+        } else {
+            postTitleTextView.setText(post.getPostTitle());
+        }
+
         addCommentView.setSendCommentListener(post.getSendCommentClickListener());
     }
 

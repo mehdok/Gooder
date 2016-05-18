@@ -39,6 +39,19 @@
                 android:layout_height="wrap_content"
                 />
 
+            <com.mehdok.singlepostviewlib.views.PostTextView
+                android:id="@+id/single_post_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Title"
+                android:gravity="right"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:lines="1"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:layout_marginTop="@dimen/standard_padding"
+                />
+
             <com.mehdok.singlepostviewlib.views.PostBodyView
                 android:id="@+id/post_body"
                 android:layout_width="match_parent"

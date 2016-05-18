@@ -15,15 +15,17 @@ public class Post {
     private PostFunction postFunction;
     //private ArrayList<PostComment> postComment;
     private SendCommentClickListener sendCommentClickListener;
+    private String postTitle;
 
     public Post(PostDetail postDetail, PostBody postBody,
                 PostFunction postFunction, /*ArrayList<PostComment> postComment,*/
-                SendCommentClickListener sendCommentClickListener) {
+                SendCommentClickListener sendCommentClickListener, String postTitle) {
         this.postDetail = postDetail;
         this.postBody = postBody;
         this.postFunction = postFunction;
         //this.postComment = postComment;
         this.sendCommentClickListener = sendCommentClickListener;
+        this.postTitle = postTitle;
     }
 
     public PostDetail getPostDetail() {
@@ -44,5 +46,9 @@ public class Post {
 
     public SendCommentClickListener getSendCommentClickListener() {
         return sendCommentClickListener;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
     }
 }
