@@ -170,6 +170,10 @@ public class PrettySpann {
                     "<a href=\"" +
                     str.substring(openTagIndex + 5, str.length());
             int secondOpenTagIndex = str.toLowerCase(Locale.US).indexOf("]", openTagIndex);
+            if (secondOpenTagIndex < 0) {
+                break;
+            }
+
             str = str.subSequence(0, secondOpenTagIndex) +
                     "\">" +
                     str.substring(secondOpenTagIndex + 1, str.length());
