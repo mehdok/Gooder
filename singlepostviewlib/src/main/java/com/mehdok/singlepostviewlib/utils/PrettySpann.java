@@ -62,7 +62,9 @@ public class PrettySpann {
         if (str == null) return new SpannableString("");
 
         str = getCleanString(str);
-        str = replaceForumUrl(str);
+        str = replaceForumUrl1(str);
+        str = replaceForumUrl2(str);
+        str = replaceForumUrl3(str);
         str = replaceForumImage(str);
         Spanned spanned = linkifyHtml(str, imageGetter);
         //spanned = setBackgroundForShare(spanned);
@@ -84,12 +86,76 @@ public class PrettySpann {
     }
 
     /**
-     * Replace [url=http://google.com][/url] with <a href="http://google.com"></a>
+     * Replace [url=]google.com[/url] with <a href="google.com">google.com</a>
+     *
+     * @param str
+     * @return
+     */
+    private static String replaceForumUrl1(String str) {
+        final String tag1 = "[url=]";
+        final String closeTag = "[/url]";
+        int openTagIndex;
+        while ((openTagIndex = str.toLowerCase(Locale.US).indexOf(tag1)) != -1) {
+
+            //this is the other kind of link
+            //            if (str.charAt(openTagIndex + tag1.length()) == ']')
+            //                continue;
+
+            int secondIndex = str.toLowerCase(Locale.US).indexOf(closeTag, openTagIndex);
+            String link =
+                    str.substring(openTagIndex + tag1.length(), secondIndex);
+            str = str.subSequence(0, openTagIndex) +
+                    "<a href=\"" +
+                    str.substring(openTagIndex + tag1.length(), str.length());
+
+            int closeTagIndex = str.indexOf(closeTag, openTagIndex + tag1.length());
+            str = str.subSequence(0, closeTagIndex) +
+                    "\">" + link + "</a>" +
+                    str.substring(closeTagIndex + closeTag.length(), str.length());
+        }
+
+        return str;
+    }
+
+    /**
+     * Replace [url]google.com[/url] with <a href="google.com">google.com</a>
+     *
+     * @param str
+     * @return
+     */
+    private static String replaceForumUrl2(String str) {
+        final String tag2 = "[url]";
+        final String closeTag = "[/url]";
+        int openTagIndex;
+        while ((openTagIndex = str.toLowerCase(Locale.US).indexOf(tag2)) != -1) {
+
+            //this is the other kind of link
+            //            if (str.charAt(openTagIndex + tag2.length()) == ']')
+            //                continue;
+
+            int secondIndex = str.toLowerCase(Locale.US).indexOf(closeTag, openTagIndex);
+            String link =
+                    str.substring(openTagIndex + tag2.length(), secondIndex);
+            str = str.subSequence(0, openTagIndex) +
+                    "<a href=\"" +
+                    str.substring(openTagIndex + tag2.length(), str.length());
+
+            int closeTagIndex = str.indexOf(closeTag, openTagIndex + tag2.length());
+            str = str.subSequence(0, closeTagIndex) +
+                    "\">" + link + "</a>" +
+                    str.substring(closeTagIndex + closeTag.length(), str.length());
+        }
+
+        return str;
+    }
+
+    /**
+     * Replace [url=http://google.com]link[/url] with <a href="http://google.com">link</a>
      *
      * @param str the input
      * @return
      */
-    private static String replaceForumUrl(String str) {
+    private static String replaceForumUrl3(String str) {
         int openTagIndex;
         while ((openTagIndex = str.toLowerCase(Locale.US).indexOf("[url=")) != -1) {
             str = str.subSequence(0, openTagIndex) +
