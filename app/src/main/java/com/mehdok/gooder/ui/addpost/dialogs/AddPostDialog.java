@@ -148,8 +148,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         boolean error = false;
 
         if (etTitle.getText().toString().isEmpty()) {
-            etTitle.setError(getActivity().getString(R.string.required_field));
-            error = true;
+            etTitle.setText(R.string.no_title);
         }
 
         if (etBody.getText().toString().isEmpty()) {
