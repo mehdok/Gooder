@@ -102,6 +102,10 @@ public class PrettySpann {
             //                continue;
 
             int secondIndex = str.toLowerCase(Locale.US).indexOf(closeTag, openTagIndex);
+            if (secondIndex < 0) {
+                break;
+            }
+
             String link =
                     str.substring(openTagIndex + tag1.length(), secondIndex);
             str = str.subSequence(0, openTagIndex) +
@@ -134,6 +138,10 @@ public class PrettySpann {
             //                continue;
 
             int secondIndex = str.toLowerCase(Locale.US).indexOf(closeTag, openTagIndex);
+            if (secondIndex < 0) {
+                break;
+            }
+
             String link =
                     str.substring(openTagIndex + tag2.length(), secondIndex);
             str = str.subSequence(0, openTagIndex) +
