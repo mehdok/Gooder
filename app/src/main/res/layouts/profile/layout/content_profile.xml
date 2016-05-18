@@ -3,8 +3,8 @@
   ~ Copyright (c) 2016. Mehdi Sohrabi
   -->
 
-<android.support.v7.widget.RecyclerView
-    android:id="@+id/profile_recycler_view"
+
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -15,5 +15,21 @@
     tools:showIn="@layout/activity_profile"
     >
 
+    <com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView
+        android:id="@+id/profile_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
-</android.support.v7.widget.RecyclerView>
+    <ProgressBar
+        android:id="@+id/profile_item_progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:indeterminate="true"
+        android:visibility="invisible"
+        />
+
+</FrameLayout>

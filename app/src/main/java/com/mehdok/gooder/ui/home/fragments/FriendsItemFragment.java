@@ -28,19 +28,16 @@ import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
+import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooder.views.VerticalSpaceItemDecoration;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
-import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
-import com.mehdok.singlepostviewlib.utils.PrettySpann;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -49,7 +46,7 @@ import rx.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener,
-        UiToggleListener {
+        UiToggleListener, ReshareUtil.ReshareUpdateListener {
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
     private ProgressBar mProgress;
@@ -85,12 +82,12 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         mRecyclerView.setInfiniteScrollListener(this);
         mRecyclerView.setUiToggleListener(this);
 
+        mProgress = (ProgressBar) v.findViewById(R.id.friends_item_progress);
+
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
             mAdapter = new SinglePostAdapter(getActivity(), mPosts);
             mRecyclerView.setAdapter(mAdapter);
-
-            mProgress = (ProgressBar) v.findViewById(R.id.friends_item_progress);
 
             getData();
         } else {
@@ -113,7 +110,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
     private void getData() {
         showProgress(true);
 
-        UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
+        final UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
 
         RequestBuilder requestBuilder = new RequestBuilder();
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -150,8 +147,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                             mPosts.addAll(posts.getPosts());
                             mAdapter.notifyDataSetChanged();
 
-                            //TODO test
-                            checkForReshares(mPosts.size() - posts.getPosts().size());
+                            checkForReshares(mPosts.size() - posts.getPosts().size(), userInfo);
                         }
                     }
                 });
@@ -219,50 +215,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         }
     };
 
-    private void checkForReshares(int from) {
-        for (int i = from; i < mPosts.size(); i++) {
-            if (!mPosts.get(i).getParentPid().equals("0")) {
-                getResharedPost(i, mPosts.get(i).getAuthor().getFullName(),
-                        mPosts.get(i).getPostBody(), mPosts.get(i).getParentPid(), 0);
-            }
-        }
-    }
-
-    private void checkForReshares(List<APIPost> posts) {
-        Observable.from(posts)
-                .subscribe(new Observer<APIPost>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(APIPost apiPost) {
-                        if (apiPost.getParentPid().equals("0")) {
-
-                        }
-                    }
-                });
-    }
-
-    /**
-     * @param pos
-     * @param userName
-     * @param postBody
-     * @param parentId
-     * @param count
-     */
-    private void getResharedPost(final int pos, final String userName, final String postBody,
-                                 String parentId, int count) {
-        ++count;
-        UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
-
-        RequestBuilder requestBuilder = new RequestBuilder();
+    private void checkForReshares(int from, UserInfo userInfo) {
         QueryBuilder queryBuilder = new QueryBuilder();
         queryBuilder.setUserName(userInfo.getUsername());
         try {
@@ -271,59 +224,13 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         } catch (Exception e) {
             e.printStackTrace();
         }
+        ReshareUtil reshareUtil = new ReshareUtil();
+        reshareUtil.setListener(FriendsItemFragment.this);
+        reshareUtil.checkForReshares(mPosts, from, queryBuilder);
+    }
 
-        final int finalCount = count;
-        requestBuilder.getPost(parentId, queryBuilder)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<SinglePost>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                    }
-
-                    @Override
-                    public void onNext(SinglePost singlePost) {
-                        if (!singlePost.getPost().getParentPid().equals("0")) {
-                            String body = postBody +
-                                    PrettySpann.SHARE_PARAGRAPH_START +
-                                    singlePost.getPost().getAuthor().getFullName() +
-                                    "</font>" +
-                                    "<br\\>" +
-                                    singlePost.getPost().getPostBody() +
-                                    "</p><br\\><br\\>";
-
-                            getResharedPost(pos, "",
-                                    body,
-                                    singlePost.getPost().getParentPid(), finalCount + 1);
-                        } else {
-                            APIPost apiPost = mPosts.get(pos);
-                            String editedPost = "";
-                            //                            if (finalCount > 1) {
-                            //                                // more than 1 reshare
-                            //                                editedPost += postBody;
-                            //                            }
-
-                            editedPost += String.format("%s%s%s%s%s",
-                                    PrettySpann.SHARE_PARAGRAPH_START,
-                                    singlePost.getPost().getAuthor().getFullName(),
-                                    "</font>",
-                                    "<br\\>",
-                                    singlePost.getPost().getPostBody() +
-                                            "</p>");
-                            apiPost.getExtra().setNote(editedPost);
-                            //                            apiPost.setPostBody("\\n" + postBody +
-                            //                                    "\\n" +
-                            //                                    singlePost.getPost().getAuthor().getFullName() +
-                            //                                    "\\n" +
-                            //                                    singlePost.getPost().getPostBody());
-
-                            mAdapter.notifyItemChanged(pos);
-                        }
-                    }
-                });
+    @Override
+    public void ResharePostFetched(int position) {
+        mAdapter.notifyItemChanged(position);
     }
 }
