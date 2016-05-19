@@ -6,8 +6,9 @@ package com.mehdok.gooder;
 
 import android.app.Application;
 
-import com.mehdok.gooderapilib.GooderApi;
 import com.mehdok.gooder.crypto.Crypto;
+import com.mehdok.gooderapilib.GooderApi;
+import com.onesignal.OneSignal;
 import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
@@ -20,6 +21,7 @@ public class AndroidApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        OneSignal.startInit(this).init();
 
         if (BuildConfig.DEBUG) {
             // init the logger library
