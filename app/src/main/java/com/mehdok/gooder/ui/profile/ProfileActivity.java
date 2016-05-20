@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -28,7 +29,6 @@ import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
 import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
-import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.profile.views.FollowButton;
 import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooder.utils.Util;
@@ -39,6 +39,7 @@ import com.mehdok.gooderapilib.models.follow.FollowResponse;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.mehdok.singlepostviewlib.views.PostTextView;
 
 import java.util.ArrayList;
 
@@ -65,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     private SinglePostAdapter mAdapter;
     private ArrayList<APIPost> mPosts;
     private CoordinatorLayout mRootLayout;
+    private PostTextView tvAboutMe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         followButton = (FollowButton) findViewById(R.id.profile_follow_button);
         collapsingToolbarLayout =
                 (CollapsingToolbarLayout) findViewById(R.id.profile_toolbar_layout);
+        tvAboutMe = (PostTextView) findViewById(R.id.profile_about_text);
 
         mRecyclerView = (InfiniteRecyclerView) findViewById(R.id.profile_recycler_view);
         mRecyclerView.setHasFixedSize(false);
@@ -107,6 +110,13 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         } else {
             mRecyclerView.setAdapter(mAdapter);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_profile, menu);
+        return true;
     }
 
     @Override
@@ -153,6 +163,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
     private void fillUserInfo(String userName, String avatar) {
         collapsingToolbarLayout.setTitle(UNI_LTR + userName);
+        tvAboutMe.setText(mUserInfo.getAbout());
         loadUserImage(avatar);
     }
 
@@ -201,7 +212,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                     @Override
                     public void onError(Throwable e) {
                         showProgress(false);
-                        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
+                        showBugSnackBar(e);
                     }
 
                     @Override
