@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -51,6 +52,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
     private AppCompatCheckBox chbDisableComment;
     private AppCompatCheckBox chbDisableReshare;
     private AppCompatCheckBox chbDraft;
+    private SpinKitView mProgress;
 
     private TextProccessor textProccessor;
 
@@ -86,6 +88,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         chbDisableReshare =
                 (AppCompatCheckBox) rootView.findViewById(R.id.add_post_disable_reshare);
         chbDraft = (AppCompatCheckBox) rootView.findViewById(R.id.add_post_draft);
+        mProgress = (SpinKitView) rootView.findViewById(R.id.add_post_progress);
 
         btnBold.setOnClickListener(this);
         btnItalic.setOnClickListener(this);
@@ -133,7 +136,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
     }
 
     private void sendPost() {
-        //TODO show waiting
+        showProgress(true);
         UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
         RequestBuilder requestBuilder = new RequestBuilder();
         QueryBuilder queryBuilder = new QueryBuilder();
@@ -206,6 +209,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
                         Toast.makeText(AddPostDialog.this.getActivity(), addPost.getMsgText(),
                                 Toast.LENGTH_SHORT)
                                 .show();
+                        showProgress(false);
                         cancelPost();
                     }
                 });
@@ -213,5 +217,16 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
 
     private void cancelPost() {
         dismiss();
+    }
+
+    private void showProgress(boolean show) {
+        if (show) {
+            mProgress.setVisibility(View.VISIBLE);
+        } else {
+            mProgress.setVisibility(View.GONE);
+        }
+
+        btnSend.setEnabled(!show);
+        btnCancel.setEnabled(!show);
     }
 }
