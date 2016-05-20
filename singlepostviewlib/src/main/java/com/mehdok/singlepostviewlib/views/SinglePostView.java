@@ -78,9 +78,10 @@ public class SinglePostView extends RelativeLayout {
     }
 
     public void addComment(PostComment postComment) {
-        postCommentsView.addComment(postComment.getAuthor(), postComment.getDate(),
+        postCommentsView.addComment(postComment.getUid(), postComment.getAuthor(),
+                postComment.getDate(),
                 postComment.getBody(),
-                postComment.getAuthorUrl());
+                postComment.getAuthorUrl(), postComment.getProfileClickListener());
     }
 
     public void addUserPhoto(String authorPhoto) {

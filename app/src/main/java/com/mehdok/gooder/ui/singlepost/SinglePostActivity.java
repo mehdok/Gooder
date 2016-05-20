@@ -210,9 +210,11 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                         ArrayList<PostComment> postComments =
                                 new ArrayList<PostComment>(commentResponse.getCommentList().size());
                         for (CommentContent response : commentResponse.getCommentList()) {
-                            PostComment post = new PostComment(response.getCommentAuthor().fullname,
+                            PostComment post = new PostComment(response.getCommentAuthor().getUid(),
+                                    response.getCommentAuthor().fullname,
                                     response.getTime(), response.getContent(),
-                                    response.getCommentAuthor().getAvatar());
+                                    response.getCommentAuthor().getAvatar(),
+                                    SinglePostActivity.this);
                             postComments.add(post);
                         }
                         return Observable.just(postComments);
@@ -335,8 +337,9 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         singlePostView.changeCommentCount(Integer.valueOf(post.getCommentCount()));
         UserInfo userInfo = DatabaseHelper.getInstance(this).getUserInfo();
         PostComment postComment =
-                new PostComment(userInfo.getFullname(), System.currentTimeMillis() + "",
-                        commentBody, userInfo.getAvatar());
+                new PostComment(userInfo.getUid(), userInfo.getFullname(),
+                        System.currentTimeMillis() + "",
+                        commentBody, userInfo.getAvatar(), this);
         singlePostView.addComment(postComment);
     }
 
