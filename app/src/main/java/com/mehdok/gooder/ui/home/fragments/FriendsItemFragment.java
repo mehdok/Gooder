@@ -16,8 +16,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -51,7 +51,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener {
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
-    private ProgressBar mProgress;
+    private SpinKitView mProgress;
     private SinglePostAdapter mAdapter;
     private ArrayList<APIPost> mPosts;
 
@@ -84,7 +84,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         mRecyclerView.setInfiniteScrollListener(this);
         mRecyclerView.setUiToggleListener(this);
 
-        mProgress = (ProgressBar) v.findViewById(R.id.friends_item_progress);
+        mProgress = (SpinKitView) v.findViewById(R.id.friends_item_progress);
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();

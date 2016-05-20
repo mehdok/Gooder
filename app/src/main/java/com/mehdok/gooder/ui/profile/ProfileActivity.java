@@ -16,11 +16,11 @@ import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -60,7 +60,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     private FollowButton followButton;
     private AppCompatImageView imgUser;
     private InfiniteRecyclerView mRecyclerView;
-    private ProgressBar mProgress;
+    private SpinKitView mProgress;
     private SinglePostAdapter mAdapter;
     private ArrayList<APIPost> mPosts;
     private CoordinatorLayout mRootLayout;
@@ -95,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                 getResources().getDimensionPixelSize(R.dimen.standard_padding)));
         mRecyclerView.setInfiniteScrollListener(this);
 
-        mProgress = (ProgressBar) findViewById(R.id.profile_item_progress);
+        mProgress = (SpinKitView) findViewById(R.id.profile_item_progress);
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
