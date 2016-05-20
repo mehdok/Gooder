@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -62,6 +63,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     private CoordinatorLayout mRootLayout;
     private PostFunctionHandler functionHandler;
     private ParcelablePost post;
+    private SpinKitView mProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
         singlePostView = (SinglePostView) findViewById(R.id.single_post_view);
         mRootLayout = (CoordinatorLayout) findViewById(R.id.single_post_root_layout);
+        mProgress = (SpinKitView) findViewById(R.id.single_post_progress);
 
         setUpToolbar();
         post = getExtra();
@@ -180,6 +183,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
     private void requestComment(String pid, String userName, String password,
                                 RequestBuilder requestBuilder) {
+        mProgress.setVisibility(View.VISIBLE);
         QueryBuilder queryBuilder = new QueryBuilder();
         queryBuilder.setUserName(userName);
         queryBuilder.setPassword(password);
@@ -216,6 +220,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                     @Override
                     public void onNext(ArrayList<PostComment> postComments) {
                         singlePostView.addComments(postComments);
+                        mProgress.setVisibility(View.GONE);
                     }
                 });
     }
