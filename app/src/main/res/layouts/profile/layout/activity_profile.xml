@@ -46,7 +46,6 @@
                     android:layout_height="@dimen/user_pic_size"
                     android:layout_marginLeft="?attr/actionBarSize"
                     android:layout_marginBottom="?attr/actionBarSize"
-                    android:src="@mipmap/logo"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     />

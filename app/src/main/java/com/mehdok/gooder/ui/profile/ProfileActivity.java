@@ -4,13 +4,10 @@
 
 package com.mehdok.gooder.ui.profile;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,8 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -39,6 +34,7 @@ import com.mehdok.gooderapilib.models.follow.FollowResponse;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.mehdok.singlepostviewlib.utils.GlideHelper;
 import com.mehdok.singlepostviewlib.views.PostTextView;
 
 import java.util.ArrayList;
@@ -168,21 +164,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     }
 
     private void loadUserImage(String avatar) {
-        Glide
-                .with(this)
-                .load(avatar)
-                .asBitmap()
-                .centerCrop()
-                .placeholder(R.mipmap.logo)
-                .into(new BitmapImageViewTarget(imgUser) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        imgUser.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+        GlideHelper.loadProfileImage(this, avatar, imgUser, null);
     }
 
     private void getUserPosts() {

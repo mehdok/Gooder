@@ -5,19 +5,15 @@
 package com.mehdok.singlepostviewlib.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.models.PostDetail;
+import com.mehdok.singlepostviewlib.utils.GlideHelper;
 import com.mehdok.singlepostviewlib.utils.TimeUtil;
 
 /**
@@ -69,21 +65,7 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
 
     public void loadAuthorPhoto(String url) {
         imvAuthor.setVisibility(VISIBLE);
-
-        Glide
-                .with(getContext())
-                .load(url)
-                .asBitmap()
-                .centerCrop()
-                .into(new BitmapImageViewTarget(imvAuthor) {
-                    @Override
-                    protected void setResource(Bitmap resource) {
-                        RoundedBitmapDrawable circularBitmapDrawable =
-                                RoundedBitmapDrawableFactory.create(getResources(), resource);
-                        circularBitmapDrawable.setCircular(true);
-                        imvAuthor.setImageDrawable(circularBitmapDrawable);
-                    }
-                });
+        GlideHelper.loadProfileImage(getContext(), url, imvAuthor, null);
     }
 
     @Override
