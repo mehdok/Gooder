@@ -49,5 +49,6 @@
     <string name="user_followed">User Followed</string>
     <string name="user_unfollowed">User UnFollowed</string>
     <string name="can_not_do">Can not do this operation right now.</string>
+    <string name="last_post">That\'s the last post</string>
 
 </resources>

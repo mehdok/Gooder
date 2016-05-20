@@ -52,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     private UserInfo mUserInfo;
     private String currentUserId;
     private boolean loadingFlag = false;
+    private boolean reachEndOfPosts = false;
 
     private Toolbar toolbar;
     private CollapsingToolbarLayout collapsingToolbarLayout;
@@ -168,6 +169,9 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     }
 
     private void getUserPosts() {
+        // return if there is no more posts
+        if (reachEndOfPosts) return;
+
         showProgress(true);
 
         RequestBuilder requestBuilder = new RequestBuilder();
@@ -201,6 +205,13 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                     public void onNext(APIPosts posts) {
                         showProgress(false);
                         if (posts != null) {
+                            // if there is no more posts, show message and return
+                            if (posts.getPosts().size() == 0) {
+                                reachEndOfPosts = true;
+                                showSimpleMessage(getString(R.string.last_post));
+                                return;
+                            }
+
                             mPosts.addAll(posts.getPosts());
                             mAdapter.notifyDataSetChanged();
 
@@ -407,5 +418,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         }
 
         return queryBuilder;
+    }
+
+    public void showSimpleMessage(String str) {
+        Snackbar.make(mRootLayout, str, Snackbar.LENGTH_SHORT)
+                .show();
     }
 }

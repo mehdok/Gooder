@@ -56,6 +56,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
     private ArrayList<APIPost> mPosts;
 
     private boolean loadingFlag = false;
+    private boolean reachEndOfPosts = false;
 
     public static FriendsItemFragment getInstance() {
         if (mInstance == null) {
@@ -110,6 +111,9 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
     }
 
     private void getData() {
+        // return if there is no more posts
+        if (reachEndOfPosts) return;
+
         showProgress(true);
 
         final UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
@@ -146,6 +150,16 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                     public void onNext(APIPosts posts) {
                         showProgress(false);
                         if (posts != null) {
+
+                            // if there is no more posts, show message and return
+                            if (posts.getPosts().size() == 0) {
+                                reachEndOfPosts = true;
+                                MainActivityDelegate.getInstance()
+                                        .getActivity()
+                                        .showSimpleMessage(getString(R.string.last_post));
+                                return;
+                            }
+
                             mPosts.addAll(posts.getPosts());
                             mAdapter.notifyDataSetChanged();
 
