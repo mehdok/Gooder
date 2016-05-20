@@ -32,44 +32,36 @@
             app:expandedTitleGravity="bottom|left"
             >
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/profile_photo"
-                android:layout_width="@dimen/user_pic_size"
-                android:layout_height="@dimen/user_pic_size"
-                android:layout_marginLeft="?attr/actionBarSize"
-                android:layout_marginTop="?attr/actionBarSize"
-                android:src="@mipmap/logo"
-                app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.1"
-                />
-
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="top|right"
-                app:layout_collapseMode="parallax"
-                android:orientation="horizontal"
                 android:layout_marginTop="?attr/actionBarSize"
+                app:layout_collapseMode="parallax"
+                app:layout_collapseParallaxMultiplier="0.3"
                 >
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/profile_photo"
+                    android:layout_width="@dimen/user_pic_size"
+                    android:layout_height="@dimen/user_pic_size"
+                    android:layout_marginLeft="?attr/actionBarSize"
+                    android:layout_marginBottom="?attr/actionBarSize"
+                    android:src="@mipmap/logo"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"
+                    />
 
                 <com.mehdok.singlepostviewlib.views.PostTextView
                     android:id="@+id/profile_about_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    android:text="about me"
+                    android:layout_margin="@dimen/fab_margin"
+                    android:gravity="right"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_toRightOf="@id/profile_photo"
+                    android:layout_above="@+id/profile_follow_button"
                     />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="bottom|right"
-                app:layout_collapseMode="parallax"
-                android:orientation="horizontal"
-                android:layout_marginTop="?attr/actionBarSize"
-                >
 
                 <com.mehdok.gooder.ui.profile.views.FollowButton
                     android:id="@+id/profile_follow_button"
@@ -80,9 +72,11 @@
                     android:textColor="@color/colorPrimaryDark"
                     android:visibility="gone"
                     android:layout_margin="@dimen/fab_margin"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"
                     />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/profile_toolbar"
