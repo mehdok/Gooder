@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatCheckBox;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.orhanobut.logger.Logger;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
@@ -34,7 +36,10 @@ import rx.schedulers.Schedulers;
 /**
  * Created by mehdok on 5/8/2016.
  */
-public class AddPostDialog extends DialogFragment implements View.OnClickListener {
+public class AddPostDialog extends DialogFragment implements View.OnClickListener,
+        View.OnKeyListener {
+
+    private final String NEW_LINE_CHAR = "\\n";
 
     private VazirEditText etTitle;
     private VazirEditText etBody;
@@ -162,7 +167,12 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         if (error) return;
 
         queryBuilder.setPostTitle(etTitle.getText().toString());
-        queryBuilder.setPostBody(etBody.getText().toString());
+
+        String body = etBody.getText().toString();
+        //body = body.replace("\n", "newline");
+        body = body.replace("\\n", "\\r\\n");
+        String bodys[] = body.split("\n");
+        queryBuilder.setPostBody(body);
 
         if (chbDisableComment.isChecked()) {
             queryBuilder.setDisableComments(QueryBuilder.Value.YES);
@@ -213,6 +223,8 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
                         cancelPost();
                     }
                 });
+
+        Logger.d("text lines: " + bodys.length);
     }
 
     private void cancelPost() {
@@ -228,5 +240,15 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
 
         btnSend.setEnabled(!show);
         btnCancel.setEnabled(!show);
+    }
+
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        if (keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
+                keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            etBody.setText(etBody.getText().toString() + NEW_LINE_CHAR);
+        }
+
+        return false;
     }
 }
