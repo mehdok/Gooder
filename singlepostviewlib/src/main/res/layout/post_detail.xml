@@ -10,11 +10,20 @@
     android:orientation="horizontal"
     >
 
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/post_more_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_more_vert_grey600_24dp"
+        android:padding="@dimen/standard_padding"
+        android:tint="?attr/colorPrimaryDark"
+        android:background="@drawable/buttons_background"
+        />
+
     <com.mehdok.singlepostviewlib.views.PostTextView
         android:id="@+id/post_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/mini_padding"
         android:layout_marginRight="@dimen/mini_padding"
         android:text="date"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -29,7 +38,7 @@
         android:gravity="right"
         android:text="author"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="?attr/colorPrimaryDark"
         />
 
     <ImageView

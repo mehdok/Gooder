@@ -8,23 +8,28 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.mehdok.singlepostviewlib.R;
+import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
 import com.mehdok.singlepostviewlib.models.Post;
 import com.mehdok.singlepostviewlib.models.PostComment;
+import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 
 import java.util.ArrayList;
 
 /**
  * Created by mehdok on 5/4/2016.
  */
-public class SinglePostView extends RelativeLayout {
+public class SinglePostView extends RelativeLayout implements PostMoreListener {
     private PostDetailView postDetailView;
     private PostBodyView postBodyView;
     private PostFunctionView postFunctionView;
     private PostCommentsView postCommentsView;
     private AddCommentView addCommentView;
     private PostTextView postTitleTextView;
+
+    private Post mPost;
 
     public SinglePostView(Context context) {
         super(context);
@@ -60,7 +65,8 @@ public class SinglePostView extends RelativeLayout {
     }
 
     public void showPost(Post post) {
-        postDetailView.setPostDetail(post.getPostDetail());
+        mPost = post;
+        postDetailView.setPostDetail(post.getPostDetail(), PostDetailView.More.POST, this, null, 0);
         postBodyView.setPostBody(post.getPostBody());
         postFunctionView.setPostFunction(post.getPostFunction());
 
@@ -106,5 +112,28 @@ public class SinglePostView extends RelativeLayout {
 
     public void changeCommentCount(int count) {
         postFunctionView.changeCommentCount(count);
+    }
+
+    @Override
+    public void copyPostId(int position) {
+        ClipBoardUtil.copyText(getContext(), mPost.getPostId());
+        showToast(R.string.clip_post_id);
+    }
+
+    @Override
+    public void copyPostAuthorId(int position) {
+        ClipBoardUtil.copyText(getContext(), mPost.getPostDetail().getUid());
+        showToast(R.string.clip_post_author);
+    }
+
+    @Override
+    public void copyPostText(int position) {
+        ClipBoardUtil.copyText(getContext(),
+                mPost.getPostBody().getBody() + mPost.getPostBody().getNote());
+        showToast(R.string.clip_post_body);
+    }
+
+    private void showToast(int resourceId) {
+        Toast.makeText(getContext(), resourceId, Toast.LENGTH_SHORT).show();
     }
 }

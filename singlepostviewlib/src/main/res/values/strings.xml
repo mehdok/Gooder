@@ -5,4 +5,12 @@
 <resources>
     <string name="app_name">SinglePostViewLib</string>
     <string name="comment_hint">Add Comment</string>
+    <string name="post_id_copy">Copy Post ID</string>
+    <string name="user_id_copy">Copy User ID</string>
+    <string name="text_copy">Copy text</string>
+    <string name="clip_comment_author">Comment Author ID Copied to clipboard</string>
+    <string name="clip_comment_body">Comment Text Copied to clipboard</string>
+    <string name="clip_post_author">Post Author ID Copied to clipboard</string>
+    <string name="clip_post_id">Post ID Text Copied to clipboard</string>
+    <string name="clip_post_body">Post Text Copied to clipboard</string>
 </resources>

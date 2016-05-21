@@ -4,14 +4,21 @@
 
 package com.mehdok.singlepostviewlib.views;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.mehdok.singlepostviewlib.R;
+import com.mehdok.singlepostviewlib.interfaces.CommentMoreListener;
+import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
 import com.mehdok.singlepostviewlib.models.PostDetail;
 import com.mehdok.singlepostviewlib.utils.GlideHelper;
 import com.mehdok.singlepostviewlib.utils.TimeUtil;
@@ -20,10 +27,19 @@ import com.mehdok.singlepostviewlib.utils.TimeUtil;
  * Created by mehdok on 5/4/2016.
  */
 public class PostDetailView extends LinearLayout implements View.OnClickListener {
+    public enum More {POST, COMMENT}
+
     private PostTextView tvAuthor;
     private PostTextView tvDate;
     private ImageView imvAuthor;
     private PostDetail mPostDetail;
+    private AppCompatImageButton imgMore;
+    private More mDetailMode;
+    private Dialog postMoreDialog;
+    private Dialog commentMoreDialog;
+    private PostMoreListener postMoreListener;
+    private CommentMoreListener commentMoreListener;
+    private int mPosition;
 
     public PostDetailView(Context context) {
         super(context);
@@ -55,12 +71,21 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
         tvAuthor = (PostTextView) findViewById(R.id.author_name);
         tvDate = (PostTextView) findViewById(R.id.post_date);
         imvAuthor = (ImageView) findViewById(R.id.author_pic);
+        imgMore = (AppCompatImageButton) findViewById(R.id.post_more_button);
+        imgMore.setOnClickListener(this);
     }
 
-    public void setPostDetail(PostDetail postDetail) {
+    public void setPostDetail(PostDetail postDetail, More detailMode,
+                              PostMoreListener postMoreListener,
+                              CommentMoreListener commentMoreListener,
+                              int position) {
         mPostDetail = postDetail;
         tvAuthor.setText(postDetail.getAuthor());
         tvDate.setText(TimeUtil.getInstance().getReadableDate(postDetail.getDate()));
+        mDetailMode = detailMode;
+        this.postMoreListener = postMoreListener;
+        this.commentMoreListener = commentMoreListener;
+        mPosition = position;
     }
 
     public void loadAuthorPhoto(String url) {
@@ -70,12 +95,106 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
 
     @Override
     public void onClick(View view) {
-        if (mPostDetail.getProfileClickListener() != null) {
-            mPostDetail.getProfileClickListener().showUserProfile(mPostDetail.getUid());
+        int id = view.getId();
+        if (id == R.id.post_more_button) {
+            if (mDetailMode == More.POST) {
+                showPostMoreOption(view);
+            } else if (mDetailMode == More.COMMENT) {
+                showCommentMoreOption(view);
+            }
+        } else if (id == R.id.more_copy_post_id) {
+            hideMoreDialog(More.POST);
+            if (postMoreListener != null) {
+                postMoreListener.copyPostId(mPosition);
+            }
+        } else if (id == R.id.more_copy_user_id) {
+            hideMoreDialog(More.POST);
+            if (postMoreListener != null) {
+                postMoreListener.copyPostAuthorId(mPosition);
+            }
+        } else if (id == R.id.more_copy_text) {
+            hideMoreDialog(More.POST);
+            if (postMoreListener != null) {
+                postMoreListener.copyPostText(mPosition);
+            }
+        } else if (id == R.id.more_copy_comment_text) {
+            hideMoreDialog(More.COMMENT);
+            if (commentMoreListener != null) {
+                commentMoreListener.copyCommentText();
+            }
+        } else if (id == R.id.more_copy_comment_author_id) {
+            hideMoreDialog(More.COMMENT);
+            if (commentMoreListener != null) {
+                commentMoreListener.copyCommentAuthorId();
+            }
+        } else {
+            if (mPostDetail.getProfileClickListener() != null) {
+                mPostDetail.getProfileClickListener().showUserProfile(mPostDetail.getUid());
+            }
         }
     }
 
     public void hideUserPhoto() {
         imvAuthor.setVisibility(GONE);
+    }
+
+    private void showPostMoreOption(View view) {
+        postMoreDialog = new Dialog(view.getContext(), android.R.style.Theme_Holo_Light_Dialog);
+
+        postMoreDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        postMoreDialog.setContentView(R.layout.dialog_post_more);
+        WindowManager.LayoutParams wmlp = postMoreDialog.getWindow().getAttributes();
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        wmlp.gravity = Gravity.TOP | Gravity.START;
+        wmlp.x = location[0] - view.getWidth();
+        wmlp.y = location[1];
+        wmlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        postMoreDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        PostTextView copyPostId =
+                (PostTextView) postMoreDialog.findViewById(R.id.more_copy_post_id);
+        PostTextView copyUserId =
+                (PostTextView) postMoreDialog.findViewById(R.id.more_copy_user_id);
+        PostTextView copyText = (PostTextView) postMoreDialog.findViewById(R.id.more_copy_text);
+
+        copyPostId.setOnClickListener(this);
+        copyUserId.setOnClickListener(this);
+        copyText.setOnClickListener(this);
+
+        postMoreDialog.show();
+    }
+
+    private void showCommentMoreOption(View view) {
+        commentMoreDialog = new Dialog(view.getContext(), android.R.style.Theme_Holo_Light_Dialog);
+
+        commentMoreDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        commentMoreDialog.setContentView(R.layout.dialog_comment_more);
+        WindowManager.LayoutParams wmlp = commentMoreDialog.getWindow().getAttributes();
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        wmlp.gravity = Gravity.TOP | Gravity.START;
+        wmlp.x = location[0] - view.getWidth();
+        wmlp.y = location[1];
+        wmlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        commentMoreDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        PostTextView copyCommentText =
+                (PostTextView) commentMoreDialog.findViewById(R.id.more_copy_comment_text);
+        PostTextView copyUserId =
+                (PostTextView) commentMoreDialog.findViewById(R.id.more_copy_comment_author_id);
+
+        copyCommentText.setOnClickListener(this);
+        copyUserId.setOnClickListener(this);
+
+        commentMoreDialog.show();
+    }
+
+    private void hideMoreDialog(More more) {
+        if (more == More.POST) {
+            postMoreDialog.dismiss();
+        } else if (more == More.COMMENT) {
+            commentMoreDialog.dismiss();
+        }
     }
 }

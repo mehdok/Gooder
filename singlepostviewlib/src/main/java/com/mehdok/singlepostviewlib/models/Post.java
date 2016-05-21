@@ -13,19 +13,20 @@ public class Post {
     private PostDetail postDetail;
     private PostBody postBody;
     private PostFunction postFunction;
-    //private ArrayList<PostComment> postComment;
     private SendCommentClickListener sendCommentClickListener;
     private String postTitle;
+    private String postId;
 
     public Post(PostDetail postDetail, PostBody postBody,
-                PostFunction postFunction, /*ArrayList<PostComment> postComment,*/
-                SendCommentClickListener sendCommentClickListener, String postTitle) {
+                PostFunction postFunction,
+                SendCommentClickListener sendCommentClickListener, String postTitle,
+                String postId) {
         this.postDetail = postDetail;
         this.postBody = postBody;
         this.postFunction = postFunction;
-        //this.postComment = postComment;
         this.sendCommentClickListener = sendCommentClickListener;
         this.postTitle = postTitle;
+        this.postId = postId;
     }
 
     public PostDetail getPostDetail() {
@@ -40,15 +41,15 @@ public class Post {
         return postFunction;
     }
 
-    //    public ArrayList<PostComment> getPostComment() {
-    //        return postComment;
-    //    }
-
     public SendCommentClickListener getSendCommentClickListener() {
         return sendCommentClickListener;
     }
 
     public String getPostTitle() {
         return postTitle;
+    }
+
+    public String getPostId() {
+        return postId;
     }
 }

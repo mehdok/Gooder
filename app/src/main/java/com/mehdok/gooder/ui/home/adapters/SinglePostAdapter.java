@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.ui.home.PostFunctionHandler;
@@ -21,25 +22,29 @@ import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
+import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
 import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.PostBody;
 import com.mehdok.singlepostviewlib.models.PostDetail;
+import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.views.PostBodyView;
 import com.mehdok.singlepostviewlib.views.PostDetailView;
 import com.orhanobut.logger.Logger;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 /**
  * Created by mehdok on 4/13/2016.
  */
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ItemViewHolder>
-        implements PostFunctionListener, PrettySpann.TagClickListener {
+        implements PostFunctionListener, PrettySpann.TagClickListener, PostMoreListener {
     private ArrayList<APIPost> mPosts;
     private int BODY_COUNT = 200;
     private PostFunctionHandler functionHandler;
     private UserProfileClickListener userProfileClickListener;
+    private WeakReference<Context> mContext;
 
     public SinglePostAdapter(Context ctx, ArrayList<APIPost> posts,
                              UserProfileClickListener userProfileClickListener) {
@@ -47,6 +52,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         functionHandler = new PostFunctionHandler(ctx);
         functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
         this.userProfileClickListener = userProfileClickListener;
+        mContext = new WeakReference<Context>(ctx);
     }
 
     @Override
@@ -69,7 +75,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         holder.postDetail.hideUserPhoto();
         holder.postDetail.setPostDetail(new PostDetail(mPosts.get(position).getAuthor().getUid(),
                 mPosts.get(position).getAuthor().getFullName(), mPosts.get(position).getTime(),
-                userProfileClickListener));
+                userProfileClickListener), PostDetailView.More.POST, this, null, position);
 
         holder.postBody.setPostBody(new PostBody(getLimitedText(mPosts.get(position).getPostBody()),
                 getLimitedText(mPosts.get(position).getExtra().getNote()),
@@ -258,4 +264,26 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         }
     }
 
+    @Override
+    public void copyPostId(int position) {
+        ClipBoardUtil.copyText(mContext.get(), mPosts.get(position).getPid());
+        showToast(com.mehdok.singlepostviewlib.R.string.clip_post_id);
+    }
+
+    @Override
+    public void copyPostAuthorId(int position) {
+        ClipBoardUtil.copyText(mContext.get(), mPosts.get(position).getAuthor().getUid());
+        showToast(com.mehdok.singlepostviewlib.R.string.clip_post_author);
+    }
+
+    @Override
+    public void copyPostText(int position) {
+        ClipBoardUtil.copyText(mContext.get(),
+                mPosts.get(position).getPostBody() + mPosts.get(position).getExtra().getNote());
+        showToast(com.mehdok.singlepostviewlib.R.string.clip_post_body);
+    }
+
+    private void showToast(int resourceId) {
+        Toast.makeText(mContext.get(), resourceId, Toast.LENGTH_SHORT).show();
+    }
 }

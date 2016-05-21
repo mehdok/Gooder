@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/light_gray"
+    android:orientation="vertical"
+    >
+
+    <com.mehdok.singlepostviewlib.views.PostTextView
+        android:id="@+id/more_copy_post_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/buttons_background"
+        android:clickable="true"
+        android:padding="@dimen/mini_padding"
+        android:text="@string/post_id_copy"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/medium_gray"
+        />
+
+    <com.mehdok.singlepostviewlib.views.PostTextView
+        android:id="@+id/more_copy_user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/buttons_background"
+        android:clickable="true"
+        android:padding="@dimen/mini_padding"
+        android:text="@string/user_id_copy"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/medium_gray"
+        />
+
+    <com.mehdok.singlepostviewlib.views.PostTextView
+        android:id="@+id/more_copy_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/buttons_background"
+        android:clickable="true"
+        android:padding="@dimen/mini_padding"
+        android:text="@string/text_copy"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/medium_gray"
+        />
+
+</LinearLayout>
