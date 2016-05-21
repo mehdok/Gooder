@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -45,7 +45,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends AppCompatActivity implements InfiniteScrollListener,
-        ReshareUtil.ReshareUpdateListener, View.OnClickListener {
+        ReshareUtil.ReshareUpdateListener, View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
 
     private final String UNI_LTR = "\u200e";
     public static final String PROFILE_USER_ID = "profile_user_id";
@@ -59,16 +60,24 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     private FollowButton followButton;
     private AppCompatImageView imgUser;
     private InfiniteRecyclerView mRecyclerView;
-    private SpinKitView mProgress;
     private SinglePostAdapter mAdapter;
     private ArrayList<APIPost> mPosts;
     private CoordinatorLayout mRootLayout;
     private PostTextView tvAboutMe;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        // setup refresh layout
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.profile_refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.refresh_color_1,
+                R.color.refresh_color_2,
+                R.color.refresh_color_3,
+                R.color.refresh_color_4);
+        refreshLayout.setOnRefreshListener(this);
 
         // setup toolbar
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
@@ -95,8 +104,6 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         mRecyclerView.addItemDecoration(new VerticalSpaceItemDecoration(
                 getResources().getDimensionPixelSize(R.dimen.standard_padding)));
         mRecyclerView.setInfiniteScrollListener(this);
-
-        mProgress = (SpinKitView) findViewById(R.id.profile_item_progress);
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
@@ -228,14 +235,15 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         }
     }
 
-    private void showProgress(boolean show) {
+    private void showProgress(final boolean show) {
         loadingFlag = show;
 
-        if (show) {
-            mProgress.setVisibility(View.VISIBLE);
-        } else {
-            mProgress.setVisibility(View.INVISIBLE);
-        }
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(show);
+            }
+        });
     }
 
     private void checkForReshares(int from, UserInfo userInfo) {
@@ -423,5 +431,12 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     public void showSimpleMessage(String str) {
         Snackbar.make(mRootLayout, str, Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    @Override
+    public void onRefresh() {
+        reachEndOfPosts = false;
+        mPosts.clear();
+        getUserPosts();
     }
 }

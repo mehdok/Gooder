@@ -15,21 +15,19 @@
     tools:showIn="@layout/activity_profile"
     >
 
-    <com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView
-        android:id="@+id/profile_recycler_view"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/profile_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
+        >
 
-    <com.github.ybq.android.spinkit.SpinKitView
-        android:id="@+id/profile_item_progress"
-        style="@style/SpinKitView.CubeGrid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        app:SpinKit_Color="@color/progress_bar_color"
-        android:visibility="gone"
-        />
+        <com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView
+            android:id="@+id/profile_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

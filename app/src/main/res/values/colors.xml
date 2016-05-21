@@ -13,4 +13,9 @@
     <color name="separator_color">#a6a6a6</color>
     <color name="progress_bar_color">@color/colorPrimary</color>
 
+    <color name="refresh_color_1">@color/colorPrimaryDark</color>
+    <color name="refresh_color_2">#da6200</color>
+    <color name="refresh_color_3">#453232</color>
+    <color name="refresh_color_4">#ed1fe160</color>
+
 </resources>

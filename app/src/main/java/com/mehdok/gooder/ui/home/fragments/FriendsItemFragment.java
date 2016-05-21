@@ -12,12 +12,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -48,12 +48,13 @@ import rx.schedulers.Schedulers;
  * A simple {@link Fragment} subclass.
  */
 public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener,
-        UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener {
+        UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener,
+        SwipeRefreshLayout.OnRefreshListener {
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
-    private SpinKitView mProgress;
     private SinglePostAdapter mAdapter;
     private ArrayList<APIPost> mPosts;
+    private SwipeRefreshLayout refreshLayout;
 
     private boolean loadingFlag = false;
     private boolean reachEndOfPosts = false;
@@ -76,6 +77,14 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
 
         View v = inflater.inflate(R.layout.fragment_friends_item, container, false);
 
+        // setup refresh action
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.friends_refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.refresh_color_1,
+                R.color.refresh_color_2,
+                R.color.refresh_color_3,
+                R.color.refresh_color_4);
+        refreshLayout.setOnRefreshListener(this);
+
         // init recycler
         mRecyclerView = (InfiniteRecyclerView) v.findViewById(R.id.friends_item_recycler);
         mRecyclerView.setHasFixedSize(false);
@@ -84,8 +93,6 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
                 getActivity().getResources().getDimensionPixelSize(R.dimen.standard_padding)));
         mRecyclerView.setInfiniteScrollListener(this);
         mRecyclerView.setUiToggleListener(this);
-
-        mProgress = (SpinKitView) v.findViewById(R.id.friends_item_progress);
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
@@ -100,14 +107,15 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         return v;
     }
 
-    private void showProgress(boolean show) {
+    private void showProgress(final boolean show) {
         loadingFlag = show;
 
-        if (show) {
-            mProgress.setVisibility(View.VISIBLE);
-        } else {
-            mProgress.setVisibility(View.INVISIBLE);
-        }
+        refreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                refreshLayout.setRefreshing(show);
+            }
+        });
     }
 
     private void getData() {
@@ -255,5 +263,12 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
         profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
         getActivity().startActivity(profileIntent);
+    }
+
+    @Override
+    public void onRefresh() {
+        reachEndOfPosts = false;
+        mPosts.clear();
+        getData();
     }
 }
