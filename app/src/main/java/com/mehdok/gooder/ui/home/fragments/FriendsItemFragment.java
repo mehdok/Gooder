@@ -5,38 +5,25 @@
 package com.mehdok.gooder.ui.home.fragments;
 
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
-import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
-import com.mehdok.gooder.infinitescroll.interfaces.UiToggleListener;
 import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
-import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
-import com.mehdok.gooder.ui.profile.ProfileActivity;
-import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooder.views.VerticalSpaceItemDecoration;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
-import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.user.UserInfo;
-import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 
 import java.util.ArrayList;
 
@@ -47,18 +34,9 @@ import rx.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener,
-        UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+public class FriendsItemFragment extends BaseFragment {
     private String TAG = this.getClass().getSimpleName();
     private static FriendsItemFragment mInstance;
-    private InfiniteRecyclerView mRecyclerView;
-    private SinglePostAdapter mAdapter;
-    private ArrayList<APIPost> mPosts;
-    private SwipeRefreshLayout refreshLayout;
-
-    private boolean loadingFlag = false;
-    private boolean reachEndOfPosts = false;
 
     public static FriendsItemFragment getInstance() {
         if (mInstance == null) {
@@ -108,18 +86,8 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         return v;
     }
 
-    private void showProgress(final boolean show) {
-        loadingFlag = show;
-
-        refreshLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                refreshLayout.setRefreshing(show);
-            }
-        });
-    }
-
-    private void getData() {
+    @Override
+    protected void getData() {
         // return if there is no more posts
         if (reachEndOfPosts) return;
 
@@ -180,108 +148,7 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
     }
 
     @Override
-    public void loadMore() {
-        if (!loadingFlag) {
-            getData();
-        }
-    }
-
-    @Override
-    public void clearViews() {
-        mPosts.clear();
-        mAdapter = null;
-    }
-
-    @Override
-    public void show() {
-        MainActivityDelegate.getInstance().getActivity().showUI();
-    }
-
-    @Override
-    public void hide() {
-        MainActivityDelegate.getInstance().getActivity().hideUI();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(postContentChangeReceiver, new IntentFilter(
-                        Globals.POST_CONTENT_CHANGED));
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        //        LocalBroadcastManager.getInstance(getActivity())
-        //                .unregisterReceiver(postContentChangeReceiver);
-    }
-
-    private BroadcastReceiver postContentChangeReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ParcelablePost parcelablePost = intent.getParcelableExtra(Globals.CHANGED_POST);
-            if (mPosts != null) {
-                for (APIPost post : mPosts) {
-                    if (post.getPid().equals(parcelablePost.getPid())) {
-                        post.setLiked(parcelablePost.isLiked());
-                        post.setStarred(parcelablePost.isStared());
-                        post.setLikeCounts(parcelablePost.getLikeCounts());
-                        post.setCommentCount(parcelablePost.getCommentCount());
-                        post.setSharesCount(parcelablePost.getSharesCount());
-
-                        if (mAdapter != null) {
-                            mAdapter.notifyDataSetChanged();
-                        }
-
-                        break;
-                    }
-                }
-            }
-        }
-    };
-
-    private void checkForReshares(int from, UserInfo userInfo) {
-        QueryBuilder queryBuilder = new QueryBuilder();
-        queryBuilder.setUserName(userInfo.getUsername());
-        try {
-            queryBuilder.setPassword(Crypto.getMD5BASE64(
-                    new String(Crypto.decrypt(userInfo.getPassword(), getActivity()))));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        ReshareUtil reshareUtil = new ReshareUtil();
-        reshareUtil.setListener(FriendsItemFragment.this);
-        reshareUtil.checkForReshares(mPosts, from, queryBuilder);
-    }
-
-    @Override
-    public void ResharePostFetched(int position) {
-        mAdapter.notifyItemChanged(position);
-    }
-
-    @Override
-    public void showUserProfile(String userID) {
-        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
-        profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
-        getActivity().startActivity(profileIntent);
-    }
-
-    @Override
-    public void onRefresh() {
-        refreshData();
-    }
-
-
-    @Override
     public String getFragmentTag() {
         return TAG;
-    }
-
-    @Override
-    public void refreshData() {
-        reachEndOfPosts = false;
-        mPosts.clear();
-        getData();
     }
 }

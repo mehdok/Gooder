@@ -54,8 +54,7 @@ public class StaredItemFragment extends BaseFragment
     }
 
     @Override
-    public void refreshData() {
+    protected void getData() {
 
     }
-
 }

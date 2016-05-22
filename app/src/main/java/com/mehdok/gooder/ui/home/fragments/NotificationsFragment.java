@@ -49,8 +49,7 @@ public class NotificationsFragment extends BaseFragment {
     }
 
     @Override
-    public void refreshData() {
+    protected void getData() {
 
     }
-
 }

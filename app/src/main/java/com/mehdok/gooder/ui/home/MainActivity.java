@@ -631,4 +631,15 @@ public class MainActivity extends AppCompatActivity implements
             }
         }
     }
+
+    public QueryBuilder.TypeFactor getCommentKind() {
+        if (mCommentKind == CommentKind.ME) {
+            return QueryBuilder.TypeFactor.ME;
+        } else if (mCommentKind == CommentKind.ME_FOLLOWED) {
+            return QueryBuilder.TypeFactor.ME_FRIENDS;
+        } else {
+            return QueryBuilder.TypeFactor.MY_POSTS;
+        }
+    }
+
 }
