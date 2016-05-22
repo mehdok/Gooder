@@ -235,6 +235,7 @@ public class MainActivity extends AppCompatActivity implements
         itemCommentByAnyone = menu.findItem(R.id.action_comment_by_anyone);
 
         itemUnreadOnly.setChecked(true);
+        itemCommentByMe.setChecked(true);
 
         // first view is friends, so hide comment options
         showCommentOptions(false);
@@ -260,10 +261,13 @@ public class MainActivity extends AppCompatActivity implements
             itemUnreadOnly.setChecked(!itemUnreadOnly.isChecked());
         } else if (id == R.id.action_comment_by_me) {
             mCommentKind = CommentKind.ME;
+            itemCommentByMe.setChecked(true);
         } else if (id == R.id.action_comment_by_me_and_followers) {
             mCommentKind = CommentKind.ME_FOLLOWED;
+            itemCommentByMeAndFollowers.setChecked(true);
         } else if (id == R.id.action_comment_by_anyone) {
             mCommentKind = CommentKind.EVERYONE;
+            itemCommentByAnyone.setChecked(true);
         }
 
         reloadFragmentsData();

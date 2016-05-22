@@ -23,19 +23,23 @@
         app:actionViewClass="android.support.v7.widget.AppCompatCheckBox"
         app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_by_me"
-        android:title="@string/action_by_me"
-        app:showAsAction="never"/>
+    <group
+        android:id="@+id/comment_group"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_comment_by_me"
+            android:title="@string/action_by_me"
+            app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_by_me_and_followers"
-        android:title="@string/action_by_me_and_followers"
-        app:showAsAction="never"/>
+        <item
+            android:id="@+id/action_comment_by_me_and_followers"
+            android:title="@string/action_by_me_and_followers"
+            app:showAsAction="never"/>
 
-    <item
-        android:id="@+id/action_comment_by_anyone"
-        android:title="@string/action_by_anyone_on_my_post"
-        app:showAsAction="never"/>
+        <item
+            android:id="@+id/action_comment_by_anyone"
+            android:title="@string/action_by_anyone_on_my_post"
+            app:showAsAction="never"/>
+    </group>
 
 </menu>
