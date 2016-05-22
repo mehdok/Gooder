@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements
                     changeView(CommentViewFragment.getInstance());
                 } else if (menuItemId == R.id.stared_item) {
                     showCommentOptions(false);
-                    showGeneralOption(true);
+                    showGeneralOption(false);
                     mViewKind = ViewKind.STARED;
                     changeView(StaredItemFragment.getInstance());
                 } else if (menuItemId == R.id.notification) {
@@ -252,7 +252,6 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        //TODO refresh views
         if (id == R.id.action_search) {
             return true;
         } else if (id == R.id.action_friends_reverse_order) {

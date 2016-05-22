@@ -5,11 +5,18 @@
     tools:context="com.mehdok.gooder.ui.home.fragments.StaredItemFragment"
     >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/star_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="stared"
-        />
+        >
+
+        <com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView
+            android:id="@+id/star_item_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </FrameLayout>

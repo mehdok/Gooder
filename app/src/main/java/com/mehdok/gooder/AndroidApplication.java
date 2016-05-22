@@ -25,10 +25,10 @@ public class AndroidApplication extends Application {
 
         if (BuildConfig.DEBUG) {
             // init the logger library
-            Logger.init().logLevel(LogLevel.FULL);
+            Logger.init().logLevel(LogLevel.NONE);
 
             // init Retrofit
-            GooderApi.create(Crypto.API_KEY, HttpLoggingInterceptor.Level.BODY);
+            GooderApi.create(Crypto.API_KEY, HttpLoggingInterceptor.Level.NONE);
         } else {
             Logger.init().logLevel(LogLevel.NONE);
             GooderApi.create(Crypto.API_KEY, HttpLoggingInterceptor.Level.NONE);
