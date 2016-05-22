@@ -26,7 +26,6 @@ import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
-import com.orhanobut.logger.Logger;
 
 import retrofit2.adapter.rxjava.HttpException;
 import rx.Observer;
@@ -169,9 +168,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         queryBuilder.setPostTitle(etTitle.getText().toString());
 
         String body = etBody.getText().toString();
-        //body = body.replace("\n", "newline");
         body = body.replace("\\n", "\\r\\n");
-        String bodys[] = body.split("\n");
         queryBuilder.setPostBody(body);
 
         if (chbDisableComment.isChecked()) {
@@ -223,8 +220,6 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
                         cancelPost();
                     }
                 });
-
-        Logger.d("text lines: " + bodys.length);
     }
 
     private void cancelPost() {

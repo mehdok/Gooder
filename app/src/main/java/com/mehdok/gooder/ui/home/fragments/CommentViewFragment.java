@@ -43,4 +43,14 @@ public class CommentViewFragment extends BaseFragment {
 
     }
 
+    @Override
+    public String getFragmentTag() {
+        return null;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
 }

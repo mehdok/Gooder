@@ -48,4 +48,14 @@ public class StaredItemFragment extends BaseFragment
 
     }
 
+    @Override
+    public String getFragmentTag() {
+        return null;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
 }

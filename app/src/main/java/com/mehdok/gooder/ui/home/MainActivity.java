@@ -67,6 +67,11 @@ import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+
+    private enum ViewKind {FRIENDS, COMMENT, NOTIFICATION, STARED}
+
+    public enum CommentKind {ME, ME_FOLLOWED, EVERYONE}
+
     private BottomBar mBottomBar;
     private boolean firstRun = true;
     private Dialog loginDialog;
@@ -77,11 +82,19 @@ public class MainActivity extends AppCompatActivity implements
     private boolean showFlag = true;
     private boolean hideFlag = true;
     private int bottomBarSize = 0;
+    private ViewKind mViewKind;
+    private CommentKind mCommentKind = CommentKind.ME; // default comment view kind
 
     private CoordinatorLayout mRootLayout;
     private ImageView userImage;
     private VazirTextView tvUserName;
     private FloatingActionButton addPostFab;
+
+    private MenuItem itemReverseOrder;
+    private MenuItem itemUnreadOnly;
+    private MenuItem itemCommentByMe;
+    private MenuItem itemCommentByMeAndFollowers;
+    private MenuItem itemCommentByAnyone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,12 +171,24 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 if (menuItemId == R.id.friends_item) {
+                    mViewKind = ViewKind.FRIENDS;
+                    showGeneralOption(true);
+                    showCommentOptions(false);
                     changeView(FriendsItemFragment.getInstance());
                 } else if (menuItemId == R.id.comments_view) {
+                    mViewKind = ViewKind.COMMENT;
+                    showCommentOptions(true);
+                    showGeneralOption(true);
                     changeView(CommentViewFragment.getInstance());
                 } else if (menuItemId == R.id.stared_item) {
+                    showCommentOptions(false);
+                    showGeneralOption(true);
+                    mViewKind = ViewKind.STARED;
                     changeView(StaredItemFragment.getInstance());
                 } else if (menuItemId == R.id.notification) {
+                    showCommentOptions(false);
+                    showGeneralOption(false);
+                    mViewKind = ViewKind.NOTIFICATION;
                     changeView(NotificationsFragment.getInstance());
                 }
             }
@@ -202,6 +227,19 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        itemReverseOrder = menu.findItem(R.id.action_friends_reverse_order);
+        itemUnreadOnly = menu.findItem(R.id.action_friends_unread_only);
+        itemCommentByMe = menu.findItem(R.id.action_comment_by_me);
+        itemCommentByMeAndFollowers = menu.findItem(R.id.action_comment_by_me_and_followers);
+        itemCommentByAnyone = menu.findItem(R.id.action_comment_by_anyone);
+
+        itemUnreadOnly.setChecked(true);
+
+        // first view is friends, so hide comment options
+        showCommentOptions(false);
+        showGeneralOption(true);
+
         return true;
     }
 
@@ -213,9 +251,22 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+        //TODO refresh views
         if (id == R.id.action_search) {
             return true;
+        } else if (id == R.id.action_friends_reverse_order) {
+            itemReverseOrder.setChecked(!itemReverseOrder.isChecked());
+        } else if (id == R.id.action_friends_unread_only) {
+            itemUnreadOnly.setChecked(!itemUnreadOnly.isChecked());
+        } else if (id == R.id.action_comment_by_me) {
+            mCommentKind = CommentKind.ME;
+        } else if (id == R.id.action_comment_by_me_and_followers) {
+            mCommentKind = CommentKind.ME_FOLLOWED;
+        } else if (id == R.id.action_comment_by_anyone) {
+            mCommentKind = CommentKind.EVERYONE;
         }
+
+        reloadFragmentsData();
 
         return super.onOptionsItemSelected(item);
     }
@@ -287,7 +338,7 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
-    private void changeView(Fragment fragment) {
+    private void changeView(BaseFragment fragment) {
         if (fragment.getArguments() == null) {
             Bundle bundle = new Bundle();
             fragment.setArguments(bundle);
@@ -535,6 +586,49 @@ public class MainActivity extends AppCompatActivity implements
 
             //hide actionbar
             //            getSupportActionBar().hide();
+        }
+    }
+
+    private void showCommentOptions(boolean show) {
+        itemCommentByMe.setVisible(show);
+        itemCommentByMeAndFollowers.setVisible(show);
+        itemCommentByAnyone.setVisible(show);
+    }
+
+    private void showGeneralOption(boolean show) {
+        itemUnreadOnly.setVisible(show);
+        itemReverseOrder.setVisible(show);
+    }
+
+    public QueryBuilder.Value isReverseOrder() {
+        // if view is null it mean this is the first run, so return default value.
+        //TODO ROAD_MAP put a default value in setting
+        if (itemReverseOrder == null) return QueryBuilder.Value.NO;
+
+        if (itemReverseOrder.isChecked()) {
+            return QueryBuilder.Value.YES;
+        } else {
+            return QueryBuilder.Value.NO;
+        }
+    }
+
+    public QueryBuilder.Value isUnreadOnly() {
+        // if view is null it mean this is the first run, so return default value.
+        //TODO ROAD_MAP put a default value in setting
+        if (itemUnreadOnly == null) return QueryBuilder.Value.YES;
+
+        if (itemUnreadOnly.isChecked()) {
+            return QueryBuilder.Value.YES;
+        } else {
+            return QueryBuilder.Value.NO;
+        }
+    }
+
+    private void reloadFragmentsData() {
+        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+            if (fragment instanceof BaseFragment && fragment.isVisible()) {
+                ((BaseFragment) fragment).refreshData();
+            }
         }
     }
 }

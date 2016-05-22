@@ -5,6 +5,11 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_search">Search</string>
+    <string name="action_reverse_order">Reverse Order</string>
+    <string name="action_unread_only">Unread Only</string>
+    <string name="action_by_me">By Me</string>
+    <string name="action_by_me_and_followers">By Me And People I follow</string>
+    <string name="action_by_anyone_on_my_post">By Me And Anny One On My Post</string>
 
     <string name="bottom_bar_home">Friends</string>
     <string name="bottom_bar_comment">Comments</string>

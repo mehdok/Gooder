@@ -50,6 +50,7 @@ import rx.schedulers.Schedulers;
 public class FriendsItemFragment extends BaseFragment implements InfiniteScrollListener,
         UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener,
         SwipeRefreshLayout.OnRefreshListener {
+    private String TAG = this.getClass().getSimpleName();
     private static FriendsItemFragment mInstance;
     private InfiniteRecyclerView mRecyclerView;
     private SinglePostAdapter mAdapter;
@@ -137,8 +138,9 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
         }
 
         //        queryBuilder.setGid("");
-        //        queryBuilder.setUnreadOnly(QueryBuilder.Value.YES);
-        //        queryBuilder.setReverseOrder(QueryBuilder.Value.NO);
+        queryBuilder.setUnreadOnly(MainActivityDelegate.getInstance().getActivity().isUnreadOnly());
+        queryBuilder.setReverseOrder(
+                MainActivityDelegate.getInstance().getActivity().isReverseOrder());
         queryBuilder.setStart(mPosts.size());
         requestBuilder.getAllFriendsItem(queryBuilder)
                 .subscribeOn(Schedulers.io())
@@ -267,6 +269,17 @@ public class FriendsItemFragment extends BaseFragment implements InfiniteScrollL
 
     @Override
     public void onRefresh() {
+        refreshData();
+    }
+
+
+    @Override
+    public String getFragmentTag() {
+        return TAG;
+    }
+
+    @Override
+    public void refreshData() {
         reachEndOfPosts = false;
         mPosts.clear();
         getData();

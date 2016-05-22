@@ -43,4 +43,14 @@ public class NotificationsFragment extends BaseFragment {
 
     }
 
+    @Override
+    public String getFragmentTag() {
+        return null;
+    }
+
+    @Override
+    public void refreshData() {
+
+    }
+
 }
