@@ -18,12 +18,12 @@ import com.mehdok.gooderapilib.models.follow.FollowResponse;
 import com.mehdok.gooderapilib.models.follow.Followed;
 import com.mehdok.gooderapilib.models.follow.Followers;
 import com.mehdok.gooderapilib.models.notification.NotificationList;
+import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.Like;
 import com.mehdok.gooderapilib.models.post.NewPostsCount;
 import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.post.PostReadsCount;
-import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.gooderapilib.models.user.UserSearchInfo;
@@ -929,7 +929,7 @@ public class RequestBuilder {
      * If access code is usable return it  otherwise request new one.
      */
     private Observable<String> getAccessCode(com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
-        if (com.mehdok.gooderapilib.GooderApi.lastOperation - System.currentTimeMillis() >
+        if (System.currentTimeMillis() - com.mehdok.gooderapilib.GooderApi.lastOperation <
                 com.mehdok.gooderapilib.GooderApi.ACCESS_CODE_LIMIT) {
             com.mehdok.gooderapilib.GooderApi.lastOperation = System.currentTimeMillis();
             return Observable.just(com.mehdok.gooderapilib.GooderApi.mAccessCode);
