@@ -55,7 +55,6 @@ import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.BottomBarBadge;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.util.UUID;
@@ -104,6 +103,10 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         mRootLayout = (CoordinatorLayout) findViewById(R.id.main_root_layout);
 
+        init(savedInstanceState);
+    }
+
+    private void init(Bundle savedInstanceState) {
         // set the private encryption key
         handleFirstRun();
 
@@ -208,9 +211,8 @@ public class MainActivity extends AppCompatActivity implements
         mBottomBar.mapColorForTab(3, colorId);
 
         //TODO badge test
-        BottomBarBadge unreadMessages = mBottomBar.makeBadgeForTabAt(3, "#FF0000", 6);
-
-        unreadMessages.show();
+        //BottomBarBadge unreadMessages = mBottomBar.makeBadgeForTabAt(3, "#FF0000", 6);
+        //unreadMessages.show();
     }
 
     @Override
