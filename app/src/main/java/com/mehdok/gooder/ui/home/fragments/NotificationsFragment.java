@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -138,6 +139,12 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
                     @Override
                     public void onNext(NotificationList notificationList) {
                         showProgress(false);
+                        if (notificationList.getNotifications().size() == 0) {
+                            Toast.makeText(getActivity(), R.string.notification_no,
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                            return;
+                        }
                         mNotification.addAll(notificationList.getNotifications());
                         mUserInfo.addAll(notificationList.getUsers().getUsers());
                         mAdapter.notifyDataSetChanged();

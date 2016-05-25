@@ -61,8 +61,13 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
 
         extractLog(stacktrace, logDir.getAbsolutePath(), fullName);
 
+        if (com.mehdok.gooder.BuildConfig.DEBUG) {
+            defaultUEH.uncaughtException(t, e);
+        } else {
+            restartApp(logDir.getAbsolutePath() + "/" + fullName);
+        }
         //restartApp(logDir.getAbsolutePath() + "/" + fullName);
-        defaultUEH.uncaughtException(t, e);
+        //defaultUEH.uncaughtException(t, e);
     }
 
     public static File extractLog(String trace, String logDir, String fullName) {
