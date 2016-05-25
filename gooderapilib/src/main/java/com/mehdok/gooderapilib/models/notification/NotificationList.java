@@ -6,6 +6,7 @@ package com.mehdok.gooderapilib.models.notification;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mehdok.gooderapilib.models.user.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,17 @@ public class NotificationList extends com.mehdok.gooderapilib.models.BaseRespons
     @Expose
     public List<Notification> notifications = new ArrayList<Notification>();
 
+    private Users users;
+
     public List<Notification> getNotifications() {
         return notifications;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 }

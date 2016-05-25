@@ -9,8 +9,6 @@ package com.mehdok.singlepostviewlib.interfaces;
  */
 public interface PostMoreListener {
     void copyPostId(int pos);
-
     void copyPostAuthorId(int pos);
-
     void copyPostText(int pos);
 }

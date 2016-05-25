@@ -343,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements
                 .commit();
     }
 
-    private void changeView(BaseFragment fragment) {
+    private void changeView(Fragment fragment) {
         if (fragment.getArguments() == null) {
             Bundle bundle = new Bundle();
             fragment.setArguments(bundle);
@@ -544,6 +544,9 @@ public class MainActivity extends AppCompatActivity implements
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
             if (fragment instanceof BaseFragment) {
                 ((BaseFragment) fragment).clearViews();
+                trans.remove(fragment);
+            } else if (fragment instanceof NotificationsFragment) {
+                ((NotificationsFragment) fragment).clearViews();
                 trans.remove(fragment);
             }
         }

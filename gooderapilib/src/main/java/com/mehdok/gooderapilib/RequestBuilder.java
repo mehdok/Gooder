@@ -903,12 +903,28 @@ public class RequestBuilder {
 
     public Observable<NotificationList> getNotification(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+        final NotificationList[] mNotification = new NotificationList[1];
         return getAccessCode(queryBuilder)
                 .flatMap(new Func1<String, Observable<NotificationList>>() {
                     @Override
                     public Observable<NotificationList> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getNotification(queryBuilder.getPostParams());
+                    }
+                })
+                .flatMap(new Func1<NotificationList, Observable<Users>>() {
+                    @Override
+                    public Observable<Users> call(NotificationList notificationList) {
+                        String userId = Util.getCommaDelimitedUser(notificationList);
+                        mNotification[0] = notificationList;
+                        return mGooderApi.getUsersInfo(userId, queryBuilder.getPostParams());
+                    }
+                })
+                .flatMap(new Func1<Users, Observable<NotificationList>>() {
+                    @Override
+                    public Observable<NotificationList> call(Users users) {
+                        mNotification[0].setUsers(users);
+                        return Observable.just(mNotification[0]);
                     }
                 });
     }

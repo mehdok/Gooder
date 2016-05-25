@@ -27,7 +27,7 @@ import com.mehdok.singlepostviewlib.utils.TimeUtil;
  * Created by mehdok on 5/4/2016.
  */
 public class PostDetailView extends LinearLayout implements View.OnClickListener {
-    public enum More {POST, COMMENT}
+    public enum More {POST, COMMENT, NOTIFICATION}
 
     private PostTextView tvAuthor;
     private PostTextView tvDate;
@@ -78,7 +78,7 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
     public void setPostDetail(PostDetail postDetail, More detailMode,
                               PostMoreListener postMoreListener,
                               CommentMoreListener commentMoreListener,
-                              int position) {
+                              int position, String authorPhoto) {
         mPostDetail = postDetail;
         tvAuthor.setText(postDetail.getAuthor());
         tvDate.setText(TimeUtil.getInstance().getReadableDate(postDetail.getDate()));
@@ -86,6 +86,10 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
         this.postMoreListener = postMoreListener;
         this.commentMoreListener = commentMoreListener;
         mPosition = position;
+
+        if (authorPhoto != null) {
+            loadAuthorPhoto(authorPhoto);
+        }
     }
 
     public void loadAuthorPhoto(String url) {
@@ -101,6 +105,8 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
                 showPostMoreOption(view);
             } else if (mDetailMode == More.COMMENT) {
                 showCommentMoreOption(view);
+            } else if (mDetailMode == More.NOTIFICATION) {
+                showNotificationMoreOption(view);
             }
         } else if (id == R.id.more_copy_post_id) {
             hideMoreDialog(More.POST);
@@ -196,5 +202,9 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
         } else if (more == More.COMMENT) {
             commentMoreDialog.dismiss();
         }
+    }
+
+    private void showNotificationMoreOption(View view) {
+        //TODO
     }
 }

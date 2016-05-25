@@ -62,6 +62,23 @@ public class QueryBuilder {
         }
     }
 
+    public enum NotificationType {
+        COMMENT("new_mention_in_comment"),
+        POST("new_mention_in_post"),
+        FOLLOWER("new_follower");
+
+        private String mValue;
+
+        private NotificationType(String value) {
+            mValue = value;
+        }
+
+        @Override
+        public String toString() {
+            return mValue;
+        }
+    }
+
     // POST PARAMS
     private static final String KEY_CLIENT_ID = "client_id";
     private static final String KEY_ACCESS_CODE = "access_code";

@@ -9,7 +9,7 @@
     <string name="action_unread_only">Unread Only</string>
     <string name="action_by_me">By Me</string>
     <string name="action_by_me_and_followers">By Me And People I follow</string>
-    <string name="action_by_anyone_on_my_post">By Me And Anny One On My Post</string>
+    <string name="action_by_anyone_on_my_post">By Me And Anyone On My Post</string>
 
     <string name="bottom_bar_home">Friends</string>
     <string name="bottom_bar_comment">Comments</string>
@@ -55,5 +55,8 @@
     <string name="user_unfollowed">User UnFollowed</string>
     <string name="can_not_do">Can not do this operation right now.</string>
     <string name="last_post">That\'s the last post</string>
+    <string name="notification_post">Mentioned you in post</string>
+    <string name="notification_comment">Mentioned you in Comment</string>
+    <string name="notification_new_follower">Starts following you</string>
 
 </resources>
