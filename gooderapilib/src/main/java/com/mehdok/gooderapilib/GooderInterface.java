@@ -317,7 +317,6 @@ public interface GooderInterface {
 
     //TODO http://gooder.in/api/?method=mark-everything-as-read
     //TODO http://gooder.in/api/?method=mark-user-as-read
-    //TODO http://gooder.in/api/?method=delete-notification
     //TODO http://gooder.in/api/?method=clear-notifications
 
     @FormUrlEncoded
@@ -332,5 +331,10 @@ public interface GooderInterface {
     @FormUrlEncoded
     @POST("?method=is-premium-user")
     Observable<PremiumUserResponse> isUserPremium(@FieldMap Map<String, String> query);
+
+    @FormUrlEncoded
+    @POST("?method=delete-notification")
+    Observable<BaseResponse> deleteNotification(@Query("nid") String nid,
+                                                @FieldMap Map<String, String> query);
 
 }

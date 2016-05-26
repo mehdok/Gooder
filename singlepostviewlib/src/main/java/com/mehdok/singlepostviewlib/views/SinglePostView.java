@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
 import com.mehdok.singlepostviewlib.models.Post;
+import com.mehdok.singlepostviewlib.models.PostBody;
 import com.mehdok.singlepostviewlib.models.PostComment;
 import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 
@@ -81,6 +82,10 @@ public class SinglePostView extends RelativeLayout implements PostMoreListener {
         }
 
         addCommentView.setSendCommentListener(post.getSendCommentClickListener());
+    }
+
+    public void changePostBody(PostBody postBody) {
+        postBodyView.setPostBody(postBody);
     }
 
     public void addComments(ArrayList<PostComment> postComment) {

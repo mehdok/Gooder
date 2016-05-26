@@ -25,6 +25,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,6 +55,7 @@ import com.mehdok.gooder.views.VazirTextView;
 import com.mehdok.gooderapilib.GooderApi;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
+import com.mehdok.gooderapilib.models.BaseResponse;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
@@ -409,7 +411,6 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loginWithUserPass(String userName, String password) {
-
         try {
             mPassword = Crypto.encrypt(password.getBytes(), this);
         } catch (Exception e) {
@@ -655,6 +656,41 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             return QueryBuilder.TypeFactor.MY_POSTS;
         }
+    }
+
+    public void requestDeleteNotif(String nid) {
+        final QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userInfo.getUsername());
+        try {
+            queryBuilder.setPassword(Crypto.getMD5BASE64(
+                    new String(Crypto.decrypt(userInfo.getPassword(), this))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBuilder requestBuilder = new RequestBuilder();
+
+        requestBuilder.deleteNotification(nid, queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BaseResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showBugSnackBar(e);
+                    }
+
+                    @Override
+                    public void onNext(BaseResponse baseResponse) {
+                        Log.d("requestDeleteNotif", baseResponse.getMsgText());
+                    }
+                });
+
     }
 
 }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mehdok.gooder.R;
+import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.models.notification.Notification;
@@ -22,6 +23,7 @@ import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.PostDetail;
 import com.mehdok.singlepostviewlib.views.PostDetailView;
 import com.mehdok.singlepostviewlib.views.PostTextView;
+import com.orhanobut.logger.Logger;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -95,6 +97,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void onClick(View view) {
             int pos = getAdapterPosition();
             if (mNotification.get(pos).getNotificationData() != null) {
+                Logger.e("nid: " + mNotification.get(pos).getNid());
                 Intent singlePostIntent = new Intent(view.getContext(), SinglePostActivity.class);
                 singlePostIntent.putExtra(SinglePostActivity.POST_ID_EXTRA,
                         mNotification.get(pos).getNotificationData().getPid());
@@ -105,17 +108,11 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void deleteNotification(int pos) {
+        String nid = mNotification.get(pos).getNid();
+        MainActivityDelegate.getInstance().getActivity().requestDeleteNotif(nid);
 
-    }
-
-    private String getUserName(String uid) {
-        for (UserInfo userInfo : mUserInfo) {
-            if (userInfo.getUid().equals(uid)) {
-                return userInfo.getFullname();
-            }
-        }
-
-        return "";
+        mNotification.remove(pos);
+        notifyItemRemoved(pos);
     }
 
     private UserInfo getUserInfo(String uid) {

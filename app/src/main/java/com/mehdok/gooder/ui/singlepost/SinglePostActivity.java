@@ -23,11 +23,13 @@ import com.mehdok.gooder.ui.home.PostFunctionHandler;
 import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.profile.ProfileActivity;
+import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.comment.CommentContent;
 import com.mehdok.gooderapilib.models.comment.CommentResponse;
+import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.post.SinglePost;
@@ -57,7 +59,7 @@ import rx.schedulers.Schedulers;
 //TODO copy post body
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
         SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener,
-        UserProfileClickListener {
+        UserProfileClickListener, ReshareUtil.ReshareUpdateListener {
 
     public static final String PARCELABLE_POST_EXTRA = "parcelable_post_extra";
     public static final String POST_ID_EXTRA = "post_id_extra";
@@ -69,6 +71,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     private SpinKitView mProgress;
     private String mPostId;
     private UserInfo userInfo;
+    private ArrayList<APIPost> mPosts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -431,7 +434,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     }
 
     private void reloadPost() {
-        QueryBuilder queryBuilder = new QueryBuilder();
+        final QueryBuilder queryBuilder = new QueryBuilder();
         queryBuilder.setUserName(userInfo.getUsername());
         try {
             queryBuilder.setPassword(Crypto.getMD5BASE64(
@@ -462,11 +465,30 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                         if (singlePost.getPost() != null) {
                             post = new ParcelablePost(singlePost.getPost());
                             showPost(post);
+
+                            // get reshare content
+                            mPosts = new ArrayList<>(1);
+                            mPosts.add(singlePost.getPost());
+                            checkForReshare(queryBuilder);
                         } else {
                             showSimpleMessage(
                                     String.format(getString(R.string.can_not_find_post), mPostId));
                         }
                     }
                 });
+    }
+
+    private void checkForReshare(QueryBuilder queryBuilder) {
+        ReshareUtil reshareUtil = new ReshareUtil();
+        reshareUtil.setListener(this);
+        reshareUtil.checkForReshares(mPosts, 0, queryBuilder);
+    }
+
+    @Override
+    public void ResharePostFetched(int position) {
+        PostBody postBody =
+                new PostBody(mPosts.get(0).getPostBody(), mPosts.get(0).getExtra().getNote(), this);
+        singlePostView.changePostBody(postBody);
+
     }
 }
