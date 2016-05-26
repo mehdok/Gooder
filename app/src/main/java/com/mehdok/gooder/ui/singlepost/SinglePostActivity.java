@@ -30,6 +30,7 @@ import com.mehdok.gooderapilib.models.comment.CommentContent;
 import com.mehdok.gooderapilib.models.comment.CommentResponse;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.PostReadResponse;
+import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
@@ -59,12 +60,15 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         UserProfileClickListener {
 
     public static final String PARCELABLE_POST_EXTRA = "parcelable_post_extra";
+    public static final String POST_ID_EXTRA = "post_id_extra";
 
     private SinglePostView singlePostView;
     private CoordinatorLayout mRootLayout;
     private PostFunctionHandler functionHandler;
     private ParcelablePost post;
     private SpinKitView mProgress;
+    private String mPostId;
+    private UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +80,17 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         mProgress = (SpinKitView) findViewById(R.id.single_post_progress);
 
         setUpToolbar();
-        post = getExtra();
-        showPost(post);
+
+        userInfo = DatabaseHelper.getInstance(this).getUserInfo();
+
+        if (getIntent().hasExtra(PARCELABLE_POST_EXTRA)) {
+            post = getIntent().getParcelableExtra(PARCELABLE_POST_EXTRA);
+            mPostId = post.getPid();
+            showPost(post);
+        } else if (getIntent().hasExtra(POST_ID_EXTRA)) {
+            mPostId = getIntent().getStringExtra(POST_ID_EXTRA);
+            reloadPost();
+        }
 
         functionHandler = new PostFunctionHandler(this);
         functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
@@ -121,7 +134,6 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
         singlePostView.showPost(poster);
 
-        UserInfo userInfo = DatabaseHelper.getInstance(this).getUserInfo();
         RequestBuilder requestBuilder = new RequestBuilder();
         String pass = "";
         try {
@@ -414,5 +426,40 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         Intent profileIntent = new Intent(SinglePostActivity.this, ProfileActivity.class);
         profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
         startActivity(profileIntent);
+    }
+
+    private void reloadPost() {
+        QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userInfo.getUsername());
+        try {
+            queryBuilder.setPassword(Crypto.getMD5BASE64(
+                    new String(Crypto.decrypt(userInfo.getPassword(), this))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBuilder requestBuilder = new RequestBuilder();
+
+        requestBuilder.getPost(mPostId, queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SinglePost>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showBugSnackBar(e);
+                    }
+
+                    @Override
+                    public void onNext(SinglePost singlePost) {
+                        post = new ParcelablePost(singlePost.getPost());
+                        showPost(post);
+                    }
+                });
     }
 }

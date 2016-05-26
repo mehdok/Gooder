@@ -5,6 +5,7 @@
 package com.mehdok.gooder.ui.home.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mehdok.gooder.R;
+import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.models.notification.Notification;
 import com.mehdok.gooderapilib.models.user.UserInfo;
@@ -92,7 +94,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         @Override
         public void onClick(View view) {
             int pos = getAdapterPosition();
-            //TODO check for msg if it is not null open post single view, also update post singleview to handle fetch all data from scrach
+            if (mNotification.get(pos).getNotificationData() != null) {
+                Intent singlePostIntent = new Intent(view.getContext(), SinglePostActivity.class);
+                singlePostIntent.putExtra(SinglePostActivity.POST_ID_EXTRA,
+                        mNotification.get(pos).getNotificationData().getPid());
+                view.getContext().startActivity(singlePostIntent);
+            }
         }
     }
 
