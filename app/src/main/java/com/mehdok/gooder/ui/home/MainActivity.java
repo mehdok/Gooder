@@ -51,6 +51,7 @@ import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooder.views.VazirTextView;
+import com.mehdok.gooderapilib.GooderApi;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.user.UserInfo;
@@ -408,6 +409,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void loginWithUserPass(String userName, String password) {
+
         try {
             mPassword = Crypto.encrypt(password.getBytes(), this);
         } catch (Exception e) {
@@ -538,7 +540,12 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void logOut() {
+        //delete the user from database
         DatabaseHelper.getInstance(this).deleteUserInfo();
+
+        // reset the access code
+        GooderApi.lastOperation = 0;
+        GooderApi.mAccessCode = "";
 
         FragmentTransaction trans = getSupportFragmentManager().beginTransaction();
         for (Fragment fragment : getSupportFragmentManager().getFragments()) {
