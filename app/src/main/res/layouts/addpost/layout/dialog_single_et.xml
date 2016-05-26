@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    >
+
+    <com.mehdok.singlepostviewlib.views.PostEditText
+        android:id="@+id/dialog_single_et_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/mini_padding"
+        />
+
+    <android.support.v7.widget.AppCompatImageButton
+        android:id="@+id/dialog_single_et_1_paste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_content_paste_grey600_24dp"
+        android:background="@drawable/buttons_background"
+        android:padding="@dimen/standard_padding"
+        android:layout_marginRight="@dimen/mini_padding"
+        />
+
+</LinearLayout>

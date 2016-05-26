@@ -46,4 +46,8 @@
         <item name="android:windowMinWidthMinor">99%</item>
     </style>
 
+    <style name="SingleEditTextDialogStyle" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">?attr/colorPrimaryDark</item>
+    </style>
+
 </resources>

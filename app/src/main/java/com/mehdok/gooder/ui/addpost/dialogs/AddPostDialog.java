@@ -19,7 +19,7 @@ import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
-import com.mehdok.gooder.ui.addpost.TextProccessor;
+import com.mehdok.gooder.ui.addpost.TextProcessor;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooderapilib.QueryBuilder;
@@ -58,7 +58,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
     private AppCompatCheckBox chbDraft;
     private SpinKitView mProgress;
 
-    private TextProccessor textProccessor;
+    private TextProcessor textProcessor;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,7 +71,7 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dialog_add_post, container, false);
 
-        textProccessor = new TextProccessor();
+        textProcessor = new TextProcessor();
 
         etTitle = (VazirEditText) rootView.findViewById(R.id.add_post_title);
         etBody = (VazirEditText) rootView.findViewById(R.id.add_post_body);
@@ -115,23 +115,23 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         int id = view.getId();
 
         if (id == R.id.add_post_bold) {
-            textProccessor.addBold(etBody);
+            textProcessor.addBold(etBody);
         } else if (id == R.id.add_post_italic) {
-            textProccessor.addItalic(etBody);
+            textProcessor.addItalic(etBody);
         } else if (id == R.id.add_post_underline) {
-            textProccessor.addUnderLine(etBody);
+            textProcessor.addUnderLine(etBody);
         } else if (id == R.id.add_post_s) {
-            textProccessor.addS(etBody);
+            textProcessor.addS(etBody);
         } else if (id == R.id.add_post_img) {
-            textProccessor.addImg(etBody);
+            showImgLinkDialog();
         } else if (id == R.id.add_post_url) {
-            textProccessor.addUrl(etBody);
+            showUrlLinkDialog();
         } else if (id == R.id.add_post_user) {
-            textProccessor.addUserTag(etBody);
+            showUserTagDialog();
         } else if (id == R.id.add_post_post) {
-            textProccessor.addPostTag(etBody);
+            showPostTagDialog();
         } else if (id == R.id.add_post_tag) {
-            textProccessor.addHashTag(etBody);
+            showHashTagDialog();
         } else if (id == R.id.add_post_send) {
             sendPost();
         } else if (id == R.id.add_post_cancel) {
@@ -245,5 +245,79 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
         }
 
         return false;
+    }
+
+    private void showImgLinkDialog() {
+        SingleEditTextDialog.newInstance(R.string.add_img_dialog_title, R.string.add_img_et_hint)
+                .setOnOkClickListener(new SingleEditTextDialog.OnOkClickedListener() {
+                    @Override
+                    public void OnOkCLicked(String text) {
+                        addImageLinkToBody(text);
+                    }
+                }).show(getFragmentManager(), "dialog_add_image");
+    }
+
+    private void showUrlLinkDialog() {
+        SingleEditTextDialog.newInstance(R.string.add_link_dialog_title,
+                R.string.add_link_dialog_hint)
+                .setOnOkClickListener(new SingleEditTextDialog.OnOkClickedListener() {
+                    @Override
+                    public void OnOkCLicked(String text) {
+                        addUrlToBody(text);
+                    }
+                }).show(getFragmentManager(), "dialog_add_link");
+    }
+
+    private void showUserTagDialog() {
+        SingleEditTextDialog.newInstance(R.string.add_user_tag_dialog_title,
+                R.string.add_user_tag_dialog_hint)
+                .setOnOkClickListener(new SingleEditTextDialog.OnOkClickedListener() {
+                    @Override
+                    public void OnOkCLicked(String text) {
+                        addUserTagToBody(text);
+                    }
+                }).show(getFragmentManager(), "dialog_add_user_tag");
+    }
+
+    private void showPostTagDialog() {
+        SingleEditTextDialog.newInstance(R.string.add_post_tag_dialog_title,
+                R.string.add_post_tag_dialog_hint)
+                .setOnOkClickListener(new SingleEditTextDialog.OnOkClickedListener() {
+                    @Override
+                    public void OnOkCLicked(String text) {
+                        addPostTagToBody(text);
+                    }
+                }).show(getFragmentManager(), "dialog_add_post_tag");
+    }
+
+    private void showHashTagDialog() {
+        SingleEditTextDialog.newInstance(R.string.add_hash_tag_dialog_title,
+                R.string.add_hash_tag_dialog_hint)
+                .setOnOkClickListener(new SingleEditTextDialog.OnOkClickedListener() {
+                    @Override
+                    public void OnOkCLicked(String text) {
+                        addHashTagToBody(text);
+                    }
+                }).show(getFragmentManager(), "dialog_add_hash_tag");
+    }
+
+    private void addImageLinkToBody(String imageLink) {
+        textProcessor.addImg(etBody, imageLink);
+    }
+
+    private void addUrlToBody(String imageLink) {
+        textProcessor.addUrl(etBody, imageLink);
+    }
+
+    private void addUserTagToBody(String imageLink) {
+        textProcessor.addUserTag(etBody, imageLink);
+    }
+
+    private void addPostTagToBody(String imageLink) {
+        textProcessor.addPostTag(etBody, imageLink);
+    }
+
+    private void addHashTagToBody(String imageLink) {
+        textProcessor.addHashTag(etBody, imageLink);
     }
 }

@@ -11,7 +11,7 @@ import com.mehdok.gooder.views.VazirEditText;
 /**
  * Created by mehdok on 5/9/2016.
  */
-public class TextProccessor {
+public class TextProcessor {
 
     private final String BOLD_MARK = "*";
     private final String ITALIC_MARK = "^";
@@ -19,8 +19,8 @@ public class TextProccessor {
     private final String S_MARK = "-";
     private final String IMG_START = "[img]";
     private final String IMG_END = "[/img]";
-    private final String URL_START = "[url=";
-    private final String URL_END = "][/url]";
+    private final String URL_START = "[url=]";
+    private final String URL_END = "[/url]";
     private final String USER_TAG = "#!user/";
     private final String POST_TAG = "#!post/";
     private final String HASH_TAG = "#!tag/";
@@ -65,54 +65,30 @@ public class TextProccessor {
         }
     }
 
-    public void addImg(VazirEditText editText) {
-        int selectionBounds[] = getSelectionBounds(editText);
-        if (selectionBounds[1] <= 0) {
-            editText.setText(
-                    String.format("%s%s%s", editText.getText().toString(), IMG_START, IMG_END));
-        } else {
-            addHyperMark(editText, selectionBounds, IMG_START, IMG_END);
-        }
+    public void addImg(VazirEditText editText, String imgLink) {
+        editText.setText(
+                String.format("%s%s%s%s", editText.getText().toString(), IMG_START, imgLink,
+                        IMG_END));
     }
 
-    public void addUrl(VazirEditText editText) {
-        int selectionBounds[] = getSelectionBounds(editText);
-        if (selectionBounds[1] <= 0) {
-            editText.setText(
-                    String.format("%s%s%s", editText.getText().toString(), URL_START, URL_END));
-        } else {
-            addHyperMark(editText, selectionBounds, URL_START, URL_END);
-        }
+    public void addUrl(VazirEditText editText, String url) {
+        editText.setText(
+                String.format("%s%s%s%s", editText.getText().toString(), URL_START, url, URL_END));
     }
 
-    public void addUserTag(VazirEditText editText) {
-        int selectionBounds[] = getSelectionBounds(editText);
-        if (selectionBounds[1] <= 0) {
-            editText.setText(
-                    String.format("%s%s", editText.getText().toString(), USER_TAG));
-        } else {
-            addHyperMark(editText, selectionBounds, USER_TAG, "");
-        }
+    public void addUserTag(VazirEditText editText, String userId) {
+        editText.setText(
+                String.format("%s%s%s", editText.getText().toString(), USER_TAG, userId));
     }
 
-    public void addPostTag(VazirEditText editText) {
-        int selectionBounds[] = getSelectionBounds(editText);
-        if (selectionBounds[1] <= 0) {
-            editText.setText(
-                    String.format("%s%s", editText.getText().toString(), POST_TAG));
-        } else {
-            addHyperMark(editText, selectionBounds, POST_TAG, "");
-        }
+    public void addPostTag(VazirEditText editText, String postId) {
+        editText.setText(
+                String.format("%s%s%s", editText.getText().toString(), POST_TAG, postId));
     }
 
-    public void addHashTag(VazirEditText editText) {
-        int selectionBounds[] = getSelectionBounds(editText);
-        if (selectionBounds[1] <= 0) {
-            editText.setText(
-                    String.format("%s%s", editText.getText().toString(), HASH_TAG));
-        } else {
-            addHyperMark(editText, selectionBounds, HASH_TAG, "");
-        }
+    public void addHashTag(VazirEditText editText, String tag) {
+        editText.setText(
+                String.format("%s%s%s", editText.getText().toString(), HASH_TAG, tag));
     }
 
     private int[] getSelectionBounds(AppCompatEditText editText) {

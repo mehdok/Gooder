@@ -63,5 +63,15 @@
     <string name="can_not_find_post">Can not find post with id %s</string>
     <string name="notif_delete">Notification Deleted</string>
     <string name="notif_clear">Notifications Cleared</string>
+    <string name="add_img_dialog_title">Add Image Link</string>
+    <string name="add_link_dialog_title">Add Url</string>
+    <string name="add_user_tag_dialog_title">Add user tag</string>
+    <string name="add_post_tag_dialog_title">Add post tag</string>
+    <string name="add_hash_tag_dialog_title">Add tag</string>
+    <string name="add_img_et_hint">http://google.com/image.jpg</string>
+    <string name="add_link_dialog_hint">http://google.com</string>
+    <string name="add_user_tag_dialog_hint">user id, like: 14095</string>
+    <string name="add_post_tag_dialog_hint">post id, like: 1235242</string>
+    <string name="add_hash_tag_dialog_hint">tag, like: android</string>
 
 </resources>

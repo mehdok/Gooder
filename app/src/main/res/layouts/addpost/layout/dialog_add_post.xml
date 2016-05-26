@@ -51,6 +51,7 @@
             android:textStyle="bold"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <com.mehdok.gooder.views.VazirButton
@@ -61,6 +62,7 @@
             android:textStyle="italic"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <com.mehdok.gooder.views.VazirButton
@@ -70,6 +72,7 @@
             android:text="U"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <com.mehdok.gooder.views.VazirButton
@@ -79,6 +82,7 @@
             android:text="S"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <LinearLayout
@@ -97,6 +101,7 @@
             android:text="IMG"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <com.mehdok.gooder.views.VazirButton
@@ -106,6 +111,7 @@
             android:text="URL"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
     </LinearLayout>
@@ -125,6 +131,7 @@
             android:text="#User"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <com.mehdok.gooder.views.VazirButton
@@ -134,6 +141,7 @@
             android:text="#Post"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
         <com.mehdok.gooder.views.VazirButton
@@ -143,6 +151,7 @@
             android:text="#Tag"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:padding="14dp"
             />
 
     </LinearLayout>
