@@ -337,4 +337,9 @@ public interface GooderInterface {
     Observable<BaseResponse> deleteNotification(@Query("nid") String nid,
                                                 @FieldMap Map<String, String> query);
 
+    @FormUrlEncoded
+    @POST("?method=clear-notifications")
+    Observable<BaseResponse> clearNotifications(@FieldMap Map<String, String> query);
+
+
 }

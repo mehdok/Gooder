@@ -25,7 +25,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -97,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements
     private MenuItem itemCommentByMe;
     private MenuItem itemCommentByMeAndFollowers;
     private MenuItem itemCommentByAnyone;
+    private MenuItem itemClearNotification;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -180,20 +180,24 @@ public class MainActivity extends AppCompatActivity implements
                     mViewKind = ViewKind.FRIENDS;
                     showGeneralOption(true);
                     showCommentOptions(false);
+                    showNotifOption(false);
                     changeView(FriendsItemFragment.getInstance());
                 } else if (menuItemId == R.id.comments_view) {
                     mViewKind = ViewKind.COMMENT;
                     showCommentOptions(true);
                     showGeneralOption(true);
+                    showNotifOption(false);
                     changeView(CommentViewFragment.getInstance());
                 } else if (menuItemId == R.id.stared_item) {
                     showCommentOptions(false);
                     showGeneralOption(false);
+                    showNotifOption(false);
                     mViewKind = ViewKind.STARED;
                     changeView(StaredItemFragment.getInstance());
                 } else if (menuItemId == R.id.notification) {
                     showCommentOptions(false);
                     showGeneralOption(false);
+                    showNotifOption(true);
                     mViewKind = ViewKind.NOTIFICATION;
                     changeView(NotificationsFragment.getInstance());
                 }
@@ -238,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements
         itemCommentByMe = menu.findItem(R.id.action_comment_by_me);
         itemCommentByMeAndFollowers = menu.findItem(R.id.action_comment_by_me_and_followers);
         itemCommentByAnyone = menu.findItem(R.id.action_comment_by_anyone);
+        itemClearNotification = menu.findItem(R.id.action_clear_notification);
 
         itemUnreadOnly.setChecked(true);
         itemCommentByMe.setChecked(true);
@@ -245,6 +250,7 @@ public class MainActivity extends AppCompatActivity implements
         // first view is friends, so hide comment options
         showCommentOptions(false);
         showGeneralOption(true);
+        showNotifOption(false);
 
         return true;
     }
@@ -272,6 +278,8 @@ public class MainActivity extends AppCompatActivity implements
         } else if (id == R.id.action_comment_by_anyone) {
             mCommentKind = CommentKind.EVERYONE;
             itemCommentByAnyone.setChecked(true);
+        } else if (id == R.id.action_clear_notification) {
+            clearNotification();
         }
 
         reloadFragmentsData();
@@ -616,6 +624,10 @@ public class MainActivity extends AppCompatActivity implements
         itemReverseOrder.setVisible(show);
     }
 
+    private void showNotifOption(boolean show) {
+        itemClearNotification.setVisible(show);
+    }
+
     public QueryBuilder.Value isReverseOrder() {
         // if view is null it mean this is the first run, so return default value.
         //TODO ROAD_MAP put a default value in setting
@@ -687,10 +699,43 @@ public class MainActivity extends AppCompatActivity implements
 
                     @Override
                     public void onNext(BaseResponse baseResponse) {
-                        Log.d("requestDeleteNotif", baseResponse.getMsgText());
+                        showSimpleMessage(getResources().getString(R.string.notif_delete));
                     }
                 });
 
+    }
+
+    private void clearNotification() {
+        final QueryBuilder queryBuilder = new QueryBuilder();
+        queryBuilder.setUserName(userInfo.getUsername());
+        try {
+            queryBuilder.setPassword(Crypto.getMD5BASE64(
+                    new String(Crypto.decrypt(userInfo.getPassword(), this))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        RequestBuilder requestBuilder = new RequestBuilder();
+        requestBuilder.clearNotifications(queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BaseResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        e.printStackTrace();
+                        showBugSnackBar(e);
+                    }
+
+                    @Override
+                    public void onNext(BaseResponse baseResponse) {
+                        showSimpleMessage(getResources().getString(R.string.notif_clear));
+                    }
+                });
     }
 
 }

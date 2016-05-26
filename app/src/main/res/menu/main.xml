@@ -23,6 +23,12 @@
         app:actionViewClass="android.support.v7.widget.AppCompatCheckBox"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/action_clear_notification"
+        android:title="@string/action_clear_notif"
+        app:showAsAction="never"
+        />
+
     <group
         android:id="@+id/comment_group"
         android:checkableBehavior="single">

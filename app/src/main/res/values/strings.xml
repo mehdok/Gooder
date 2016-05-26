@@ -7,6 +7,7 @@
     <string name="action_search">Search</string>
     <string name="action_reverse_order">Reverse Order</string>
     <string name="action_unread_only">Unread Only</string>
+    <string name="action_clear_notif">Clear Notification</string>
     <string name="action_by_me">By Me</string>
     <string name="action_by_me_and_followers">By Me And People I follow</string>
     <string name="action_by_anyone_on_my_post">By Me And Anyone On My Post</string>
@@ -60,5 +61,7 @@
     <string name="notification_new_follower">Starts following you</string>
     <string name="notification_no">There is no new notification</string>
     <string name="can_not_find_post">Can not find post with id %s</string>
+    <string name="notif_delete">Notification Deleted</string>
+    <string name="notif_clear">Notifications Cleared</string>
 
 </resources>

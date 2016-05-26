@@ -953,6 +953,17 @@ public class RequestBuilder {
                 });
     }
 
+    public Observable<BaseResponse> clearNotifications(final QueryBuilder queryBuilder) {
+        return getAccessCode(queryBuilder)
+                .flatMap(new Func1<String, Observable<BaseResponse>>() {
+                    @Override
+                    public Observable<BaseResponse> call(String accessCode) {
+                        queryBuilder.setAccessCode(accessCode);
+                        return mGooderApi.clearNotifications(queryBuilder.getPostParams());
+                    }
+                });
+    }
+
     /**
      * If access code is usable return it  otherwise request new one.
      */
