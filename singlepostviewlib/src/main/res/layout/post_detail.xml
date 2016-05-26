@@ -36,25 +36,29 @@
 
             <com.mehdok.singlepostviewlib.views.PostTextView
                 android:id="@+id/post_date"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/mini_padding"
                 android:text="date"
                 android:gravity="left"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:ellipsize="marquee"
+                android:lines="1"
                 />
 
             <com.mehdok.singlepostviewlib.views.PostTextView
                 android:id="@+id/author_name"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/mini_padding"
                 android:gravity="right"
+                android:layout_gravity="right"
                 android:text="author"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="?attr/colorPrimaryDark"
                 android:ellipsize="marquee"
+                android:clickable="true"
+                android:lines="1"
                 />
 
         </LinearLayout>
@@ -63,6 +67,7 @@
             android:id="@+id/author_pic"
             android:layout_width="@dimen/user_pic_size"
             android:layout_height="@dimen/user_pic_size"
+            android:clickable="true"
             />
 
     </LinearLayout>

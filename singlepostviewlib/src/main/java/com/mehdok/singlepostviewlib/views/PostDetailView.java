@@ -61,7 +61,7 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.post_detail, this);
 
-        setOnClickListener(this);
+        //setOnClickListener(this);
     }
 
     @Override
@@ -73,6 +73,8 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
         imvAuthor = (ImageView) findViewById(R.id.author_pic);
         imgMore = (AppCompatImageButton) findViewById(R.id.post_more_button);
         imgMore.setOnClickListener(this);
+        tvAuthor.setOnClickListener(this);
+        imvAuthor.setOnClickListener(this);
     }
 
     public void setPostDetail(PostDetail postDetail, More detailMode,
