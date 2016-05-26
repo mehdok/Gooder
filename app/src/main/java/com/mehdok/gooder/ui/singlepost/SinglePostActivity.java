@@ -415,10 +415,12 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     public void onPause() {
         super.onPause();
 
-        Intent intent = new Intent();
-        intent.setAction(Globals.POST_CONTENT_CHANGED);
-        intent.putExtra(Globals.CHANGED_POST, post);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        if (post != null) {
+            Intent intent = new Intent();
+            intent.setAction(Globals.POST_CONTENT_CHANGED);
+            intent.putExtra(Globals.CHANGED_POST, post);
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
     }
 
     @Override
@@ -457,8 +459,13 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
                     @Override
                     public void onNext(SinglePost singlePost) {
-                        post = new ParcelablePost(singlePost.getPost());
-                        showPost(post);
+                        if (singlePost.getPost() != null) {
+                            post = new ParcelablePost(singlePost.getPost());
+                            showPost(post);
+                        } else {
+                            showSimpleMessage(
+                                    String.format(getString(R.string.can_not_find_post), mPostId));
+                        }
                     }
                 });
     }

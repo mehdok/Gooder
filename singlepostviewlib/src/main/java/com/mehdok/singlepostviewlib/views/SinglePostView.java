@@ -66,7 +66,8 @@ public class SinglePostView extends RelativeLayout implements PostMoreListener {
 
     public void showPost(Post post) {
         mPost = post;
-        postDetailView.setPostDetail(post.getPostDetail(), PostDetailView.More.POST, this, null, 0,
+        postDetailView.setPostDetail(post.getPostDetail(), PostDetailView.More.POST, this, null,
+                null, 0,
                 null);
         postBodyView.setPostBody(post.getPostBody());
         postFunctionView.setPostFunction(post.getPostFunction());

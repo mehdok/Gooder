@@ -66,7 +66,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 new PostDetail(notification.getUid(), userName, notification.getTime(),
                         userProfileClickListener);
         holder.notificationDetail.setPostDetail(postDetail, PostDetailView.More.NOTIFICATION, null,
-                null, position, authorUrl);
+                null, this, position, authorUrl);
         //TODO msg may be null for some type of notification
         setNotifBody(holder.notificationBody, notification.getType());
     }
@@ -104,7 +104,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     @Override
-    public void deleteNotification() {
+    public void deleteNotification(int pos) {
 
     }
 

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.interfaces.CommentMoreListener;
+import com.mehdok.singlepostviewlib.interfaces.NotificationMoreListener;
 import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
 import com.mehdok.singlepostviewlib.models.PostDetail;
 import com.mehdok.singlepostviewlib.utils.GlideHelper;
@@ -37,8 +38,10 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
     private More mDetailMode;
     private Dialog postMoreDialog;
     private Dialog commentMoreDialog;
+    private Dialog notificationMoreDialog;
     private PostMoreListener postMoreListener;
     private CommentMoreListener commentMoreListener;
+    private NotificationMoreListener notificationMoreListener;
     private int mPosition;
 
     public PostDetailView(Context context) {
@@ -80,6 +83,7 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
     public void setPostDetail(PostDetail postDetail, More detailMode,
                               PostMoreListener postMoreListener,
                               CommentMoreListener commentMoreListener,
+                              NotificationMoreListener notificationMoreListener,
                               int position, String authorPhoto) {
         mPostDetail = postDetail;
         tvAuthor.setText(postDetail.getAuthor());
@@ -87,6 +91,7 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
         mDetailMode = detailMode;
         this.postMoreListener = postMoreListener;
         this.commentMoreListener = commentMoreListener;
+        this.notificationMoreListener = notificationMoreListener;
         mPosition = position;
 
         if (authorPhoto != null) {
@@ -134,6 +139,11 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
             hideMoreDialog(More.COMMENT);
             if (commentMoreListener != null) {
                 commentMoreListener.copyCommentAuthorId();
+            }
+        } else if (id == R.id.more_delete_notification) {
+            hideMoreDialog(More.NOTIFICATION);
+            if (notificationMoreListener != null) {
+                notificationMoreListener.deleteNotification(mPosition);
             }
         } else {
             if (mPostDetail.getProfileClickListener() != null) {
@@ -203,10 +213,33 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
             postMoreDialog.dismiss();
         } else if (more == More.COMMENT) {
             commentMoreDialog.dismiss();
+        } else if (more == More.NOTIFICATION) {
+            notificationMoreDialog.dismiss();
         }
     }
 
     private void showNotificationMoreOption(View view) {
-        //TODO
+        notificationMoreDialog =
+                new Dialog(view.getContext(), android.R.style.Theme_Holo_Light_Dialog);
+
+        notificationMoreDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        notificationMoreDialog.setContentView(R.layout.dialog_notification_more);
+        WindowManager.LayoutParams wmlp = notificationMoreDialog.getWindow().getAttributes();
+        int[] location = new int[2];
+        view.getLocationInWindow(location);
+        wmlp.gravity = Gravity.TOP | Gravity.START;
+        wmlp.x = location[0] - view.getWidth();
+        wmlp.y = location[1];
+        wmlp.flags &= ~WindowManager.LayoutParams.FLAG_DIM_BEHIND;
+        notificationMoreDialog.getWindow()
+                .setBackgroundDrawableResource(android.R.color.transparent);
+
+
+        PostTextView deleteNotification =
+                (PostTextView) notificationMoreDialog.findViewById(R.id.more_delete_notification);
+
+        deleteNotification.setOnClickListener(this);
+
+        notificationMoreDialog.show();
     }
 }

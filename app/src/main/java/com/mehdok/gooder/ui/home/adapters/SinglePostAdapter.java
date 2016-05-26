@@ -75,7 +75,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         holder.postDetail.hideUserPhoto();
         holder.postDetail.setPostDetail(new PostDetail(mPosts.get(position).getAuthor().getUid(),
                 mPosts.get(position).getAuthor().getFullName(), mPosts.get(position).getTime(),
-                userProfileClickListener), PostDetailView.More.POST, this, null, position, null);
+                        userProfileClickListener), PostDetailView.More.POST, this, null, null, position,
+                null);
 
         holder.postBody.setPostBody(new PostBody(getLimitedText(mPosts.get(position).getPostBody()),
                 getLimitedText(mPosts.get(position).getExtra().getNote()),

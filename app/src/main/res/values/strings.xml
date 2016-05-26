@@ -59,5 +59,6 @@
     <string name="notification_comment">Mentioned you in Comment</string>
     <string name="notification_new_follower">Starts following you</string>
     <string name="notification_no">There is no new notification</string>
+    <string name="can_not_find_post">Can not find post with id %s</string>
 
 </resources>

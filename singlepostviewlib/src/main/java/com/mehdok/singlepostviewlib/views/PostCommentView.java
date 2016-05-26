@@ -57,7 +57,7 @@ public class PostCommentView extends LinearLayout implements CommentMoreListener
                            UserProfileClickListener profileClickListener) {
         tvBody.setPrettyText(PrettySpann.getPrettyString(body, null, new URLImageParser(tvBody)));
         postDetail.setPostDetail(new PostDetail(uid, author, date, profileClickListener),
-                PostDetailView.More.COMMENT, null, this, 0, null);
+                PostDetailView.More.COMMENT, null, this, null, 0, null);
         postDetail.loadAuthorPhoto(authorPhoto);
 
         commentAuthorId = uid;

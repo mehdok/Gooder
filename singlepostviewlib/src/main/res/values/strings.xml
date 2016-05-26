@@ -8,6 +8,7 @@
     <string name="post_id_copy">Copy Post ID</string>
     <string name="user_id_copy">Copy User ID</string>
     <string name="text_copy">Copy text</string>
+    <string name="delete">Delete</string>
     <string name="clip_comment_author">Comment Author ID Copied to clipboard</string>
     <string name="clip_comment_body">Comment Text Copied to clipboard</string>
     <string name="clip_post_author">Post Author ID Copied to clipboard</string>
