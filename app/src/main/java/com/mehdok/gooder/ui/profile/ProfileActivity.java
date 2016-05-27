@@ -154,7 +154,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
     private void ownerUI() {
         followButton.setVisibility(View.GONE);
-        fillUserInfo(mUserInfo.getFullname(), mUserInfo.getAvatar());
+        fillUserInfo(mUserInfo.getFullname(), mUserInfo.getAvatar(), mUserInfo.getAbout());
         getUserPosts();
     }
 
@@ -165,9 +165,9 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         getUserPosts();
     }
 
-    private void fillUserInfo(String userName, String avatar) {
+    private void fillUserInfo(String userName, String avatar, String about) {
         collapsingToolbarLayout.setTitle(UNI_LTR + userName);
-        tvAboutMe.setText(mUserInfo.getAbout());
+        tvAboutMe.setText(about);
         loadUserImage(avatar);
     }
 
@@ -286,7 +286,8 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
                     @Override
                     public void onNext(UserInfo userInfo) {
-                        fillUserInfo(userInfo.getFullname(), userInfo.getAvatar());
+                        fillUserInfo(userInfo.getFullname(), userInfo.getAvatar(),
+                                userInfo.getAbout());
                     }
                 });
     }
