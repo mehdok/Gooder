@@ -17,11 +17,14 @@ import okhttp3.logging.HttpLoggingInterceptor;
 /**
  * Created by mehdok on 4/28/2016.
  */
-public class AndroidApplication extends Application {
+public class AndroidApplication extends Application implements Foreground.Listener {
     @Override
     public void onCreate() {
         super.onCreate();
         OneSignal.startInit(this).init();
+
+        Foreground.init(this);
+        Foreground.get().addListener(this);
 
         if (BuildConfig.DEBUG) {
             // init the logger library
@@ -33,5 +36,15 @@ public class AndroidApplication extends Application {
             Logger.init().logLevel(LogLevel.NONE);
             GooderApi.create(Crypto.API_KEY, HttpLoggingInterceptor.Level.NONE);
         }
+    }
+
+    @Override
+    public void onBecameForeground() {
+        Logger.e("onBecameForeground");
+    }
+
+    @Override
+    public void onBecameBackground() {
+        Logger.e("onBecameBackground");
     }
 }
