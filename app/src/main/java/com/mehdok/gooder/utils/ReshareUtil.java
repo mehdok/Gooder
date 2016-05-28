@@ -29,7 +29,8 @@ public class ReshareUtil {
 
     public void checkForReshares(ArrayList<APIPost> posts, int from, QueryBuilder queryBuilder) {
         for (int i = from; i < posts.size(); i++) {
-            if (!posts.get(i).getParentPid().equals("0")) {
+            if (posts.get(i).getParentPid() != null &&
+                    !posts.get(i).getParentPid().equals("0")) {
                 getResharedPost(i, posts.get(i).getPostBody(), posts.get(i).getParentPid(), 0,
                         queryBuilder, posts);
             }
@@ -54,11 +55,13 @@ public class ReshareUtil {
 
                     @Override
                     public void onError(Throwable e) {
+                        e.printStackTrace();
                     }
 
                     @Override
                     public void onNext(SinglePost singlePost) {
-                        if (!singlePost.getPost().getParentPid().equals("0")) {
+                        if (singlePost.getPost().getParentPid() != null &&
+                                !singlePost.getPost().getParentPid().equals("0")) {
                             String body = postBody +
                                     PrettySpann.SHARE_PARAGRAPH_START +
                                     singlePost.getPost().getAuthor().getFullName() +
