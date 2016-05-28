@@ -89,7 +89,6 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
             mAdapter = new NotificationAdapter(getActivity(), mNotification, mUserInfo, this);
             mRecyclerView.setAdapter(mAdapter);
 
-            getData();
         } else {
             mRecyclerView.setAdapter(mAdapter);
         }
@@ -145,6 +144,7 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
                                     .show();
                             return;
                         }
+                        mNotification.clear();
                         mNotification.addAll(notificationList.getNotifications());
                         mUserInfo.addAll(notificationList.getUsers().getUsers());
                         mAdapter.notifyDataSetChanged();
