@@ -23,7 +23,6 @@ import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.PostDetail;
 import com.mehdok.singlepostviewlib.views.PostDetailView;
 import com.mehdok.singlepostviewlib.views.PostTextView;
-import com.orhanobut.logger.Logger;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -63,7 +62,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         String userName = userInfo == null ? "" : userInfo.getFullname();
         String authorUrl = userInfo == null ? null : userInfo.getAvatar();
 
-        //TODO handle More delete
         PostDetail postDetail =
                 new PostDetail(notification.getUid(), userName, notification.getTime(),
                         userProfileClickListener);
@@ -97,7 +95,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public void onClick(View view) {
             int pos = getAdapterPosition();
             if (mNotification.get(pos).getNotificationData() != null) {
-                Logger.e("nid: " + mNotification.get(pos).getNid());
                 Intent singlePostIntent = new Intent(view.getContext(), SinglePostActivity.class);
                 singlePostIntent.putExtra(SinglePostActivity.POST_ID_EXTRA,
                         mNotification.get(pos).getNotificationData().getPid());

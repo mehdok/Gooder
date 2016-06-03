@@ -28,7 +28,7 @@ import com.mehdok.singlepostviewlib.utils.TimeUtil;
  * Created by mehdok on 5/4/2016.
  */
 public class PostDetailView extends LinearLayout implements View.OnClickListener {
-    public enum More {POST, COMMENT, NOTIFICATION}
+    public enum More {POST, COMMENT, NOTIFICATION, NOTHING}
 
     private PostTextView tvAuthor;
     private PostTextView tvDate;
@@ -89,6 +89,10 @@ public class PostDetailView extends LinearLayout implements View.OnClickListener
         tvAuthor.setText(postDetail.getAuthor());
         tvDate.setText(TimeUtil.getInstance().getReadableDate(postDetail.getDate()));
         mDetailMode = detailMode;
+        if (mDetailMode == More.NOTHING) {
+            imgMore.setVisibility(GONE);
+        }
+
         this.postMoreListener = postMoreListener;
         this.commentMoreListener = commentMoreListener;
         this.notificationMoreListener = notificationMoreListener;

@@ -34,6 +34,8 @@ public class TimeUtil {
     }
 
     public String getReadableDate(String date) {
+        if (date == null || date.isEmpty()) return "";
+
         long time = Long.parseLong(date);
         calendar.setTimeInMillis(time * 1000);
 

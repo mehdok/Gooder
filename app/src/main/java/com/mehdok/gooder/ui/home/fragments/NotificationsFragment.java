@@ -145,6 +145,7 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
                             return;
                         }
                         mNotification.clear();
+                        mUserInfo.clear();
                         mNotification.addAll(notificationList.getNotifications());
                         mUserInfo.addAll(notificationList.getUsers().getUsers());
                         mAdapter.notifyDataSetChanged();
