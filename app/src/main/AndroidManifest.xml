@@ -31,9 +31,9 @@
 
         <activity
             android:name=".ui.home.MainActivity"
+            android:configChanges="orientation|screenSize|locale"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize|locale"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -50,11 +50,11 @@
         </activity>
         <activity
             android:name=".ui.singlepost.SinglePostActivity"
+            android:configChanges="orientation|screenSize|locale"
             android:label="@string/app_name"
             android:parentActivityName=".ui.home.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden"
-            android:configChanges="orientation|screenSize|locale"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -63,10 +63,21 @@
         </activity>
         <activity
             android:name=".ui.profile.ProfileActivity"
-            android:label="title_activity_profile"
+            android:configChanges="orientation|screenSize|locale"
+            android:label="@string/activity_profile"
             android:parentActivityName=".ui.home.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation|screenSize|locale"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mehdok.gooder.ui.home.MainActivity"
+                />
+        </activity>
+        <activity
+            android:name=".ui.followed.FollowedActivity"
+            android:label="@string/activity_followed_user"
+            android:parentActivityName=".ui.home.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

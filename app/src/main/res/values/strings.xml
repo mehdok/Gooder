@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Gooder</string>
+    <string name="activity_followed_user">People you follow</string>
+    <string name="activity_profile">Profile</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

@@ -39,6 +39,7 @@ import com.mehdok.gooder.crypto.KeyManager;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.preferences.PreferencesManager;
 import com.mehdok.gooder.ui.addpost.dialogs.AddPostDialog;
+import com.mehdok.gooder.ui.followed.FollowedActivity;
 import com.mehdok.gooder.ui.home.fragments.BaseFragment;
 import com.mehdok.gooder.ui.home.fragments.CommentViewFragment;
 import com.mehdok.gooder.ui.home.fragments.FriendsItemFragment;
@@ -295,7 +296,7 @@ public class MainActivity extends AppCompatActivity implements
 
         //TODO
         if (id == R.id.nav_people_you_follow) {
-
+            startActivity(new Intent(this, FollowedActivity.class));
         } else if (id == R.id.nav_special_item) {
 
         } else if (id == R.id.nav_bug_report) {
@@ -734,6 +735,7 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onNext(BaseResponse baseResponse) {
                         showSimpleMessage(getResources().getString(R.string.notif_clear));
+                        //TODO clear adapter data
                     }
                 });
     }

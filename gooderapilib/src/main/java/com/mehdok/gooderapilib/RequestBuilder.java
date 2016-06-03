@@ -356,6 +356,7 @@ public class RequestBuilder {
 
     public Observable<Followed> getFollowedUsers(
             final com.mehdok.gooderapilib.QueryBuilder queryBuilder) {
+        final Followed[] mFollowed = new Followed[1];
         return getAccessCode(queryBuilder)
                 .flatMap(new Func1<String, Observable<Followed>>() {
                     @Override
@@ -364,6 +365,21 @@ public class RequestBuilder {
                         return mGooderApi.getFollowedUsers(
                                 queryBuilder.getFollowedUsersParams(),
                                 queryBuilder.getPostParams());
+                    }
+                })
+                .flatMap(new Func1<Followed, Observable<Users>>() {
+                    @Override
+                    public Observable<Users> call(Followed followed) {
+                        String userId = Util.getCommaDelimitedUserFromFollowed(followed);
+                        mFollowed[0] = followed;
+                        return mGooderApi.getUsersInfo(userId, queryBuilder.getPostParams());
+                    }
+                })
+                .flatMap(new Func1<Users, Observable<Followed>>() {
+                    @Override
+                    public Observable<Followed> call(Users users) {
+                        mFollowed[0].setUsers(users);
+                        return Observable.just(mFollowed[0]);
                     }
                 });
     }
@@ -915,7 +931,7 @@ public class RequestBuilder {
                 .flatMap(new Func1<NotificationList, Observable<Users>>() {
                     @Override
                     public Observable<Users> call(NotificationList notificationList) {
-                        String userId = Util.getCommaDelimitedUser(notificationList);
+                        String userId = Util.getCommaDelimitedUserFromNotif(notificationList);
                         mNotification[0] = notificationList;
                         return mGooderApi.getUsersInfo(userId, queryBuilder.getPostParams());
                     }

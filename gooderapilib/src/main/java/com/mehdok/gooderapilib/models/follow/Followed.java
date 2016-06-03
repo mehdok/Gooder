@@ -6,6 +6,7 @@ package com.mehdok.gooderapilib.models.follow;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.mehdok.gooderapilib.models.user.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,17 @@ public class Followed extends com.mehdok.gooderapilib.models.BaseResponse {
     @Expose
     public List<FollowedInfo> followedInfo = new ArrayList<FollowedInfo>();
 
+    private Users users;
+
     public List<FollowedInfo> getFollowedUser() {
         return followedInfo;
+    }
+
+    public Users getUsers() {
+        return users;
+    }
+
+    public void setUsers(Users users) {
+        this.users = users;
     }
 }
