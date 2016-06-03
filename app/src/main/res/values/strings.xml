@@ -2,6 +2,7 @@
     <string name="app_name">Gooder</string>
     <string name="activity_followed_user">People you follow</string>
     <string name="activity_profile">Profile</string>
+    <string name="activity_recommended">Recommended Items</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -13,6 +14,9 @@
     <string name="action_by_me">By Me</string>
     <string name="action_by_me_and_followers">By Me And People I follow</string>
     <string name="action_by_anyone_on_my_post">By Me And Anyone On My Post</string>
+    <string name="action_recommended_like_string">Most Liked Items</string>
+    <string name="action_recommended_share_string">Most Reshared Items</string>
+    <string name="action_recommended_comment_string">Most Commented Items</string>
 
     <string name="bottom_bar_home">Friends</string>
     <string name="bottom_bar_comment">Comments</string>

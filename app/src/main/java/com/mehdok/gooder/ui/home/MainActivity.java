@@ -47,6 +47,7 @@ import com.mehdok.gooder.ui.home.fragments.NotificationsFragment;
 import com.mehdok.gooder.ui.home.fragments.StaredItemFragment;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.profile.ProfileActivity;
+import com.mehdok.gooder.ui.recommended.RecommendedActivity;
 import com.mehdok.gooder.utils.CustomExceptionHandler;
 import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooder.views.VazirButton;
@@ -298,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements
         if (id == R.id.nav_people_you_follow) {
             startActivity(new Intent(this, FollowedActivity.class));
         } else if (id == R.id.nav_special_item) {
-
+            startActivity(new Intent(this, RecommendedActivity.class));
         } else if (id == R.id.nav_bug_report) {
             Util.sendBugReport(this, getString(R.string.bug_email_subject),
                     getString(R.string.bug_email_context));
