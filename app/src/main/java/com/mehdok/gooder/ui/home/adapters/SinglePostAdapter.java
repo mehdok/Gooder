@@ -97,6 +97,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         } else {
             holder.starButton.setImageResource(R.drawable.ic_star_outline_grey600_24dp);
         }
+
+        if (mPosts.get(position).isRead()) {
+            holder.readButton.setImageResource(R.drawable.tick_fill);
+        } else {
+            holder.readButton.setImageResource(R.drawable.tick_empty);
+        }
     }
 
     @Override
@@ -122,6 +128,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public ImageButton likeButton;
         public ImageButton starButton;
         public ImageButton shareButton;
+        public ImageButton readButton;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -135,32 +142,41 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             likeButton = (ImageButton) view.findViewById(R.id.like_button);
             starButton = (ImageButton) view.findViewById(R.id.star_button);
             shareButton = (ImageButton) view.findViewById(R.id.share_button);
+            readButton = (ImageButton) view.findViewById(R.id.read_button);
 
             view.setOnClickListener(this);
             likeButton.setOnClickListener(this);
             starButton.setOnClickListener(this);
             shareButton.setOnClickListener(this);
+            readButton.setOnClickListener(this);
             postBody.setClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
             int pos = getAdapterPosition();
+            int id = view.getId();
 
-            if (view.getId() == R.id.like_button) {
+            if (id == R.id.like_button) {
                 if (toggleLike(pos)) {
                     functionHandler.likePost(pos, mPosts.get(pos).getPid());
                 } else {
                     functionHandler.unLikePost(pos, mPosts.get(pos).getPid());
                 }
-            } else if (view.getId() == R.id.star_button) {
+            } else if (id == R.id.star_button) {
                 if (toggleStar(pos)) {
                     functionHandler.starPost(pos, mPosts.get(pos).getPid());
                 } else {
                     functionHandler.unStarPost(pos, mPosts.get(pos).getPid());
                 }
-            } else if (view.getId() == R.id.share_button) {
+            } else if (id == R.id.share_button) {
                 functionHandler.showNoteDialog(view.getContext(), pos, mPosts.get(pos).getPid());
+            } else if (id == R.id.read_button) {
+                if (toggleRead(pos)) {
+                    functionHandler.markPostAsRead(pos, mPosts.get(pos).getPid());
+                } else {
+                    functionHandler.markPostAsUnread(pos, mPosts.get(pos).getPid());
+                }
             } else {
                 Intent intent = new Intent(view.getContext(), SinglePostActivity.class);
                 intent.putExtra(SinglePostActivity.PARCELABLE_POST_EXTRA,
@@ -193,6 +209,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         mPosts.get(pos).setStarred(star);
         notifyDataSetChanged();
         return star;
+    }
+
+    private boolean toggleRead(int pos) {
+        boolean read = !mPosts.get(pos).isRead();
+        mPosts.get(pos).setRead(read);
+        notifyDataSetChanged();
+        return read;
     }
 
     private void changeLikeCount(int pos, boolean increase) {
@@ -257,7 +280,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
     @Override
     public void onReadError(int position, Throwable e) {
-        //TODO
+        toggleRead(position);
+        e.printStackTrace();
+        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
     }
 
     @Override
@@ -267,7 +292,9 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
     @Override
     public void onUnReadError(int position, Throwable e) {
-        //TODO
+        toggleRead(position);
+        e.printStackTrace();
+        MainActivityDelegate.getInstance().getActivity().showBugSnackBar(e);
     }
 
     @Override

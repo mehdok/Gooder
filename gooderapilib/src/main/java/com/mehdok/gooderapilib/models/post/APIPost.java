@@ -51,6 +51,8 @@ public class APIPost {
     @Expose
     private Extra extra;
 
+    private boolean read;
+
     public String getPid() {
         return pid;
     }
@@ -140,5 +142,13 @@ public class APIPost {
 
     public void setPostBody(String postBody) {
         this.postBody = postBody;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }

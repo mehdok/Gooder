@@ -4,10 +4,15 @@
 
 package com.mehdok.gooder.ui.profile;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageView;
@@ -18,12 +23,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.infinitescroll.interfaces.InfiniteScrollListener;
 import com.mehdok.gooder.infinitescroll.views.InfiniteRecyclerView;
 import com.mehdok.gooder.ui.home.adapters.SinglePostAdapter;
+import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.profile.views.FollowButton;
 import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooder.utils.Util;
@@ -440,4 +447,37 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         mPosts.clear();
         getUserPosts();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(this)
+                .registerReceiver(postContentChangeReceiver, new IntentFilter(
+                        Globals.POST_CONTENT_CHANGED));
+    }
+
+    private BroadcastReceiver postContentChangeReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ParcelablePost parcelablePost = intent.getParcelableExtra(Globals.CHANGED_POST);
+            if (mPosts != null) {
+                for (APIPost post : mPosts) {
+                    if (post.getPid().equals(parcelablePost.getPid())) {
+                        post.setLiked(parcelablePost.isLiked());
+                        post.setStarred(parcelablePost.isStared());
+                        post.setRead(parcelablePost.isRead());
+                        post.setLikeCounts(parcelablePost.getLikeCounts());
+                        post.setCommentCount(parcelablePost.getCommentCount());
+                        post.setSharesCount(parcelablePost.getSharesCount());
+
+                        if (mAdapter != null) {
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        break;
+                    }
+                }
+            }
+        }
+    };
 }

@@ -104,6 +104,7 @@ public abstract class BaseFragment extends Fragment implements InfiniteScrollLis
                     if (post.getPid().equals(parcelablePost.getPid())) {
                         post.setLiked(parcelablePost.isLiked());
                         post.setStarred(parcelablePost.isStared());
+                        post.setRead(parcelablePost.isRead());
                         post.setLikeCounts(parcelablePost.getLikeCounts());
                         post.setCommentCount(parcelablePost.getCommentCount());
                         post.setSharesCount(parcelablePost.getSharesCount());
