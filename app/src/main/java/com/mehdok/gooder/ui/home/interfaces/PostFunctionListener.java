@@ -16,8 +16,14 @@ public interface PostFunctionListener {
     void onStarError(int position, Throwable e);
     void onReShare(int position, AddPost result);
     void onReShareError(int position, Throwable e);
-
     void onAddComment(String commentBody);
-
     void onAddCommentError(Throwable e);
+
+    void onRead(int position, boolean read);
+
+    void onReadError(int position, Throwable e);
+
+    void onUnRead(int position, boolean read);
+
+    void onUnReadError(int position, Throwable e);
 }

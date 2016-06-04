@@ -251,6 +251,26 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     }
 
     @Override
+    public void onRead(int position, boolean read) {
+        //TODO
+    }
+
+    @Override
+    public void onReadError(int position, Throwable e) {
+        //TODO
+    }
+
+    @Override
+    public void onUnRead(int position, boolean read) {
+        //TODO
+    }
+
+    @Override
+    public void onUnReadError(int position, Throwable e) {
+        //TODO
+    }
+
+    @Override
     public void onTagClick(CharSequence tag, PrettySpann.TagType tagType) {
         Logger.t("SinglePostAdapter").d(tag.toString());
     }

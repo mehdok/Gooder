@@ -31,7 +31,6 @@ import com.mehdok.gooderapilib.models.comment.CommentContent;
 import com.mehdok.gooderapilib.models.comment.CommentResponse;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
-import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
@@ -55,8 +54,6 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-//TODO mark post as unread
-//TODO copy post body
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
         SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener,
         UserProfileClickListener, ReshareUtil.ReshareUpdateListener {
@@ -78,6 +75,9 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_post);
 
+        functionHandler = new PostFunctionHandler(this);
+        functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
+
         singlePostView = (SinglePostView) findViewById(R.id.single_post_view);
         mRootLayout = (CoordinatorLayout) findViewById(R.id.single_post_root_layout);
         mProgress = (SpinKitView) findViewById(R.id.single_post_progress);
@@ -94,9 +94,6 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
             mPostId = getIntent().getStringExtra(POST_ID_EXTRA);
             reloadPost();
         }
-
-        functionHandler = new PostFunctionHandler(this);
-        functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
     }
 
     @Override
@@ -148,7 +145,10 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
         requestUserInfo(post.getAuthor().getUid(), userInfo.getUsername(), pass, requestBuilder);
         requestComment(post.getPid(), userInfo.getUsername(), pass, requestBuilder);
-        markPostAsRead(post.getPid(), userInfo.getUsername(), pass, requestBuilder);
+
+        post.setRead(true);
+        correctReadIcon(post.isRead());
+        functionHandler.markPostAsRead(0, post.getPid());
 
         correctLikeIcon(post.isLiked());
         correctStarIcon(post.isStared());
@@ -174,6 +174,15 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
             functionHandler.starPost(0, post.getPid());
         } else {
             functionHandler.unStarPost(0, post.getPid());
+        }
+    }
+
+    @Override
+    public void readClicked() {
+        if (toggleRead()) {
+            functionHandler.markPostAsRead(0, post.getPid());
+        } else {
+            functionHandler.markPostAsUnread(0, post.getPid());
         }
     }
 
@@ -252,33 +261,6 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                     public void onNext(ArrayList<PostComment> postComments) {
                         singlePostView.addComments(postComments);
                         mProgress.setVisibility(View.GONE);
-                    }
-                });
-    }
-
-    private void markPostAsRead(String pid, String userName, String password,
-                                RequestBuilder requestBuilder) {
-        QueryBuilder queryBuilder = new QueryBuilder();
-        queryBuilder.setUserName(userName);
-        queryBuilder.setPassword(password);
-        requestBuilder.markPostAsRead(pid, queryBuilder)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<PostReadResponse>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                        showBugSnackBar(e);
-                    }
-
-                    @Override
-                    public void onNext(PostReadResponse postReadResponse) {
-
                     }
                 });
     }
@@ -365,6 +347,30 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         showBugSnackBar(e);
     }
 
+    @Override
+    public void onRead(int position, boolean read) {
+        singlePostView.changeReadIcon(read);
+    }
+
+    @Override
+    public void onReadError(int position, Throwable e) {
+        toggleRead();
+        e.printStackTrace();
+        showBugSnackBar(e);
+    }
+
+    @Override
+    public void onUnRead(int position, boolean read) {
+        singlePostView.changeReadIcon(read);
+    }
+
+    @Override
+    public void onUnReadError(int position, Throwable e) {
+        toggleRead();
+        e.printStackTrace();
+        showBugSnackBar(e);
+    }
+
     private void like(boolean like) {
         post.setLiked(like);
         changeLikeCount(like);
@@ -396,6 +402,17 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         post.setStared(star);
         correctStarIcon(star);
         return star;
+    }
+
+    private boolean toggleRead() {
+        boolean read = !post.isRead();
+        post.setRead(read);
+        correctReadIcon(read);
+        return read;
+    }
+
+    private void correctReadIcon(boolean read) {
+        singlePostView.changeReadIcon(read);
     }
 
     private void correctStarIcon(boolean star) {

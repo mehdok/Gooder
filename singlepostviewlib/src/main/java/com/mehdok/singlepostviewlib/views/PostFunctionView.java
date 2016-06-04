@@ -24,6 +24,7 @@ public class PostFunctionView extends RelativeLayout implements View.OnClickList
     private ImageButton btnLike;
     private ImageButton btnStar;
     private ImageButton btnShare;
+    private ImageButton btnRead;
     private TextView tvLikeCount;
     private TextView tvShareCount;
     private TextView tvCommentCount;
@@ -57,9 +58,11 @@ public class PostFunctionView extends RelativeLayout implements View.OnClickList
         btnLike = (ImageButton) findViewById(R.id.like_button);
         btnShare = (ImageButton) findViewById(R.id.share_button);
         btnStar = (ImageButton) findViewById(R.id.star_button);
+        btnRead = (ImageButton) findViewById(R.id.read_button);
         btnLike.setOnClickListener(this);
         btnShare.setOnClickListener(this);
         btnStar.setOnClickListener(this);
+        btnRead.setOnClickListener(this);
         tvLikeCount = (TextView) findViewById(R.id.like_count);
         tvCommentCount = (TextView) findViewById(R.id.comment_count);
         tvShareCount = (TextView) findViewById(R.id.share_count);
@@ -90,6 +93,8 @@ public class PostFunctionView extends RelativeLayout implements View.OnClickList
                 listener.shareClicked();
             } else if (id == R.id.star_button) {
                 listener.starClicked();
+            } else if (id == R.id.read_button) {
+                listener.readClicked();
             }
         }
     }
@@ -112,5 +117,13 @@ public class PostFunctionView extends RelativeLayout implements View.OnClickList
 
     public void changeCommentCount(int count) {
         tvCommentCount.setText(getCount(count));
+    }
+
+    public void changeReadIcon(boolean read) {
+        if (read) {
+            btnRead.setImageResource(R.drawable.tick_fill);
+        } else {
+            btnRead.setImageResource(R.drawable.tick_empty);
+        }
     }
 }

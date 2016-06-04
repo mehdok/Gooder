@@ -9,8 +9,8 @@ package com.mehdok.singlepostviewlib.interfaces;
  */
 public interface FunctionButtonClickListener {
     void likeClicked();
-
     void shareClicked();
-
     void starClicked();
+
+    void readClicked();
 }

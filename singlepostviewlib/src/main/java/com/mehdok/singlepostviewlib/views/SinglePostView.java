@@ -123,6 +123,10 @@ public class SinglePostView extends RelativeLayout implements PostMoreListener {
         postFunctionView.changeCommentCount(count);
     }
 
+    public void changeReadIcon(boolean read) {
+        postFunctionView.changeReadIcon(read);
+    }
+
     @Override
     public void copyPostId(int position) {
         ClipBoardUtil.copyText(getContext(), mPost.getPostId());

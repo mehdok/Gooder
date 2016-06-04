@@ -20,6 +20,7 @@ import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.comment.Comment;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.gooderapilib.models.post.Like;
+import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 
 import rx.Observer;
@@ -231,5 +232,57 @@ public class PostFunctionHandler {
 
     public void setListener(PostFunctionListener listener) {
         this.listener = listener;
+    }
+
+    public void markPostAsRead(final int position, String pid) {
+        requestBuilder.markPostAsRead(pid, queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PostReadResponse>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (listener != null) {
+                            listener.onReadError(position, e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(PostReadResponse postReadResponse) {
+                        if (listener != null) {
+                            listener.onRead(position, true);
+                        }
+                    }
+                });
+    }
+
+    public void markPostAsUnread(final int position, String pid) {
+        requestBuilder.markPostAsUnRead(pid, queryBuilder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Like>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (listener != null) {
+                            listener.onUnReadError(position, e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(Like like) {
+                        if (listener != null) {
+                            listener.onUnRead(position, false);
+                        }
+                    }
+                });
     }
 }

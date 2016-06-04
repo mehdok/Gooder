@@ -26,6 +26,7 @@ public class ParcelablePost implements Parcelable {
     private ParcelableExtra extra;
     private boolean liked;
     private boolean stared;
+    private boolean read;
 
     public ParcelablePost(APIPost post) {
         pid = post.getPid();
@@ -41,6 +42,7 @@ public class ParcelablePost implements Parcelable {
         extra = new ParcelableExtra(post.getExtra());
         liked = post.isLiked();
         stared = post.isStarred();
+        read = false;
     }
 
     public String getPid() {
@@ -163,4 +165,12 @@ public class ParcelablePost implements Parcelable {
                     return new ParcelablePost[size];
                 }
             };
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
 }
