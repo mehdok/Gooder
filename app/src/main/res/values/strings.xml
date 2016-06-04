@@ -79,6 +79,6 @@
     <string name="add_user_tag_dialog_hint">user id, like: 14095</string>
     <string name="add_post_tag_dialog_hint">post id, like: 1235242</string>
     <string name="add_hash_tag_dialog_hint">tag, like: android</string>
-    <string name="unread_count">%d Unread posts</string>
+    <string name="unread_count">%s Unread posts</string>
 
 </resources>

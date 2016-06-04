@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,8 +61,9 @@ public class FollowedAdapter extends RecyclerView.Adapter<FollowedAdapter.ItemVi
                         userProfileClickListener);
         holder.followedDetail.setPostDetail(postDetail, PostDetailView.More.NOTHING, null,
                 null, null, position, authorUrl);
-        holder.unreadCount.setText(
-                String.format(unreadCount, followedInfos.get(position).getUnreads()));
+        String count = "<b>" + followedInfos.get(position).getUnreads() + "</b> ";
+        holder.unreadCount.setText(Html.fromHtml(
+                String.format(unreadCount, count)));
     }
 
     @Override
