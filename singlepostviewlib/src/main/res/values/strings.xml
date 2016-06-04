@@ -14,4 +14,11 @@
     <string name="clip_post_author">Post Author ID Copied to clipboard</string>
     <string name="clip_post_id">Post ID Text Copied to clipboard</string>
     <string name="clip_post_body">Post Text Copied to clipboard</string>
+    <string name="comment_tag_user_string">User</string>
+    <string name="comment_tag_post_string">Post</string>
+    <string name="comment_tag_shat_string">Tag</string>
+    <string name="comment_tag_title">Insert Mention</string>
+    <string name="comment_tag_hint">ID</string>
+    <string name="ok">OK</string>
+
 </resources>

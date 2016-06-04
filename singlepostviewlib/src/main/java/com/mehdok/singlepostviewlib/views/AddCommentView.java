@@ -5,6 +5,7 @@
 package com.mehdok.singlepostviewlib.views;
 
 import android.content.Context;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -15,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import com.mehdok.singlepostviewlib.R;
+import com.mehdok.singlepostviewlib.dialogs.CommentTagDialog;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
 
 /**
@@ -22,6 +24,7 @@ import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
  */
 public class AddCommentView extends RelativeLayout implements View.OnClickListener, TextWatcher {
     private ImageButton btnSend;
+    private ImageButton btnMention;
     private PostEditText etComment;
     private SendCommentClickListener listener;
 
@@ -57,31 +60,37 @@ public class AddCommentView extends RelativeLayout implements View.OnClickListen
         btnSend = (ImageButton) findViewById(R.id.comment_send);
         btnSend.setOnClickListener(this);
 
+        btnMention = (ImageButton) findViewById(R.id.comment_tag);
+        btnMention.setOnClickListener(this);
+
         etComment = (PostEditText) findViewById(R.id.comment_field);
         etComment.addTextChangedListener(this);
-        /*etComment.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEND ||
-                        keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    onClick(textView);
-                    return true;
-                }
-                return false;
-            }
-        });*/
     }
 
     @Override
     public void onClick(View view) {
-        InputMethodManager imm = (InputMethodManager) view.getContext()
-                .getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        int id = view.getId();
+        if (id == R.id.comment_send) {
+            InputMethodManager imm = (InputMethodManager) view.getContext()
+                    .getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 
-        if (listener != null) {
-            listener.sendComment(etComment.getText().toString());
-            etComment.clearFocus();
-            etComment.setText("");
+            if (listener != null) {
+                listener.sendComment(etComment.getText().toString());
+                etComment.clearFocus();
+                etComment.setText("");
+            }
+        } else if (id == R.id.comment_tag) {
+            CommentTagDialog.newInstance(R.string.comment_tag_title,
+                    R.string.comment_tag_hint)
+                    .setOnOkClickListener(new CommentTagDialog.OnOkClickedListener() {
+                        @Override
+                        public void OnOkCLicked(String text) {
+                            etComment.append(text);
+                        }
+                    })
+                    .show(((AppCompatActivity) getContext()).getSupportFragmentManager(),
+                            "dialog_comment_hash_tag");
         }
     }
 

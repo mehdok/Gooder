@@ -30,14 +30,12 @@ public class URLImageParser implements Html.ImageGetter
 
     public URLImageParser(TextView v)
     {
-        Log.e("URLImageParser", "URLImageParser");
         this.container = v;
     }
 
     @Override
     public Drawable getDrawable(String url)
     {
-        Log.e("URLImageParser", "getDrawable");
         final UrlDrawable urlDrawable = new UrlDrawable();
         final String source = url;
 
@@ -73,8 +71,6 @@ public class URLImageParser implements Html.ImageGetter
                     @Override
                     public void onResourceReady(GlideDrawable d, GlideAnimation<? super GlideDrawable> glideAnimation)
                     {
-                        Log.e("URLImageParser", "onResourceReady");
-
                         int width = (int) (d.getIntrinsicWidth() * dpi);
                         int height = (int) (d.getIntrinsicHeight() * dpi);
                         d.setBounds(0, 0, width, height);

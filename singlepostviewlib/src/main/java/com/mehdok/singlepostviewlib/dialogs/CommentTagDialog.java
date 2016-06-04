@@ -2,7 +2,7 @@
  * Copyright (c) 2016. Mehdi Sohrabi
  */
 
-package com.mehdok.gooder.ui.addpost.dialogs;
+package com.mehdok.singlepostviewlib.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -15,35 +15,42 @@ import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 
-import com.mehdok.gooder.R;
+import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 import com.mehdok.singlepostviewlib.views.PostEditText;
 
 /**
- * Created by mehdok on 5/26/2016.
+ * Created by mehdok on 6/4/2016.
  */
-public class SingleEditTextDialog extends DialogFragment {
-
+public class CommentTagDialog extends DialogFragment {
     public static final String ET_HINT = "hint";
     public static final String DIALOG_TITLE = "title";
+    private final String USER_TAG = "#!user/";
+    private final String POST_TAG = "#!post/";
+    private final String HASH_TAG = "#!tag/";
 
     private int titleResource;
     private int hintResource;
 
     private OnOkClickedListener listener;
 
-    public SingleEditTextDialog setOnOkClickListener(OnOkClickedListener listener) {
+    public interface OnOkClickedListener {
+        void OnOkCLicked(String text);
+    }
+
+    public CommentTagDialog setOnOkClickListener(OnOkClickedListener listener) {
         this.listener = listener;
         return this;
     }
 
-    public SingleEditTextDialog() {
+    public CommentTagDialog() {
         // Required empty public constructor
     }
 
-    public static SingleEditTextDialog newInstance(int titleRes, int hintRes) {
-        SingleEditTextDialog fragment = new SingleEditTextDialog();
+    public static CommentTagDialog newInstance(int titleRes, int hintRes) {
+        CommentTagDialog fragment = new CommentTagDialog();
         Bundle args = new Bundle();
         args.putInt(ET_HINT, hintRes);
         args.putInt(DIALOG_TITLE, titleRes);
@@ -54,10 +61,10 @@ public class SingleEditTextDialog extends DialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.SingleEditTextDialogStyle);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.CommentTagDialogStyle);
         if (getArguments() != null) {
-            titleResource = getArguments().getInt(DIALOG_TITLE, R.string.add_img_dialog_title);
-            hintResource = getArguments().getInt(ET_HINT, R.string.add_img_et_hint);
+            titleResource = getArguments().getInt(DIALOG_TITLE, R.string.comment_tag_title);
+            hintResource = getArguments().getInt(ET_HINT, R.string.comment_tag_hint);
         }
     }
 
@@ -66,10 +73,11 @@ public class SingleEditTextDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View content = inflateLayout();
 
-        final PostEditText editText = (PostEditText) content.findViewById(R.id.dialog_single_et_1);
+        final RadioGroup radioGroup = (RadioGroup) content.findViewById(R.id.comment_tag_type);
+        final PostEditText editText = (PostEditText) content.findViewById(R.id.dialog_comment_et_1);
         editText.setHint(hintResource);
         AppCompatImageButton paste =
-                (AppCompatImageButton) content.findViewById(R.id.dialog_single_et_1_paste);
+                (AppCompatImageButton) content.findViewById(R.id.dialog_comment_et_1_paste);
         paste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +92,9 @@ public class SingleEditTextDialog extends DialogFragment {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (listener != null) {
-                            listener.OnOkCLicked(editText.getText().toString());
+                            String input = processInput(radioGroup.getCheckedRadioButtonId(),
+                                    editText.getText().toString());
+                            listener.OnOkCLicked(input);
                         }
                         dismiss();
                     }
@@ -95,10 +105,18 @@ public class SingleEditTextDialog extends DialogFragment {
     protected View inflateLayout() {
         LayoutInflater inflater =
                 (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        return inflater.inflate(R.layout.dialog_single_et, ((ViewGroup) getView()), false);
+        return inflater.inflate(R.layout.dialog_comment_tag, ((ViewGroup) getView()), false);
     }
 
-    public interface OnOkClickedListener {
-        void OnOkCLicked(String text);
+    private String processInput(int selection, String input) {
+        if (selection == R.id.comment_tag_user) {
+            return USER_TAG + input;
+        } else if (selection == R.id.comment_tag_post) {
+            return POST_TAG + input;
+        } else if (selection == R.id.comment_tag_hash) {
+            return HASH_TAG + input;
+        }
+
+        return "";
     }
 }
