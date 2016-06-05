@@ -106,7 +106,7 @@ public class QueryBuilder {
     private static final String KEY_NOTE_BODY = "note_body";
     private static final String KEY_COMMENT_BODY = "comment_body";
     private String uid;
-    private String gid;
+    private String gid = "-1"; //so it return all groups
     private String start;
     private String unreadOnly;
     private String reverseOrder;
