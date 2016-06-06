@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.SpinKitView;
 import com.mehdok.gooder.Globals;
@@ -85,6 +86,10 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         setUpToolbar();
 
         userInfo = DatabaseHelper.getInstance(this).getUserInfo();
+        if (userInfo == null) {
+            Toast.makeText(this, R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if (getIntent().hasExtra(PARCELABLE_POST_EXTRA)) {
             post = getIntent().getParcelableExtra(PARCELABLE_POST_EXTRA);
@@ -334,6 +339,11 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         post.setCommentCount(Integer.valueOf(post.getCommentCount()) + 1 + "");
         singlePostView.changeCommentCount(Integer.valueOf(post.getCommentCount()));
         UserInfo userInfo = DatabaseHelper.getInstance(this).getUserInfo();
+        if (userInfo == null) {
+            Toast.makeText(this, R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         PostComment postComment =
                 new PostComment(userInfo.getUid(), userInfo.getFullname(),
                         System.currentTimeMillis() + "",

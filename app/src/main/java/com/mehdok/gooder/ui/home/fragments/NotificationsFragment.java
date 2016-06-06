@@ -110,6 +110,10 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
         showProgress(true);
 
         final UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
+        if (userInfo == null) {
+            Toast.makeText(getContext(), R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         RequestBuilder requestBuilder = new RequestBuilder();
         QueryBuilder queryBuilder = new QueryBuilder();

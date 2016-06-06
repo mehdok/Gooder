@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -94,6 +95,10 @@ public class CommentViewFragment extends BaseFragment {
         showProgress(true);
 
         final UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
+        if (userInfo == null) {
+            Toast.makeText(getContext(), R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         RequestBuilder requestBuilder = new RequestBuilder();
         QueryBuilder queryBuilder = new QueryBuilder();

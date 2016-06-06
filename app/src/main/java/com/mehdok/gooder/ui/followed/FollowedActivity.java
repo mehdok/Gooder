@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -29,7 +30,6 @@ import com.mehdok.gooderapilib.models.follow.Followed;
 import com.mehdok.gooderapilib.models.follow.FollowedInfo;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
-import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 
@@ -73,7 +73,10 @@ public class FollowedActivity extends AppCompatActivity
 
         // get user info
         mUserInfo = DatabaseHelper.getInstance(this).getUserInfo();
-
+        if (mUserInfo == null) {
+            Toast.makeText(this, R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
         // setup recycler
         mRecyclerView = (RecyclerView) findViewById(R.id.followed_recycler_view);
         mRecyclerView.setHasFixedSize(true);

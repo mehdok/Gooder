@@ -142,6 +142,12 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
     private void sendPost() {
         showProgress(true);
         UserInfo userInfo = DatabaseHelper.getInstance(getActivity()).getUserInfo();
+        if (userInfo == null) {
+            Toast.makeText(getContext(), R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         RequestBuilder requestBuilder = new RequestBuilder();
         QueryBuilder queryBuilder = new QueryBuilder();
         queryBuilder.setUserName(userInfo.getUsername());

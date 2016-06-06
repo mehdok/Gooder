@@ -48,6 +48,7 @@
                     android:layout_marginBottom="?attr/actionBarSize"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
+                    android:transitionName="@string/transition_user_avatar"
                     />
 
                 <com.mehdok.singlepostviewlib.views.PostTextView

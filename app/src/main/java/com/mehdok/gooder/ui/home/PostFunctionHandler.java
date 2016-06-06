@@ -8,6 +8,7 @@ import android.content.Context;
 import android.support.v7.app.AppCompatDialog;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -37,6 +38,11 @@ public class PostFunctionHandler {
 
     public PostFunctionHandler(Context ctx) {
         UserInfo userInfo = DatabaseHelper.getInstance(ctx).getUserInfo();
+        if (userInfo == null) {
+            Toast.makeText(ctx, R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         requestBuilder = new RequestBuilder();
         queryBuilder = new QueryBuilder();
         queryBuilder.setUserName(userInfo.getUsername());

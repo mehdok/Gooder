@@ -8,8 +8,8 @@ android {
         applicationId "com.mehdok.gooder"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 4
-        versionName "0.3"
+        versionCode 5
+        versionName "0.4"
 
         manifestPlaceholders = [manifestApplicationId          : "${applicationId}",
                                 onesignal_app_id               : "26d8cfdb-4b8b-42fb-a9d1-f07a5b5a2caf",

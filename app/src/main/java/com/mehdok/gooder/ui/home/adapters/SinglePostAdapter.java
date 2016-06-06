@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -203,7 +204,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                 //view.getContext().startActivity(intent);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         // the context of the activity
-                        MainActivityDelegate.getInstance().getActivity(),
+                        ((AppCompatActivity) mContext.get()),
 
                         // For each shared element, add to this method a new Pair item,
                         // which contains the reference of the view we are transitioning *from*,
@@ -241,7 +242,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                                         .getString(R.string.transition_function_comment_count))
 
                 );
-                ActivityCompat.startActivity(MainActivityDelegate.getInstance().getActivity(),
+                ActivityCompat.startActivity((AppCompatActivity) mContext.get(),
                         intent, options.toBundle());
             }
         }

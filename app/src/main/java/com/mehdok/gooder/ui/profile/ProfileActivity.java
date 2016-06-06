@@ -93,7 +93,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
         // get user info
         mUserInfo = DatabaseHelper.getInstance(this).getUserInfo();
-
+        if (mUserInfo == null) {
+            Toast.makeText(this, R.string.not_logged_in, Toast.LENGTH_SHORT).show();
+            return;
+        }
         // get extra
         currentUserId = getIntent().getStringExtra(PROFILE_USER_ID);
 
