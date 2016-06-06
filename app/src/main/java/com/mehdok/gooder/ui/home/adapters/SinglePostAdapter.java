@@ -6,11 +6,15 @@ package com.mehdok.gooder.ui.home.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +34,7 @@ import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.views.PostBodyView;
 import com.mehdok.singlepostviewlib.views.PostDetailView;
+import com.mehdok.singlepostviewlib.views.PostTextView;
 import com.orhanobut.logger.Logger;
 
 import java.lang.ref.WeakReference;
@@ -74,7 +79,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
 
         holder.postDetail.hideUserPhoto();
         holder.postDetail.setPostDetail(new PostDetail(mPosts.get(position).getAuthor().getUid(),
-                mPosts.get(position).getAuthor().getFullName(), mPosts.get(position).getTime(),
+                        mPosts.get(position).getAuthor().getFullName(), mPosts.get(position).getTime(),
                         userProfileClickListener), PostDetailView.More.POST, this, null, null, position,
                 null);
 
@@ -130,6 +135,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public ImageButton shareButton;
         public ImageButton readButton;
 
+        // Transitions
+        public PostTextView authorName;
+        public PostTextView postDate;
+        public ImageView authorAvatar;
+        public ImageButton commentButton;
+        public ImageButton postMoreButton;
+
         public ItemViewHolder(View view) {
             super(view);
 
@@ -150,6 +162,13 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             shareButton.setOnClickListener(this);
             readButton.setOnClickListener(this);
             postBody.setClickListener(this);
+
+            //transition
+            authorName = (PostTextView) view.findViewById(R.id.author_name);
+            postDate = (PostTextView) view.findViewById(R.id.post_date);
+            authorAvatar = (ImageView) view.findViewById(R.id.author_pic);
+            commentButton = (ImageButton) view.findViewById(R.id.comment_button);
+            postMoreButton = (ImageButton) view.findViewById(R.id.post_more_button);
         }
 
         @Override
@@ -181,7 +200,49 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                 Intent intent = new Intent(view.getContext(), SinglePostActivity.class);
                 intent.putExtra(SinglePostActivity.PARCELABLE_POST_EXTRA,
                         new ParcelablePost(mPosts.get(pos)));
-                view.getContext().startActivity(intent);
+                //view.getContext().startActivity(intent);
+                ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                        // the context of the activity
+                        MainActivityDelegate.getInstance().getActivity(),
+
+                        // For each shared element, add to this method a new Pair item,
+                        // which contains the reference of the view we are transitioning *from*,
+                        // and the value of the transitionName attribute
+                        new Pair<View, String>(postTitle,
+                                view.getContext().getString(R.string.transition_post_title)),
+                        new Pair<View, String>(postBody,
+                                view.getContext().getString(R.string.transition_post_body)),
+                        new Pair<View, String>(postDate,
+                                view.getContext().getString(R.string.transition_post_date)),
+                        new Pair<View, String>(authorName,
+                                view.getContext().getString(R.string.transition_user_name)),
+                        new Pair<View, String>(authorAvatar, // FIXME: 6/6/2016 cause inconsistency
+                                view.getContext().getString(R.string.transition_user_avatar)),
+                        new Pair<View, String>(commentButton,
+                                view.getContext().getString(R.string.transition_function_comment)),
+                        new Pair<View, String>(readButton,
+                                view.getContext().getString(R.string.transition_function_read)),
+                        new Pair<View, String>(likeButton,
+                                view.getContext().getString(R.string.transition_function_like)),
+                        new Pair<View, String>(starButton,
+                                view.getContext().getString(R.string.transition_function_star)),
+                        new Pair<View, String>(shareButton,
+                                view.getContext().getString(R.string.transition_function_share)),
+                        new Pair<View, String>(postMoreButton,
+                                view.getContext().getString(R.string.transition_post_more)),
+                        new Pair<View, String>(likeCount,
+                                view.getContext()
+                                        .getString(R.string.transition_function_like_count)),
+                        new Pair<View, String>(shareCount,
+                                view.getContext()
+                                        .getString(R.string.transition_function_share_count)),
+                        new Pair<View, String>(commentCount,
+                                view.getContext()
+                                        .getString(R.string.transition_function_comment_count))
+
+                );
+                ActivityCompat.startActivity(MainActivityDelegate.getInstance().getActivity(),
+                        intent, options.toBundle());
             }
         }
     }

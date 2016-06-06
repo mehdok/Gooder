@@ -6,6 +6,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:transitionName="@string/transition_function_all"
     >
 
     <View
@@ -28,6 +29,7 @@
         android:layout_alignParentLeft="true"
         android:tint="@color/colorPrimary"
         android:padding="@dimen/mini_padding"
+        android:transitionName="@string/transition_function_like"
         />
 
     <TextView
@@ -38,6 +40,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:layout_alignBottom="@id/like_button"
         android:layout_toRightOf="@id/like_button"
+        android:transitionName="@string/transition_function_like_count"
         />
 
     <ImageButton
@@ -50,6 +53,7 @@
         android:layout_toRightOf="@id/like_count"
         android:tint="@color/colorPrimary"
         android:padding="@dimen/mini_padding"
+        android:transitionName="@string/transition_function_star"
         />
 
     <ImageButton
@@ -62,6 +66,7 @@
         android:layout_toRightOf="@id/star_button"
         android:tint="@color/colorPrimary"
         android:padding="@dimen/mini_padding"
+        android:transitionName="@string/transition_function_share"
         />
 
     <TextView
@@ -72,6 +77,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:layout_alignBottom="@id/share_button"
         android:layout_toRightOf="@id/share_button"
+        android:transitionName="@string/transition_function_share_count"
         />
 
     <TextView
@@ -82,6 +88,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:layout_alignBottom="@id/share_button"
         android:layout_alignParentRight="true"
+        android:transitionName="@string/transition_function_comment_count"
         />
 
     <ImageButton
@@ -94,6 +101,7 @@
         android:layout_toLeftOf="@id/comment_count"
         android:tint="@color/colorPrimary"
         android:padding="@dimen/mini_padding"
+        android:transitionName="@string/transition_function_comment"
         />
 
     <ImageButton
@@ -106,6 +114,7 @@
         android:layout_toLeftOf="@id/comment_button"
         android:tint="@color/colorPrimary"
         android:padding="@dimen/mini_padding"
+        android:transitionName="@string/transition_function_read"
         />
 
     <View

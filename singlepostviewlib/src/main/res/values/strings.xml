@@ -21,4 +21,21 @@
     <string name="comment_tag_hint">ID</string>
     <string name="ok">OK</string>
 
+    <!-- Transitions -->
+    <string name="transition_user_name">transition:USER_NAME</string>
+    <string name="transition_user_avatar">transition:USER_AVATAR</string>
+    <string name="transition_post_date">transition:POST_DATE</string>
+    <string name="transition_post_title">transition:POST_TITLE</string>
+    <string name="transition_post_body">transition:POST_BODY</string>
+    <string name="transition_post_more">transition:POST_MORE</string>
+    <string name="transition_function_comment">transition:FUNCTION_COMMENT</string>
+    <string name="transition_function_read">transition:FUNCTION_READ</string>
+    <string name="transition_function_like">transition:FUNCTION_LIKE</string>
+    <string name="transition_function_star">transition:FUNCTION_STAR</string>
+    <string name="transition_function_share">transition:FUNCTION_SHARE</string>
+    <string name="transition_function_all">transition:FUNCTION_ALL</string>
+    <string name="transition_function_like_count">transition:FUNCTION_LIKE_COUNT</string>
+    <string name="transition_function_share_count">transition:FUNCTION_SHARE_COUNT</string>
+    <string name="transition_function_comment_count">transition:FUNCTION_COMMENT_COUNT</string>
+
 </resources>

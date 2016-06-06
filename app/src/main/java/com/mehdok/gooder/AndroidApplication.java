@@ -22,6 +22,7 @@ public class AndroidApplication extends Application implements Foreground.Listen
     public void onCreate() {
         super.onCreate();
         OneSignal.startInit(this).init();
+        //OneSignal.sendTag("admin", "true");
 
         Foreground.init(this);
         Foreground.get().addListener(this);

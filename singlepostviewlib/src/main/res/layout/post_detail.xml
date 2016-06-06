@@ -25,6 +25,7 @@
             android:padding="@dimen/mini_padding"
             android:tint="?attr/colorPrimaryDark"
             android:background="@drawable/buttons_background"
+            android:transitionName="@string/transition_post_more"
             />
 
         <LinearLayout
@@ -44,6 +45,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:ellipsize="marquee"
                 android:lines="1"
+                android:transitionName="@string/transition_post_date"
                 />
 
             <com.mehdok.singlepostviewlib.views.PostTextView
@@ -59,6 +61,7 @@
                 android:ellipsize="marquee"
                 android:clickable="true"
                 android:lines="1"
+                android:transitionName="@string/transition_user_name"
                 />
 
         </LinearLayout>
@@ -68,6 +71,7 @@
             android:layout_width="@dimen/user_pic_size"
             android:layout_height="@dimen/user_pic_size"
             android:clickable="true"
+            android:transitionName="@string/transition_user_avatar"
             />
 
     </LinearLayout>
