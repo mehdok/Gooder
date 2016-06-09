@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -42,6 +44,7 @@ import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
 import com.mehdok.gooderapilib.models.post.ReshareChain;
 import com.mehdok.gooderapilib.models.user.UserInfo;
+import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.utils.GlideHelper;
 import com.mehdok.singlepostviewlib.views.PostTextView;
 
@@ -53,7 +56,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends AppCompatActivity implements InfiniteScrollListener,
-        View.OnClickListener,
+        View.OnClickListener, UserProfileClickListener,
         SwipeRefreshLayout.OnRefreshListener, ReshareUtil.ReshareChainListener {
 
     private final String UNI_LTR = "\u200e";
@@ -121,7 +124,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
         if (mAdapter == null) {
             mPosts = new ArrayList<>();
-            mAdapter = new SinglePostAdapter(this, mPosts, null);
+            mAdapter = new SinglePostAdapter(this, mPosts, this);
             mRecyclerView.setAdapter(mAdapter);
 
             showProfile();
@@ -525,6 +528,18 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
             return QueryBuilder.Value.YES;
         } else {
             return QueryBuilder.Value.NO;
+        }
+    }
+
+    @Override
+    public void showUserProfile(String userID) {
+        if (!userID.equals(currentUserId)) {
+            Intent intent = new Intent(this, ProfileActivity.class);
+            intent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
+            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                    this, null);
+            ActivityCompat.startActivity(this,
+                    intent, options.toBundle());
         }
     }
 }

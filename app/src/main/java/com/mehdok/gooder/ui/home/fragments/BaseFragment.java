@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -144,9 +146,12 @@ public abstract class BaseFragment extends Fragment implements InfiniteScrollLis
 
     @Override
     public void showUserProfile(String userID) {
-        Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
-        profileIntent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
-        getActivity().startActivity(profileIntent);
+        Intent intent = new Intent(getActivity(), ProfileActivity.class);
+        intent.putExtra(ProfileActivity.PROFILE_USER_ID, userID);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                getActivity(), null);
+        ActivityCompat.startActivity(getActivity(),
+                intent, options.toBundle());
     }
 
     @Override
