@@ -75,7 +75,7 @@ public class SinglePostView extends RelativeLayout implements PostMoreListener {
         postBodyView.setPostBody(post.getPostBody());
         postFunctionView.setPostFunction(post.getPostFunction());
 
-        if (post.getPostTitle().isEmpty()) {
+        if (post.getPostTitle() == null || post.getPostTitle().isEmpty()) {
             postTitleTextView.setVisibility(GONE);
         } else {
             postTitleTextView.setText(post.getPostTitle());

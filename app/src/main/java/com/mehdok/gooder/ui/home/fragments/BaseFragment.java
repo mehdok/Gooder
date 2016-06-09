@@ -132,8 +132,6 @@ public abstract class BaseFragment extends Fragment implements InfiniteScrollLis
             e.printStackTrace();
         }
         ReshareUtil reshareUtil = new ReshareUtil();
-        /*reshareUtil.setListener(this);
-        reshareUtil.checkForReshares(mPosts, from, queryBuilder);*/
         reshareUtil.setReshareChainListener(this);
         reshareUtil.getReshareChain(mPosts, from, queryBuilder);
     }

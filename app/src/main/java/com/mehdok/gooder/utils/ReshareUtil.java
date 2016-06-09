@@ -67,7 +67,7 @@ public class ReshareUtil {
     }
 
     public static void getReshareChainView(LinearLayout rootLayout,
-                                           ArrayList<APIPost> reshareChain /* click listeners*/) {
+                                           ArrayList<APIPost> reshareChain, int textLimit /* click listeners*/) {
         if (rootLayout.getChildCount() == 1) { // there is already an item
             for (int i = 0; i < reshareChain.size(); i++) {
                 ResharePostView resharePostView =
@@ -76,7 +76,10 @@ public class ReshareUtil {
                                 reshareChain.get(i).getLikeCounts(),
                                 reshareChain.get(i).getAuthor().getFullName(),
                                 reshareChain.get(i).getTitle(),
-                                reshareChain.get(i).getPostBody());
+                                textLimit == -1 ? reshareChain.get(i).getPostBody() :
+                                        MehdokTextUtil.getLimitedText(
+                                                reshareChain.get(i).getPostBody(),
+                                                MehdokTextUtil.BODY_COUNT));
 
                 resharePostView.changeBackgroundColor(
                         ColorUtil.getDarkerColor(rootLayout.getContext().getResources().getColor(

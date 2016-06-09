@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.SpinKitView;
@@ -32,6 +33,7 @@ import com.mehdok.gooderapilib.models.comment.CommentContent;
 import com.mehdok.gooderapilib.models.comment.CommentResponse;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
+import com.mehdok.gooderapilib.models.post.ReshareChain;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
@@ -57,9 +59,8 @@ import rx.schedulers.Schedulers;
 
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
         SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener,
-        UserProfileClickListener {
+        UserProfileClickListener, ReshareUtil.ReshareChainListener {
 
-    public static final String PARCELABLE_POST_EXTRA = "parcelable_post_extra";
     public static final String POST_ID_EXTRA = "post_id_extra";
 
     private SinglePostView singlePostView;
@@ -70,6 +71,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     private String mPostId;
     private UserInfo userInfo;
     private ArrayList<APIPost> mPosts;
+    private LinearLayout rootBodyLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,7 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         functionHandler = new PostFunctionHandler(this);
         functionHandler.setListener(this);// TODO REMOVE LISTENER ON PAUSE
 
+        rootBodyLayout = (LinearLayout) findViewById(R.id.body_root_layout);
         singlePostView = (SinglePostView) findViewById(R.id.single_post_view);
         mRootLayout = (CoordinatorLayout) findViewById(R.id.single_post_root_layout);
         mProgress = (SpinKitView) findViewById(R.id.single_post_progress);
@@ -91,14 +94,8 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
             return;
         }
 
-        if (getIntent().hasExtra(PARCELABLE_POST_EXTRA)) {
-            post = getIntent().getParcelableExtra(PARCELABLE_POST_EXTRA);
-            mPostId = post.getPid();
-            showPost(post);
-        } else if (getIntent().hasExtra(POST_ID_EXTRA)) {
-            mPostId = getIntent().getStringExtra(POST_ID_EXTRA);
-            reloadPost();
-        }
+        mPostId = getIntent().getStringExtra(POST_ID_EXTRA);
+        reloadPost();
     }
 
     @Override
@@ -120,18 +117,15 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-    private ParcelablePost getExtra() {
-        return getIntent().getParcelableExtra(PARCELABLE_POST_EXTRA);
-    }
-
     private void showPost(ParcelablePost post) {
         PostDetail postDetail =
                 new PostDetail(post.getAuthor().getUid(), post.getAuthor().getFullName(),
                         post.getTime(), this);
         PostBody postBody = new PostBody(post.getPostBody(), post.getExtra().getNote(), this);
-        PostFunction postFunction = new PostFunction(Integer.valueOf(post.getLikeCounts()),
-                Integer.valueOf(post.getSharesCount()),
-                Integer.valueOf(post.getCommentCount()),
+        PostFunction postFunction = new PostFunction(
+                post.getLikeCounts() == null ? 0 : Integer.valueOf(post.getLikeCounts()),
+                post.getSharesCount() == null ? 0 : Integer.valueOf(post.getSharesCount()),
+                post.getCommentCount() == null ? 0 : Integer.valueOf(post.getCommentCount()),
                 this);
 
         Post poster =
@@ -507,15 +501,14 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
     private void checkForReshare(QueryBuilder queryBuilder) {
         ReshareUtil reshareUtil = new ReshareUtil();
-        //        reshareUtil.setListener(this);
-        //        reshareUtil.checkForReshares(mPosts, 0, queryBuilder);
+        reshareUtil.setReshareChainListener(this);
+        reshareUtil.getReshareChain(mPosts, 0, queryBuilder);
     }
 
-    /*@Override
-    public void ResharePostFetched(int position) {
-        PostBody postBody =
-                new PostBody(mPosts.get(0).getPostBody(), mPosts.get(0).getExtra().getNote(), this);
-        singlePostView.changePostBody(postBody);
-
-    }*/
+    @Override
+    public void onReshareChainFetched(ReshareChain reshareChain) {
+        if (reshareChain.getPosts() != null) {
+            ReshareUtil.getReshareChainView(rootBodyLayout, reshareChain.getPosts(), -1);
+        }
+    }
 }

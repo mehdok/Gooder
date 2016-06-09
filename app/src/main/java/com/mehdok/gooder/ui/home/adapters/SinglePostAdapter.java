@@ -23,9 +23,9 @@ import android.widget.Toast;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.ui.home.PostFunctionHandler;
 import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
-import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
+import com.mehdok.gooder.utils.MehdokTextUtil;
 import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
@@ -49,7 +49,6 @@ import java.util.ArrayList;
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ItemViewHolder>
         implements PostFunctionListener, PrettySpann.TagClickListener, PostMoreListener {
     private ArrayList<APIPost> mPosts;
-    private int BODY_COUNT = 200;
     private PostFunctionHandler functionHandler;
     private UserProfileClickListener userProfileClickListener;
     private WeakReference<Context> mContext;
@@ -86,8 +85,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                         userProfileClickListener), PostDetailView.More.POST, this, null, null, position,
                 null);
 
-        holder.postBody.setPostBody(new PostBody(getLimitedText(mPosts.get(position).getPostBody()),
-                getLimitedText(mPosts.get(position).getExtra().getNote()),
+        holder.postBody.setPostBody(new PostBody(
+                MehdokTextUtil.getLimitedText(mPosts.get(position).getPostBody(),
+                        MehdokTextUtil.BODY_COUNT),
+                MehdokTextUtil.getLimitedText(mPosts.get(position).getExtra().getNote(),
+                        MehdokTextUtil.BODY_COUNT),
                 this));
 
         holder.likeCount.setText(getCount(mPosts.get(position).getLikeCounts()));
@@ -115,7 +117,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         if (mPosts.get(position).getReshareChains() != null &&
                 mPosts.get(position).getReshareChains().size() > 0) {
             ReshareUtil.getReshareChainView(holder.bodyRoot,
-                    mPosts.get(position).getReshareChains());
+                    mPosts.get(position).getReshareChains(), MehdokTextUtil.BODY_COUNT);
         }
     }
 
@@ -125,7 +127,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     }
 
     private String getCount(String count) {
-        if (count.equals("0")) {
+        if (count == null || count.equals("0")) {
             return "";
         } else {
             return count;
@@ -209,8 +211,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                 }
             } else {
                 Intent intent = new Intent(view.getContext(), SinglePostActivity.class);
-                intent.putExtra(SinglePostActivity.PARCELABLE_POST_EXTRA,
-                        new ParcelablePost(mPosts.get(pos)));
+                intent.putExtra(SinglePostActivity.POST_ID_EXTRA,
+                        mPosts.get(pos).getPid());
                 //view.getContext().startActivity(intent);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         ((AppCompatActivity) mContext.get()),
@@ -367,16 +369,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
     @Override
     public void onTagClick(CharSequence tag, PrettySpann.TagType tagType) {
         Logger.t("SinglePostAdapter").d(tag.toString());
-    }
-
-    private String getLimitedText(String str) {
-        if (str == null) return null;
-
-        if (str.length() <= BODY_COUNT) {
-            return str;
-        } else {
-            return str.substring(0, BODY_COUNT) + "<br/>&#x25BC;";
-        }
     }
 
     @Override
