@@ -66,7 +66,7 @@ public class CustomExceptionHandler implements UncaughtExceptionHandler {
         } else {
             restartApp(logDir.getAbsolutePath() + "/" + fullName);
         }
-        restartApp(logDir.getAbsolutePath() + "/" + fullName);
+        //restartApp(logDir.getAbsolutePath() + "/" + fullName);
         //defaultUEH.uncaughtException(t, e);
     }
 

@@ -10,14 +10,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v4.view.GravityCompat;
@@ -31,6 +29,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mehdok.gooder.R;
@@ -58,8 +58,6 @@ import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.BaseResponse;
 import com.mehdok.gooderapilib.models.user.UserInfo;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.util.UUID;
 
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements
 
     public enum CommentKind {ME, ME_FOLLOWED, EVERYONE}
 
-    private BottomBar mBottomBar;
     private boolean firstRun = true;
     private Dialog loginDialog;
     private UserInfo userInfo = null;
@@ -166,62 +163,71 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void setupBottomBar(Bundle savedInstanceState) {
-        // setup bottom navigation
-        mBottomBar = BottomBar.attach(this, savedInstanceState);
-        mBottomBar.noTabletGoodness();
-        mBottomBar.setItemsFromMenu(R.menu.bottom_bar_menu, new OnMenuTabClickListener() {
+
+        AHBottomNavigation bottomNavigation =
+                (AHBottomNavigation) findViewById(R.id.main_bottom_navigation);
+        AHBottomNavigationItem
+                item1 = new AHBottomNavigationItem(R.string.bottom_bar_home,
+                R.drawable.ic_home_grey600_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.bottom_bar_comment,
+                R.drawable.ic_insert_comment_grey600_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.bottom_bar_star,
+                R.drawable.ic_star_grey600_24dp, R.color.colorPrimary);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.bottom_bar_notification,
+                R.drawable.ic_notifications_grey600_24dp, R.color.colorPrimary);
+
+        // Add items
+        bottomNavigation.addItem(item1);
+        bottomNavigation.addItem(item2);
+        bottomNavigation.addItem(item3);
+        bottomNavigation.addItem(item4);
+
+        // Set background color
+        bottomNavigation.setDefaultBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        // Disable the translation inside the CoordinatorLayout
+        bottomNavigation.setBehaviorTranslationEnabled(false);
+        // Use colored navigation with circle reveal effect
+        bottomNavigation.setColored(true);
+        // Set current item programmatically
+        bottomNavigation.setCurrentItem(0);
+        // Set listener
+        bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-                if (firstRun) {
-                    // this library call onClick on it's init, so ignore first click
-                    firstRun = false;
-                    return;
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                switch (position) {
+                    case 0:
+                        mViewKind = ViewKind.FRIENDS;
+                        showGeneralOption(true);
+                        showCommentOptions(false);
+                        showNotifOption(false);
+                        changeView(FriendsItemFragment.getInstance());
+                        return true;
+                    case 1:
+                        mViewKind = ViewKind.COMMENT;
+                        showCommentOptions(true);
+                        showGeneralOption(true);
+                        showNotifOption(false);
+                        changeView(CommentViewFragment.getInstance());
+                        return true;
+                    case 2:
+                        showCommentOptions(false);
+                        showGeneralOption(false);
+                        showNotifOption(false);
+                        mViewKind = ViewKind.STARED;
+                        changeView(StaredItemFragment.getInstance());
+                        return true;
+                    case 3:
+                        showCommentOptions(false);
+                        showGeneralOption(false);
+                        showNotifOption(true);
+                        mViewKind = ViewKind.NOTIFICATION;
+                        changeView(NotificationsFragment.getInstance());
+                        return true;
+
                 }
-
-                if (menuItemId == R.id.friends_item) {
-                    mViewKind = ViewKind.FRIENDS;
-                    showGeneralOption(true);
-                    showCommentOptions(false);
-                    showNotifOption(false);
-                    changeView(FriendsItemFragment.getInstance());
-                } else if (menuItemId == R.id.comments_view) {
-                    mViewKind = ViewKind.COMMENT;
-                    showCommentOptions(true);
-                    showGeneralOption(true);
-                    showNotifOption(false);
-                    changeView(CommentViewFragment.getInstance());
-                } else if (menuItemId == R.id.stared_item) {
-                    showCommentOptions(false);
-                    showGeneralOption(false);
-                    showNotifOption(false);
-                    mViewKind = ViewKind.STARED;
-                    changeView(StaredItemFragment.getInstance());
-                } else if (menuItemId == R.id.notification) {
-                    showCommentOptions(false);
-                    showGeneralOption(false);
-                    showNotifOption(true);
-                    mViewKind = ViewKind.NOTIFICATION;
-                    changeView(NotificationsFragment.getInstance());
-                }
-            }
-
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
-
+                return false;
             }
         });
-
-        //TODO get notification number and set it
-
-        int colorId = ContextCompat.getColor(this, R.color.colorPrimaryDark);
-        mBottomBar.mapColorForTab(0, colorId);
-        mBottomBar.mapColorForTab(1, colorId);
-        mBottomBar.mapColorForTab(2, colorId);
-        mBottomBar.mapColorForTab(3, colorId);
-
-        //TODO badge test
-        //BottomBarBadge unreadMessages = mBottomBar.makeBadgeForTabAt(3, "#FF0000", 6);
-        //unreadMessages.show();
     }
 
     @Override
@@ -318,10 +324,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        // Necessary to restore the BottomBar's state, otherwise we would
-        // lose the current tab on orientation change.
-        mBottomBar.onSaveInstanceState(outState);
     }
 
     @Override
