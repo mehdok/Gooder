@@ -27,7 +27,7 @@ public class AndroidApplication extends Application implements Foreground.Listen
         Foreground.init(this);
         Foreground.get().addListener(this);
 
-        if (BuildConfig.DEBUG) {
+        if (com.mehdok.gooder.BuildConfig.DEBUG) {
             // init the logger library
             Logger.init().logLevel(LogLevel.FULL);
 

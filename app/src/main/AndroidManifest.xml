@@ -95,6 +95,32 @@
                 android:value="com.mehdok.gooder.ui.home.MainActivity"
                 />
         </activity>
+        <activity
+            android:name=".LinkCheckerActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.CrashDialog"
+            >
+            <intent-filter>
+                <data
+                    android:scheme="http"
+                    android:host="gooder.in"
+                    />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
+                <data
+                    android:scheme="https"
+                    android:host="gooder.in"
+                    />
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
