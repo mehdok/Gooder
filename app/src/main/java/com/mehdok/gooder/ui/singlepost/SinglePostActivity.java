@@ -57,7 +57,7 @@ import rx.schedulers.Schedulers;
 
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
         SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener,
-        UserProfileClickListener, ReshareUtil.ReshareUpdateListener {
+        UserProfileClickListener {
 
     public static final String PARCELABLE_POST_EXTRA = "parcelable_post_extra";
     public static final String POST_ID_EXTRA = "post_id_extra";
@@ -507,15 +507,15 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
     private void checkForReshare(QueryBuilder queryBuilder) {
         ReshareUtil reshareUtil = new ReshareUtil();
-        reshareUtil.setListener(this);
-        reshareUtil.checkForReshares(mPosts, 0, queryBuilder);
+        //        reshareUtil.setListener(this);
+        //        reshareUtil.checkForReshares(mPosts, 0, queryBuilder);
     }
 
-    @Override
+    /*@Override
     public void ResharePostFetched(int position) {
         PostBody postBody =
                 new PostBody(mPosts.get(0).getPostBody(), mPosts.get(0).getExtra().getNote(), this);
         singlePostView.changePostBody(postBody);
 
-    }
+    }*/
 }

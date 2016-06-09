@@ -24,6 +24,7 @@ import com.mehdok.gooder.ui.profile.ProfileActivity;
 import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.models.post.APIPost;
+import com.mehdok.gooderapilib.models.post.ReshareChain;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 
@@ -33,7 +34,8 @@ import java.util.ArrayList;
  * Created by mehdok on 5/7/2016.
  */
 public abstract class BaseFragment extends Fragment implements InfiniteScrollListener,
-        UiToggleListener, ReshareUtil.ReshareUpdateListener, UserProfileClickListener,
+        UiToggleListener, ReshareUtil.ReshareChainListener,
+        UserProfileClickListener,
         SwipeRefreshLayout.OnRefreshListener {
     protected InfiniteRecyclerView mRecyclerView;
     protected SinglePostAdapter mAdapter;
@@ -130,14 +132,16 @@ public abstract class BaseFragment extends Fragment implements InfiniteScrollLis
             e.printStackTrace();
         }
         ReshareUtil reshareUtil = new ReshareUtil();
-        reshareUtil.setListener(this);
-        reshareUtil.checkForReshares(mPosts, from, queryBuilder);
+        /*reshareUtil.setListener(this);
+        reshareUtil.checkForReshares(mPosts, from, queryBuilder);*/
+        reshareUtil.setReshareChainListener(this);
+        reshareUtil.getReshareChain(mPosts, from, queryBuilder);
     }
 
-
     @Override
-    public void ResharePostFetched(int position) {
-        mAdapter.notifyItemChanged(position);
+    public void onReshareChainFetched(ReshareChain reshareChain) {
+        mPosts.get(reshareChain.getPosition()).setReshareChains(reshareChain.getPosts());
+        mAdapter.notifyItemChanged(reshareChain.getPosition());
     }
 
     @Override

@@ -4,11 +4,14 @@
 
 package com.mehdok.gooder.utils;
 
+import android.widget.LinearLayout;
+
+import com.mehdok.gooder.R;
 import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.APIPost;
-import com.mehdok.gooderapilib.models.post.SinglePost;
-import com.mehdok.singlepostviewlib.utils.PrettySpann;
+import com.mehdok.gooderapilib.models.post.ReshareChain;
+import com.mehdok.singlepostviewlib.views.ResharePostView;
 
 import java.util.ArrayList;
 
@@ -21,81 +24,66 @@ import rx.schedulers.Schedulers;
  */
 public class ReshareUtil {
 
-    private ReshareUpdateListener listener;
-
-    public void setListener(ReshareUpdateListener listener) {
-        this.listener = listener;
+    public interface ReshareChainListener {
+        void onReshareChainFetched(ReshareChain reshareChain);
     }
 
-    public void checkForReshares(ArrayList<APIPost> posts, int from, QueryBuilder queryBuilder) {
+    private ReshareChainListener reshareChainListener;
+
+    public void setReshareChainListener(
+            ReshareChainListener reshareChainListener) {
+        this.reshareChainListener = reshareChainListener;
+    }
+
+    public void getReshareChain(ArrayList<APIPost> posts, int from, QueryBuilder queryBuilder) {
+        RequestBuilder requestBuilder = new RequestBuilder();
         for (int i = from; i < posts.size(); i++) {
             if (posts.get(i).getParentPid() != null &&
                     !posts.get(i).getParentPid().equals("0")) {
-                getResharedPost(i, posts.get(i).getPostBody(), posts.get(i).getParentPid(), 0,
-                        queryBuilder, posts);
+                requestBuilder.getReshareChain(new ReshareChain(i), posts.get(i).getParentPid(),
+                        queryBuilder)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<ReshareChain>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                e.printStackTrace();
+                            }
+
+                            @Override
+                            public void onNext(ReshareChain chain) {
+                                if (reshareChainListener != null) {
+                                    reshareChainListener.onReshareChainFetched(chain);
+                                }
+                            }
+                        });
             }
         }
     }
 
-    private void getResharedPost(final int pos, final String postBody,
-                                 String parentId, int count, final QueryBuilder queryBuilder,
-                                 final ArrayList<APIPost> posts) {
-        ++count;
+    public static void getReshareChainView(LinearLayout rootLayout,
+                                           ArrayList<APIPost> reshareChain /* click listeners*/) {
+        if (rootLayout.getChildCount() == 1) { // there is already an item
+            for (int i = 0; i < reshareChain.size(); i++) {
+                ResharePostView resharePostView =
+                        new ResharePostView(rootLayout.getContext(), reshareChain.get(i).getTime(),
+                                reshareChain.get(i).getSharesCount(),
+                                reshareChain.get(i).getLikeCounts(),
+                                reshareChain.get(i).getAuthor().getFullName(),
+                                reshareChain.get(i).getTitle(),
+                                reshareChain.get(i).getPostBody());
 
-        RequestBuilder requestBuilder = new RequestBuilder();
+                resharePostView.changeBackgroundColor(
+                        ColorUtil.getDarkerColor(rootLayout.getContext().getResources().getColor(
+                                R.color.reshare_color), i));
 
-        final int finalCount = count;
-        requestBuilder.getPost(parentId, queryBuilder)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<SinglePost>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        e.printStackTrace();
-                    }
-
-                    @Override
-                    public void onNext(SinglePost singlePost) {
-                        if (singlePost.getPost().getParentPid() != null &&
-                                !singlePost.getPost().getParentPid().equals("0")) {
-                            String body = postBody +
-                                    PrettySpann.SHARE_PARAGRAPH_START +
-                                    singlePost.getPost().getAuthor().getFullName() +
-                                    "</font>" +
-                                    "<br\\>" +
-                                    singlePost.getPost().getPostBody() +
-                                    "</p><br\\><br\\>";
-
-                            getResharedPost(pos,
-                                    body,
-                                    singlePost.getPost().getParentPid(), finalCount + 1,
-                                    queryBuilder, posts);
-                        } else {
-                            APIPost apiPost = posts.get(pos);
-                            String editedPost = "";
-
-                            editedPost += String.format("%s%s%s%s%s",
-                                    PrettySpann.SHARE_PARAGRAPH_START,
-                                    singlePost.getPost().getAuthor().getFullName(),
-                                    "</font>",
-                                    "<br\\>",
-                                    singlePost.getPost().getPostBody() +
-                                            "</p>");
-                            apiPost.getExtra().setNote(editedPost);
-
-                            if (listener != null) {
-                                listener.ResharePostFetched(pos);
-                            }
-                        }
-                    }
-                });
-    }
-
-    public interface ReshareUpdateListener {
-        void ResharePostFetched(int position);
+                rootLayout.addView(resharePostView);
+            }
+        }
     }
 }

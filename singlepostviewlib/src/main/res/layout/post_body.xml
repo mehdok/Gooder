@@ -21,17 +21,4 @@
         android:text="body"
         />
 
-    <com.mehdok.singlepostviewlib.views.PostTextView
-        android:id="@+id/note_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:ellipsize="end"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:background="@color/shared_background_color"
-        android:text="note"
-        android:padding="4dp"
-        android:layout_marginTop="@dimen/mini_padding"
-        />
-
 </LinearLayout>

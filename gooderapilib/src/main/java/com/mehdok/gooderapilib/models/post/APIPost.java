@@ -7,6 +7,8 @@ package com.mehdok.gooderapilib.models.post;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 /**
  * Created by mehdok on 5/1/2016.
  */
@@ -52,6 +54,7 @@ public class APIPost {
     private Extra extra;
 
     private boolean read;
+    private ArrayList<APIPost> reshareChains;
 
     public String getPid() {
         return pid;
@@ -64,21 +67,6 @@ public class APIPost {
     public String getTime() {
         return time;
     }
-
-    //    public APIPost(String pid, Author author, String time, String parentPid, String title, SpannableString postBody, String commentsCount, String sharesCount, String likesCount, Flags flags, Extra extra)
-    //    {
-    //        this.pid = pid;
-    //        this.author = author;
-    //        this.time = time;
-    //        this.parentPid = parentPid;
-    //        this.title = title;
-    //        this.postBody = postBody;
-    //        this.commentsCount = commentsCount;
-    //        this.sharesCount = sharesCount;
-    //        this.likesCount = likesCount;
-    //        this.flags = flags;
-    //        this.extra = extra;
-    //    }
 
     public String getParentPid() {
         return parentPid;
@@ -150,5 +138,14 @@ public class APIPost {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public ArrayList<APIPost> getReshareChains() {
+        return reshareChains;
+    }
+
+    public void setReshareChains(
+            ArrayList<APIPost> reshareChains) {
+        this.reshareChains = reshareChains;
     }
 }

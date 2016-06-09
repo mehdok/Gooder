@@ -21,7 +21,6 @@ import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
  */
 public class PostBodyView extends LinearLayout {
     private PostTextView tvBody;
-    private PostTextView tvNote;
 
     public PostBodyView(Context context) {
         super(context);
@@ -49,43 +48,16 @@ public class PostBodyView extends LinearLayout {
         super.onFinishInflate();
 
         tvBody = (PostTextView) findViewById(R.id.body_text);
-        tvNote = (PostTextView) findViewById(R.id.note_text);
     }
 
     public void setPostBody(PostBody postBody) {
-        tvNote.setVisibility(View.GONE);
         tvBody.setVisibility(View.VISIBLE);
-        if (postBody.getNote() == null) {
-            SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
-                    postBody.getTagClickListener(), new GlideGetter(tvBody.getContext(), tvBody));
-            tvBody.setPrettyText(body);
-        } else {
-            tvNote.setVisibility(View.VISIBLE);
-            tvBody.setVisibility(View.VISIBLE);
-            SpannableString note = PrettySpann.getPrettyString(postBody.getNote(),
-                    postBody.getTagClickListener(), new GlideGetter(tvNote.getContext(), tvNote));
-            tvNote.setPrettyText(note);
-
-            //            BackgroundColorSpan backgroundColorSpan;
-            //            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //                backgroundColorSpan = new BackgroundColorSpan(getResources()
-            //                        .getColor(R.color.shared_background_color, null));
-            //            } else {
-            //                backgroundColorSpan = new BackgroundColorSpan(getResources()
-            //                        .getColor(R.color.shared_background_color));
-            //            }
-
-            SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
-                    postBody.getTagClickListener(), new GlideGetter(tvBody.getContext(), tvBody));
-            //            body.setSpan(backgroundColorSpan, 0, postBody.getBody().length(),
-            //                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            tvBody.setPrettyText(body);
-        }
+        SpannableString body = PrettySpann.getPrettyString(postBody.getBody(),
+                postBody.getTagClickListener(), new GlideGetter(tvBody.getContext(), tvBody));
+        tvBody.setPrettyText(body);
     }
 
     public void setClickListener(OnClickListener clickListener) {
         tvBody.setOnClickListener(clickListener);
-        tvNote.setOnClickListener(clickListener);
     }
 }

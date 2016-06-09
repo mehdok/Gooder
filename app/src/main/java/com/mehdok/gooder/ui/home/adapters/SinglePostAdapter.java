@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import com.mehdok.gooder.ui.home.interfaces.PostFunctionListener;
 import com.mehdok.gooder.ui.home.models.ParcelablePost;
 import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.ui.singlepost.SinglePostActivity;
+import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
@@ -109,6 +111,12 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         } else {
             holder.readButton.setImageResource(R.drawable.tick_empty);
         }
+
+        if (mPosts.get(position).getReshareChains() != null &&
+                mPosts.get(position).getReshareChains().size() > 0) {
+            ReshareUtil.getReshareChainView(holder.bodyRoot,
+                    mPosts.get(position).getReshareChains());
+        }
     }
 
     @Override
@@ -135,6 +143,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public ImageButton starButton;
         public ImageButton shareButton;
         public ImageButton readButton;
+        public LinearLayout bodyRoot;
 
         // Transitions
         public PostTextView authorName;
@@ -156,6 +165,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             starButton = (ImageButton) view.findViewById(R.id.star_button);
             shareButton = (ImageButton) view.findViewById(R.id.share_button);
             readButton = (ImageButton) view.findViewById(R.id.read_button);
+            bodyRoot = (LinearLayout) view.findViewById(R.id.body_root_layout);
 
             view.setOnClickListener(this);
             likeButton.setOnClickListener(this);
@@ -203,12 +213,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                         new ParcelablePost(mPosts.get(pos)));
                 //view.getContext().startActivity(intent);
                 ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                        // the context of the activity
                         ((AppCompatActivity) mContext.get()),
 
-                        // For each shared element, add to this method a new Pair item,
-                        // which contains the reference of the view we are transitioning *from*,
-                        // and the value of the transitionName attribute
                         new Pair<View, String>(postTitle,
                                 view.getContext().getString(R.string.transition_post_title)),
                         new Pair<View, String>(postBody,
@@ -240,7 +246,6 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                         new Pair<View, String>(commentCount,
                                 view.getContext()
                                         .getString(R.string.transition_function_comment_count))
-
                 );
                 ActivityCompat.startActivity((AppCompatActivity) mContext.get(),
                         intent, options.toBundle());

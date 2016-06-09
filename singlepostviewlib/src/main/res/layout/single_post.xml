@@ -55,13 +55,23 @@
                 android:transitionName="@string/transition_post_title"
                 />
 
-            <com.mehdok.singlepostviewlib.views.PostBodyView
-                android:id="@+id/post_body"
+            <LinearLayout
+                android:id="@+id/body_root_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_marginTop="@dimen/standard_padding"
                 android:transitionName="@string/transition_post_body"
-                />
+                >
+
+                <com.mehdok.singlepostviewlib.views.PostBodyView
+                    android:id="@+id/post_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/mini_padding"
+                    />
+
+            </LinearLayout>
 
             <com.mehdok.singlepostviewlib.views.PostFunctionView
                 android:id="@+id/post_function"

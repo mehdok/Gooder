@@ -40,6 +40,7 @@ import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.follow.FollowResponse;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.APIPosts;
+import com.mehdok.gooderapilib.models.post.ReshareChain;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.utils.GlideHelper;
 import com.mehdok.singlepostviewlib.views.PostTextView;
@@ -52,8 +53,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ProfileActivity extends AppCompatActivity implements InfiniteScrollListener,
-        ReshareUtil.ReshareUpdateListener, View.OnClickListener,
-        SwipeRefreshLayout.OnRefreshListener {
+        View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener, ReshareUtil.ReshareChainListener {
 
     private final String UNI_LTR = "\u200e";
     public static final String PROFILE_USER_ID = "profile_user_id";
@@ -266,13 +267,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
             e.printStackTrace();
         }
         ReshareUtil reshareUtil = new ReshareUtil();
-        reshareUtil.setListener(this);
-        reshareUtil.checkForReshares(mPosts, from, queryBuilder);
-    }
-
-    @Override
-    public void ResharePostFetched(int position) {
-        mAdapter.notifyItemChanged(position);
+        /*reshareUtil.setListener(this);
+        reshareUtil.checkForReshares(mPosts, from, queryBuilder);*/
+        reshareUtil.setReshareChainListener(this);
+        reshareUtil.getReshareChain(mPosts, from, queryBuilder);
     }
 
     private void getUserInfo() {
@@ -483,4 +481,20 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
             }
         }
     };
+
+    @Override
+    public void onReshareChainFetched(ReshareChain reshareChain) {
+        /*String log = "pos: " +
+                reshareChain.getPosition() +
+                " -- id: " +
+                mPosts.get(reshareChain.getPosition()).getPid() +
+                "\n";
+        for (APIPost apiPost : reshareChain.getPosts()) {
+            log += "post id: " + apiPost.getPid() + "\n";
+        }
+
+        Logger.e("onReshareChainFetched: " + log);*/
+        mPosts.get(reshareChain.getPosition()).setReshareChains(reshareChain.getPosts());
+        mAdapter.notifyItemChanged(reshareChain.getPosition());
+    }
 }

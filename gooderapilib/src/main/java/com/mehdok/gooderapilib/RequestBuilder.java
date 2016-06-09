@@ -24,6 +24,7 @@ import com.mehdok.gooderapilib.models.post.Like;
 import com.mehdok.gooderapilib.models.post.NewPostsCount;
 import com.mehdok.gooderapilib.models.post.PostReadResponse;
 import com.mehdok.gooderapilib.models.post.PostReadsCount;
+import com.mehdok.gooderapilib.models.post.ReshareChain;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.gooderapilib.models.user.UserSearchInfo;
@@ -95,7 +96,7 @@ public class RequestBuilder {
 
     /**
      * if message type is error, something went wrong
-     * <p/>
+     * <p>
      * this might call onError with HTTP 403 Forbidden
      *
      * @param feedUrl
@@ -471,7 +472,7 @@ public class RequestBuilder {
 
     /**
      * all get params are optional
-     * <p/>
+     * <p>
      * type: The factor which the recommendation will be based on. Can be one of likes, shares, or
      * comments. If not provided, likes will be used. start: Start offset. Use for pagination.
      *
@@ -494,7 +495,7 @@ public class RequestBuilder {
 
     /**
      * all get params are optional
-     * <p/>
+     * <p>
      * start: Start offset. Use for pagination.
      *
      * @param queryBuilder
@@ -516,7 +517,7 @@ public class RequestBuilder {
 
     /**
      * all get params are optional
-     * <p/>
+     * <p>
      * type: The factor to filter the commented posts based on. Can be one of me, me-friends, or
      * my-posts. If not provided, me will be used. start: Start offset. Use for pagination.
      *
@@ -804,6 +805,28 @@ public class RequestBuilder {
                     public Observable<SinglePost> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.getPost(pid, queryBuilder.getPostParams());
+                    }
+                });
+    }
+
+    public Observable<ReshareChain> getReshareChain(final ReshareChain chain,
+                                                    String parentPid,
+                                                    final QueryBuilder queryBuilder) {
+        return getPost(parentPid, queryBuilder)
+                .flatMap(new Func1<SinglePost, Observable<ReshareChain>>() {
+                    @Override
+                    public Observable<ReshareChain> call(SinglePost singlePost) {
+                        if (singlePost != null && singlePost.getPost() != null) {
+                            chain.getPosts().add(singlePost.getPost());
+
+                            if (singlePost.getPost().getParentPid() != null &&
+                                    !singlePost.getPost().getParentPid().equals("0")) {
+                                return getReshareChain(chain, singlePost.getPost().getParentPid(),
+                                        queryBuilder);
+                            }
+                        }
+
+                        return Observable.just(chain);
                     }
                 });
     }

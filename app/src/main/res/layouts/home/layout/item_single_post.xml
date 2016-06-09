@@ -45,23 +45,33 @@
             android:transitionName="@string/transition_post_title"
             />
 
-        <com.mehdok.singlepostviewlib.views.PostBodyView
-            android:id="@+id/post_body"
+        <LinearLayout
+            android:id="@+id/body_root_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:layout_below="@+id/post_title"
-            android:gravity="right"
-            android:ellipsize="end"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:layout_marginTop="@dimen/standard_padding"
             android:transitionName="@string/transition_post_body"
-            />
+            >
+
+            <com.mehdok.singlepostviewlib.views.PostBodyView
+                android:id="@+id/post_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right"
+                android:ellipsize="end"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:layout_marginBottom="@dimen/mini_padding"
+                />
+
+        </LinearLayout>
 
         <View
             android:id="@+id/separator"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_below="@id/post_body"
+            android:layout_below="@+id/body_root_layout"
             android:background="@color/selection_color"
             android:layout_marginTop="@dimen/standard_padding"
             android:layout_marginBottom="@dimen/standard_padding"
