@@ -6,9 +6,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.mehdok.gooder.ui.profile.ProfileActivity">
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="action_settings"
+        android:id="@+id/action_profile_reverse_order"
+        android:checkable="true"
+        android:title="@string/action_reverse_order"
+        app:actionViewClass="android.support.v7.widget.AppCompatCheckBox"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/action_profile_unread_only"
+        android:checkable="true"
+        android:title="@string/action_unread_only"
+        app:actionViewClass="android.support.v7.widget.AppCompatCheckBox"
+        app:showAsAction="never"/>
+
 </menu>

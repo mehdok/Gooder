@@ -74,6 +74,9 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     private PostTextView tvAboutMe;
     private SwipeRefreshLayout refreshLayout;
 
+    private MenuItem itemReverseOrder;
+    private MenuItem itemUnreadOnly;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,6 +134,12 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_profile, menu);
+
+        itemReverseOrder = menu.findItem(R.id.action_profile_reverse_order);
+        itemUnreadOnly = menu.findItem(R.id.action_profile_unread_only);
+
+        itemUnreadOnly.setChecked(true);
+
         return true;
     }
 
@@ -141,7 +150,13 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
         if (id == android.R.id.home) {
             super.onBackPressed();
             return true;
+        } else if (id == R.id.action_profile_reverse_order) {
+            itemReverseOrder.setChecked(!itemReverseOrder.isChecked());
+        } else if (id == R.id.action_profile_unread_only) {
+            itemUnreadOnly.setChecked(!itemUnreadOnly.isChecked());
         }
+
+        getUserPosts();
 
         return super.onOptionsItemSelected(item);
     }
@@ -204,6 +219,8 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
         queryBuilder.setStart(mPosts.size());
         queryBuilder.setUid(currentUserId);
+        queryBuilder.setUnreadOnly(isUnreadOnly());
+        queryBuilder.setReverseOrder(isReverseOrder());
 
         requestBuilder.getUserPosts(queryBuilder)
                 .subscribeOn(Schedulers.io())
@@ -230,6 +247,7 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                                 return;
                             }
 
+                            mPosts.clear();
                             mPosts.addAll(posts.getPosts());
                             mAdapter.notifyDataSetChanged();
 
@@ -484,17 +502,29 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
 
     @Override
     public void onReshareChainFetched(ReshareChain reshareChain) {
-        /*String log = "pos: " +
-                reshareChain.getPosition() +
-                " -- id: " +
-                mPosts.get(reshareChain.getPosition()).getPid() +
-                "\n";
-        for (APIPost apiPost : reshareChain.getPosts()) {
-            log += "post id: " + apiPost.getPid() + "\n";
-        }
-
-        Logger.e("onReshareChainFetched: " + log);*/
         mPosts.get(reshareChain.getPosition()).setReshareChains(reshareChain.getPosts());
         mAdapter.notifyItemChanged(reshareChain.getPosition());
+    }
+
+    public QueryBuilder.Value isReverseOrder() {
+        // if view is null it mean this is the first run, so return default value.
+        if (itemReverseOrder == null) return QueryBuilder.Value.NO;
+
+        if (itemReverseOrder.isChecked()) {
+            return QueryBuilder.Value.YES;
+        } else {
+            return QueryBuilder.Value.NO;
+        }
+    }
+
+    public QueryBuilder.Value isUnreadOnly() {
+        // if view is null it mean this is the first run, so return default value.
+        if (itemUnreadOnly == null) return QueryBuilder.Value.YES;
+
+        if (itemUnreadOnly.isChecked()) {
+            return QueryBuilder.Value.YES;
+        } else {
+            return QueryBuilder.Value.NO;
+        }
     }
 }
