@@ -20,8 +20,8 @@
     <string name="comment_tag_title">Insert Mention</string>
     <string name="comment_tag_hint">ID</string>
     <string name="ok">OK</string>
-    <string name="reshare">%s ReShare</string>
-    <string name="like">%s Like</string>
+    <string name="reshare">%s ReShares</string>
+    <string name="like">%s Likes</string>
 
     <!-- Transitions -->
     <string name="transition_user_name">transition:USER_NAME</string>

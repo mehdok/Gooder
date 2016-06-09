@@ -265,9 +265,10 @@ public class MainActivity extends AppCompatActivity implements
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_search) {
+        /*if (id == R.id.action_search) {
             return true;
-        } else if (id == R.id.action_friends_reverse_order) {
+        } else*/
+        if (id == R.id.action_friends_reverse_order) {
             itemReverseOrder.setChecked(!itemReverseOrder.isChecked());
         } else if (id == R.id.action_friends_unread_only) {
             itemUnreadOnly.setChecked(!itemUnreadOnly.isChecked());
