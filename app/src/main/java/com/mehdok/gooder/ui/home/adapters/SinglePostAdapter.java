@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -30,6 +29,7 @@ import com.mehdok.gooder.utils.ReshareUtil;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.AddPost;
 import com.mehdok.singlepostviewlib.interfaces.PostMoreListener;
+import com.mehdok.singlepostviewlib.interfaces.ReshareBodyClickListener;
 import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.PostBody;
 import com.mehdok.singlepostviewlib.models.PostDetail;
@@ -47,7 +47,8 @@ import java.util.ArrayList;
  * Created by mehdok on 4/13/2016.
  */
 public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.ItemViewHolder>
-        implements PostFunctionListener, PrettySpann.TagClickListener, PostMoreListener {
+        implements PostFunctionListener, PrettySpann.TagClickListener, PostMoreListener,
+        ReshareBodyClickListener {
     private ArrayList<APIPost> mPosts;
     private PostFunctionHandler functionHandler;
     private UserProfileClickListener userProfileClickListener;
@@ -117,7 +118,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         if (mPosts.get(position).getReshareChains() != null &&
                 mPosts.get(position).getReshareChains().size() > 0) {
             ReshareUtil.getReshareChainView(holder.bodyRoot,
-                    mPosts.get(position).getReshareChains(), MehdokTextUtil.BODY_COUNT);
+                    mPosts.get(position).getReshareChains(), MehdokTextUtil.BODY_COUNT, this,
+                    userProfileClickListener, this);
         }
     }
 
@@ -132,6 +134,11 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         } else {
             return count;
         }
+    }
+
+    @Override
+    public void onReshareBodyClicked(String resharePostId) {
+        openSinglePostActivity(resharePostId);
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -210,7 +217,8 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                     functionHandler.markPostAsUnread(pos, mPosts.get(pos).getPid());
                 }
             } else {
-                Intent intent = new Intent(view.getContext(), SinglePostActivity.class);
+                openSinglePostActivity(mPosts.get(pos).getPid());
+                /*Intent intent = new Intent(view.getContext(), SinglePostActivity.class);
                 intent.putExtra(SinglePostActivity.POST_ID_EXTRA,
                         mPosts.get(pos).getPid());
                 //view.getContext().startActivity(intent);
@@ -250,9 +258,18 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
                                         .getString(R.string.transition_function_comment_count))
                 );
                 ActivityCompat.startActivity((AppCompatActivity) mContext.get(),
-                        intent, options.toBundle());
+                        intent, options.toBundle());*/
             }
         }
+    }
+
+    private void openSinglePostActivity(String postId) {
+        Intent intent = new Intent(mContext.get(), SinglePostActivity.class);
+        intent.putExtra(SinglePostActivity.POST_ID_EXTRA, postId);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                ((AppCompatActivity) mContext.get()), null);
+        ActivityCompat.startActivity((AppCompatActivity) mContext.get(),
+                intent, options.toBundle());
     }
 
     private void like(int pos, boolean like) {

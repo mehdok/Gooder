@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -37,6 +39,7 @@ import com.mehdok.gooderapilib.models.post.ReshareChain;
 import com.mehdok.gooderapilib.models.post.SinglePost;
 import com.mehdok.gooderapilib.models.user.UserInfo;
 import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
+import com.mehdok.singlepostviewlib.interfaces.ReshareBodyClickListener;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
 import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
 import com.mehdok.singlepostviewlib.models.Post;
@@ -59,7 +62,7 @@ import rx.schedulers.Schedulers;
 
 public class SinglePostActivity extends AppCompatActivity implements FunctionButtonClickListener,
         SendCommentClickListener, PrettySpann.TagClickListener, PostFunctionListener,
-        UserProfileClickListener, ReshareUtil.ReshareChainListener {
+        UserProfileClickListener, ReshareUtil.ReshareChainListener, ReshareBodyClickListener {
 
     public static final String POST_ID_EXTRA = "post_id_extra";
 
@@ -508,7 +511,21 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
     @Override
     public void onReshareChainFetched(ReshareChain reshareChain) {
         if (reshareChain.getPosts() != null) {
-            ReshareUtil.getReshareChainView(rootBodyLayout, reshareChain.getPosts(), -1);
+            ReshareUtil.getReshareChainView(rootBodyLayout, reshareChain.getPosts(), -1, this, this,
+                    this);
         }
+    }
+
+    @Override
+    public void onReshareBodyClicked(String resharePostId) {
+        openSinglePostActivity(resharePostId);
+    }
+
+    private void openSinglePostActivity(String postId) {
+        Intent intent = new Intent(this, SinglePostActivity.class);
+        intent.putExtra(SinglePostActivity.POST_ID_EXTRA, postId);
+        ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(
+                this, null);
+        ActivityCompat.startActivity(this, intent, options.toBundle());
     }
 }

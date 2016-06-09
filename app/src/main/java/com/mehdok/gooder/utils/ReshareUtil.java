@@ -11,6 +11,9 @@ import com.mehdok.gooderapilib.QueryBuilder;
 import com.mehdok.gooderapilib.RequestBuilder;
 import com.mehdok.gooderapilib.models.post.APIPost;
 import com.mehdok.gooderapilib.models.post.ReshareChain;
+import com.mehdok.singlepostviewlib.interfaces.ReshareBodyClickListener;
+import com.mehdok.singlepostviewlib.interfaces.UserProfileClickListener;
+import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.views.ResharePostView;
 
 import java.util.ArrayList;
@@ -67,7 +70,10 @@ public class ReshareUtil {
     }
 
     public static void getReshareChainView(LinearLayout rootLayout,
-                                           ArrayList<APIPost> reshareChain, int textLimit /* click listeners*/) {
+                                           ArrayList<APIPost> reshareChain, int textLimit,
+                                           PrettySpann.TagClickListener tagClickListener,
+                                           UserProfileClickListener userProfileClickListener,
+                                           ReshareBodyClickListener reshareBodyClickListener) {
         if (rootLayout.getChildCount() == 1) { // there is already an item
             for (int i = 0; i < reshareChain.size(); i++) {
                 ResharePostView resharePostView =
@@ -75,11 +81,16 @@ public class ReshareUtil {
                                 reshareChain.get(i).getSharesCount(),
                                 reshareChain.get(i).getLikeCounts(),
                                 reshareChain.get(i).getAuthor().getFullName(),
+                                reshareChain.get(i).getAuthor().getUid(),
                                 reshareChain.get(i).getTitle(),
                                 textLimit == -1 ? reshareChain.get(i).getPostBody() :
                                         MehdokTextUtil.getLimitedText(
                                                 reshareChain.get(i).getPostBody(),
-                                                MehdokTextUtil.BODY_COUNT));
+                                                MehdokTextUtil.BODY_COUNT),
+                                reshareChain.get(i).getPid(),
+                                tagClickListener,
+                                userProfileClickListener,
+                                reshareBodyClickListener);
 
                 resharePostView.changeBackgroundColor(
                         ColorUtil.getDarkerColor(rootLayout.getContext().getResources().getColor(
