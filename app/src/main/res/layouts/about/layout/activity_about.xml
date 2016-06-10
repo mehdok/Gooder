@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2016. Mehdi Sohrabi
+  -->
+
+<RelativeLayout
+    android:id="@+id/activity_about"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/about_background_color"
+    tools:context="com.mehdok.gooder.ui.about.AboutActivity"
+    >
+
+    <RelativeLayout
+        android:id="@+id/logo_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/logoContainer_about_margin_top"
+        >
+
+        <ImageView
+            android:id="@+id/gooder_image"
+            android:layout_width="@dimen/gooder_logo_about"
+            android:layout_height="@dimen/gooder_logo_about"
+            android:src="@drawable/logo_unscaled"
+            android:layout_alignParentTop="true"
+            android:visibility="invisible"
+            android:layout_centerHorizontal="true"
+            />
+
+        <RelativeLayout
+            android:id="@+id/both_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/gooder_image"
+            android:layout_marginTop="10dp"
+            >
+
+            <LinearLayout
+                android:id="@+id/text_separator"
+                android:layout_width="1dip"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerHorizontal="true"
+                >
+            </LinearLayout>
+
+            <com.mehdok.singlepostviewlib.views.PostTextView
+                android:id="@+id/gooder_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/app_name"
+                android:textColor="@color/gooder_text_color"
+                android:textSize="@dimen/gooder_text_about"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                android:layout_toLeftOf="@+id/text_separator"
+                android:layout_toStartOf="@+id/text_separator"
+                />
+
+            <com.mehdok.singlepostviewlib.views.PostTextView
+                android:id="@+id/version_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="version"
+                android:textColor="@color/version_text_color"
+                android:textSize="@dimen/gooder_text_about"
+                android:layout_alignBottom="@id/gooder_text"
+                android:layout_toRightOf="@id/text_separator"
+                android:visibility="invisible"
+                />
+
+        </RelativeLayout>
+
+        <com.mehdok.singlepostviewlib.views.PostTextView
+            android:id="@+id/about_gooder_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="about_gooder_string"
+            android:layout_below="@id/both_text_layout"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/about_gooder_text_size"
+            android:layout_margin="@dimen/about_gooder_text_margin_top"
+            android:visibility="invisible"
+            android:alpha="0.5"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

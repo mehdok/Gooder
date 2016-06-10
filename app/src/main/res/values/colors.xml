@@ -18,5 +18,9 @@
     <color name="refresh_color_3">#453232</color>
     <color name="refresh_color_4">#ed1fe160</color>
     <color name="white">#FFFFFF</color>
+    <color name="about_background_color">#3c3c3c</color>
+
+    <color name="gooder_text_color">#f8a31a</color>
+    <color name="version_text_color">#80f8a31a</color>
 
 </resources>

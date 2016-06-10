@@ -50,4 +50,14 @@
         <item name="colorAccent">?attr/colorPrimaryDark</item>
     </style>
 
+    <style name="AboutStyle" parent="Theme.AppCompat">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="colorPrimary">@color/medium_gray</item>
+        <item name="colorPrimaryDark">@color/medium_gray</item>
+        <item name="colorAccent">@color/medium_gray</item>
+    </style>
+
 </resources>

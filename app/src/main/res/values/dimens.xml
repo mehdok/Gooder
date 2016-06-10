@@ -17,4 +17,10 @@
     <dimen name="user_logo_size">80dp</dimen>
     <dimen name="app_bar_height">240dp</dimen>
 
+    <dimen name="about_gooder_text_size">14sp</dimen>
+    <dimen name="about_gooder_text_margin_top">40dp</dimen>
+    <dimen name="gooder_logo_about">75dp</dimen>
+    <dimen name="gooder_text_about">16sp</dimen>
+    <dimen name="logoContainer_about_margin_top">50dip</dimen>
+
 </resources>

@@ -14,6 +14,8 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -38,6 +40,7 @@ import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.preferences.PreferencesManager;
+import com.mehdok.gooder.ui.about.AboutActivity;
 import com.mehdok.gooder.ui.addpost.dialogs.AddPostDialog;
 import com.mehdok.gooder.ui.followed.FollowedActivity;
 import com.mehdok.gooder.ui.home.fragments.BaseFragment;
@@ -304,14 +307,23 @@ public class MainActivity extends AppCompatActivity implements
 
         //TODO
         if (id == R.id.nav_people_you_follow) {
-            startActivity(new Intent(this, FollowedActivity.class));
+            ActivityCompat.startActivity(this, new Intent(this, FollowedActivity.class),
+                    ActivityOptionsCompat
+                            .makeSceneTransitionAnimation(
+                                    this, null).toBundle());
         } else if (id == R.id.nav_special_item) {
-            startActivity(new Intent(this, RecommendedActivity.class));
+            ActivityCompat.startActivity(this, new Intent(this, RecommendedActivity.class),
+                    ActivityOptionsCompat
+                            .makeSceneTransitionAnimation(
+                                    this, null).toBundle());
         } else if (id == R.id.nav_bug_report) {
             Util.sendBugReport(this, getString(R.string.bug_email_subject),
                     getString(R.string.bug_email_context));
         } else if (id == R.id.nav_about_app) {
-
+            ActivityCompat.startActivity(this, new Intent(this, AboutActivity.class),
+                    ActivityOptionsCompat
+                            .makeSceneTransitionAnimation(
+                                    this, null).toBundle());
         } else if (id == R.id.nav_log_out) {
             logOut();
         }
