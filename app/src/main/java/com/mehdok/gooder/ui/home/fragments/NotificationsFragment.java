@@ -100,7 +100,13 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
     }
 
     public void clearViews() {
+        mNotification.clear();
+        mAdapter = null;
+    }
 
+    public void clearNotifications() {
+        mNotification.clear();
+        mAdapter.notifyDataSetChanged();
     }
 
     public String getFragmentTag() {

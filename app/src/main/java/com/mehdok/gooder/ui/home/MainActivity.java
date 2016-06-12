@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements
         handleFirstRun();
 
         setupCrashReporter();
-        //TODO setup google tracker
         //TODO setup new version reminder
 
         // setup toolbar
@@ -307,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        //TODO
         if (id == R.id.nav_people_you_follow) {
             ActivityCompat.startActivity(this, new Intent(this, FollowedActivity.class),
                     ActivityOptionsCompat
@@ -753,7 +751,11 @@ public class MainActivity extends AppCompatActivity implements
                     @Override
                     public void onNext(BaseResponse baseResponse) {
                         showSimpleMessage(getResources().getString(R.string.notif_clear));
-                        //TODO clear adapter data
+                        for (Fragment fragment : getSupportFragmentManager().getFragments()) {
+                            if (fragment instanceof NotificationsFragment) {
+                                ((NotificationsFragment) fragment).clearNotifications();
+                            }
+                        }
                     }
                 });
     }
