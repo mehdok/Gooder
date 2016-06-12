@@ -706,7 +706,7 @@ public class RequestBuilder {
                     public Observable<AddPost> call(String accessCode) {
                         queryBuilder.setAccessCode(accessCode);
                         return mGooderApi.resharePost(queryBuilder.getResharePostParams(),
-                                queryBuilder.getPostParams());
+                                queryBuilder.getReshareParamsPost());
                     }
                 });
     }

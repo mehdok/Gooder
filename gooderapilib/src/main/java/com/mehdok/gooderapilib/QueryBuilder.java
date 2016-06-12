@@ -544,9 +544,20 @@ public class QueryBuilder {
         }
 
         query.put(KEY_PID, pid);
+        return query;
+    }
+
+    public Map<String, String> getReshareParamsPost() {
+        Map<String, String> query = new HashMap<>();
         if (noteBody != null) {
             query.put(KEY_NOTE_BODY, noteBody);
         }
+        query.put(KEY_CLIENT_ID, com.mehdok.gooderapilib.GooderApi.apiKey);
+
+        if (accessCode != null) {
+            query.put(KEY_ACCESS_CODE, accessCode);
+        }
+
         return query;
     }
 
