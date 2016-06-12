@@ -25,6 +25,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mehdok.gooder.AndroidApplication;
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -231,6 +233,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                 .subscribe(new Observer<APIPosts>() {
                     @Override
                     public void onCompleted() {
+                        FireBaseHandler.sendLogEvent(
+                                ((AndroidApplication) getApplication()).getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_VIEW_PROFILE,
+                                FireBaseHandler.ItemName.IN_VIEW_PROFILE);
                     }
 
                     @Override
@@ -348,7 +354,6 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                 .subscribe(new Observer<FollowResponse>() {
                     @Override
                     public void onCompleted() {
-
                     }
 
                     @Override
@@ -390,7 +395,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                 .subscribe(new Observer<FollowResponse>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(
+                                ((AndroidApplication) getApplication()).getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_USER_UNFOLLOW,
+                                FireBaseHandler.ItemName.IN_USER_UNFOLLOW);
                     }
 
                     @Override
@@ -422,7 +430,10 @@ public class ProfileActivity extends AppCompatActivity implements InfiniteScroll
                 .subscribe(new Observer<FollowResponse>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(
+                                ((AndroidApplication) getApplication()).getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_USER_FOLLOW,
+                                FireBaseHandler.ItemName.IN_USER_FOLLOW);
                     }
 
                     @Override

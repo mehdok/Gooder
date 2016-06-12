@@ -6,7 +6,9 @@ package com.mehdok.gooder;
 
 import android.app.Application;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.mehdok.gooder.crypto.Crypto;
+import com.mehdok.gooder.utils.Util;
 import com.mehdok.gooderapilib.GooderApi;
 import com.onesignal.OneSignal;
 import com.orhanobut.logger.LogLevel;
@@ -18,6 +20,8 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * Created by mehdok on 4/28/2016.
  */
 public class AndroidApplication extends Application implements Foreground.Listener {
+    private static FirebaseAnalytics firebaseAnalytics;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -47,5 +51,14 @@ public class AndroidApplication extends Application implements Foreground.Listen
     @Override
     public void onBecameBackground() {
         Logger.e("onBecameBackground");
+    }
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        if (firebaseAnalytics == null) {
+            firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+            firebaseAnalytics.setUserId(Util.getDeviceUniqueId(this));
+        }
+
+        return firebaseAnalytics;
     }
 }

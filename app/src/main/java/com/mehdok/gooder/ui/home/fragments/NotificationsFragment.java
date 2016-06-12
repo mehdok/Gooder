@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -131,7 +132,11 @@ public class NotificationsFragment extends Fragment implements SwipeRefreshLayou
                 .subscribe(new Observer<NotificationList>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(MainActivityDelegate.getInstance()
+                                        .getActivity()
+                                        .getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_VIEW_NOTIFICATIONS,
+                                FireBaseHandler.ItemName.IN_VIEW_NOTIFICATIONS);
                     }
 
                     @Override

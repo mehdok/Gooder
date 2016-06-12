@@ -19,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.mehdok.gooder.AndroidApplication;
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.Globals;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
@@ -475,7 +477,10 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
                 .subscribe(new Observer<SinglePost>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(
+                                ((AndroidApplication) getApplication()).getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_POST_EXPAND,
+                                FireBaseHandler.ItemName.IN_POST_EXPAND);
                     }
 
                     @Override

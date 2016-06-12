@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mehdok.gooder.AndroidApplication;
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -35,6 +38,7 @@ public class PostFunctionHandler {
     private RequestBuilder requestBuilder;
     private QueryBuilder queryBuilder;
     private PostFunctionListener listener;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public PostFunctionHandler(Context ctx) {
         UserInfo userInfo = DatabaseHelper.getInstance(ctx).getUserInfo();
@@ -42,6 +46,9 @@ public class PostFunctionHandler {
             Toast.makeText(ctx, R.string.not_logged_in, Toast.LENGTH_SHORT).show();
             return;
         }
+
+        mFirebaseAnalytics =
+                ((AndroidApplication) ctx.getApplicationContext()).getFirebaseAnalytics();
 
         requestBuilder = new RequestBuilder();
         queryBuilder = new QueryBuilder();
@@ -61,6 +68,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<AddPost>() {
                     @Override
                     public void onCompleted() {
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_LIKED,
+                                FireBaseHandler.ItemName.IN_POST_LIKED);
                     }
 
                     @Override
@@ -86,6 +96,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<AddPost>() {
                     @Override
                     public void onCompleted() {
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_UNLIKED,
+                                FireBaseHandler.ItemName.IN_POST_UNLIKED);
                     }
 
                     @Override
@@ -111,6 +124,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<Like>() {
                     @Override
                     public void onCompleted() {
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_STAR,
+                                FireBaseHandler.ItemName.IN_POST_STAR);
                     }
 
                     @Override
@@ -136,6 +152,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<Like>() {
                     @Override
                     public void onCompleted() {
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_UNSTAR,
+                                FireBaseHandler.ItemName.IN_POST_UNSTAR);
                     }
 
                     @Override
@@ -163,7 +182,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<AddPost>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_SHARE,
+                                FireBaseHandler.ItemName.IN_POST_SHARE);
                     }
 
                     @Override
@@ -191,7 +212,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<Comment>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_ADD_COMMENT,
+                                FireBaseHandler.ItemName.IN_ADD_COMMENT);
                     }
 
                     @Override
@@ -247,7 +270,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<PostReadResponse>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_READ,
+                                FireBaseHandler.ItemName.IN_POST_READ);
                     }
 
                     @Override
@@ -273,7 +298,9 @@ public class PostFunctionHandler {
                 .subscribe(new Observer<Like>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(mFirebaseAnalytics,
+                                FireBaseHandler.ItemId.II_POST_UNREAD,
+                                FireBaseHandler.ItemName.IN_POST_UNREAD);
                     }
 
                     @Override

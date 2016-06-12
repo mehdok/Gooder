@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mehdok.gooder.AndroidApplication;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.ui.recommended.fragments.RecommendedItemsFragment;
 import com.mehdok.gooder.ui.recommended.navigation.RecommendedActivityDelegate;
@@ -111,6 +113,10 @@ public class RecommendedActivity extends AppCompatActivity {
     public void showSimpleMessage(String str) {
         Snackbar.make(mRootLayout, str, Snackbar.LENGTH_SHORT)
                 .show();
+    }
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        return ((AndroidApplication) getApplication()).getFirebaseAnalytics();
     }
 
 }

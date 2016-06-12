@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.v4.content.FileProvider;
 
 import com.orhanobut.logger.Logger;
@@ -38,6 +39,7 @@ public class Util
     private static String appVersionName;
     public static final String LOG_DIR = "logs";
     public static final String LOG_ZIP_DIR = "log_zip";
+    private static String android_id;
 
     public static String getDeviceName()
     {
@@ -280,6 +282,15 @@ public class Util
         str = str.replace("\\r\\n", "<br\\>");
         str = str.replace("\\n", "<br\\>");
         return str;
+    }
+
+    public static String getDeviceUniqueId(Context context) {
+        if (android_id == null) {
+            android_id = Settings.Secure.getString(context.getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+        }
+
+        return android_id;
     }
 
 }

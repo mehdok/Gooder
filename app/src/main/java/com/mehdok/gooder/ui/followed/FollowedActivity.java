@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mehdok.gooder.AndroidApplication;
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -116,7 +118,10 @@ public class FollowedActivity extends AppCompatActivity
                 .subscribe(new Observer<Followed>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(
+                                ((AndroidApplication) getApplication()).getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_VIEW_FOLLOWED,
+                                FireBaseHandler.ItemName.IN_VIEW_FOLLOWED);
                     }
 
                     @Override

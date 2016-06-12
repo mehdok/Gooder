@@ -16,10 +16,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
 import com.mehdok.gooder.ui.addpost.TextProcessor;
+import com.mehdok.gooder.ui.home.navigation.MainActivityDelegate;
 import com.mehdok.gooder.views.VazirButton;
 import com.mehdok.gooder.views.VazirEditText;
 import com.mehdok.gooderapilib.QueryBuilder;
@@ -201,7 +203,11 @@ public class AddPostDialog extends DialogFragment implements View.OnClickListene
                 .subscribe(new Observer<AddPost>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(MainActivityDelegate.getInstance()
+                                        .getActivity()
+                                        .getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_ADD_POST,
+                                FireBaseHandler.ItemName.IN_ADD_POST);
                     }
 
                     @Override

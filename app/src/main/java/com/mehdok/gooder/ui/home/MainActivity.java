@@ -35,6 +35,8 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.BitmapImageViewTarget;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.mehdok.gooder.AndroidApplication;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.crypto.KeyManager;
@@ -754,6 +756,10 @@ public class MainActivity extends AppCompatActivity implements
                         //TODO clear adapter data
                     }
                 });
+    }
+
+    public FirebaseAnalytics getFirebaseAnalytics() {
+        return ((AndroidApplication) getApplication()).getFirebaseAnalytics();
     }
 
 }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.mehdok.gooder.FireBaseHandler;
 import com.mehdok.gooder.R;
 import com.mehdok.gooder.crypto.Crypto;
 import com.mehdok.gooder.database.DatabaseHelper;
@@ -118,7 +119,12 @@ public class RecommendedItemsFragment extends BaseFragment {
                 .subscribe(new Observer<APIPosts>() {
                     @Override
                     public void onCompleted() {
-
+                        FireBaseHandler.sendLogEvent(
+                                RecommendedActivityDelegate.getInstance()
+                                        .getActivity()
+                                        .getFirebaseAnalytics(),
+                                FireBaseHandler.ItemId.II_VIEW_RECOMMENDED,
+                                FireBaseHandler.ItemName.IN_VIEW_RECOMMENDED);
                     }
 
                     @Override
