@@ -335,7 +335,12 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
     @Override
     public void onAddComment(String commentBody) {
-        post.setCommentCount(Integer.valueOf(post.getCommentCount()) + 1 + "");
+        if (post.getCommentCount() == null) {
+            post.setCommentCount("1");
+        } else {
+            post.setCommentCount(Integer.valueOf(post.getCommentCount()) + 1 + "");
+        }
+
         singlePostView.changeCommentCount(Integer.valueOf(post.getCommentCount()));
         UserInfo userInfo = DatabaseHelper.getInstance(this).getUserInfo();
         if (userInfo == null) {
@@ -387,9 +392,11 @@ public class SinglePostActivity extends AppCompatActivity implements FunctionBut
 
     private void changeLikeCount(boolean increase) {
         if (increase) {
-            post.setLikeCounts(Integer.valueOf(post.getLikeCounts()) + 1 + "");
+            post.setLikeCounts(post.getLikeCounts() == null ? "1" :
+                    Integer.valueOf(post.getLikeCounts()) + 1 + "");
         } else {
-            post.setLikeCounts(Integer.valueOf(post.getLikeCounts()) - 1 + "");
+            post.setLikeCounts(post.getLikeCounts() == null ? "0" :
+                    Integer.valueOf(post.getLikeCounts()) - 1 + "");
         }
 
         singlePostView.changeLikeCount(Integer.valueOf(post.getLikeCounts()));
