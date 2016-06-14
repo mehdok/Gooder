@@ -4,8 +4,6 @@
 
 package com.mehdok.gooder;
 
-import android.os.Bundle;
-
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 /**
@@ -85,9 +83,10 @@ public class FireBaseHandler {
     public static void sendLogEvent(FirebaseAnalytics firebaseAnalytics,
                                     ItemId itemId,
                                     ItemName itemName) {
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString(FirebaseAnalytics.Param.ITEM_ID, itemId.toString());
         bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, itemName.toString());
-        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);*/
+        firebaseAnalytics.logEvent(itemName.toString(), null);
     }
 }
