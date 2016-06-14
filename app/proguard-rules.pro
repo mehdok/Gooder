@@ -90,3 +90,12 @@
 -keep class com.onesignal.shortcutbadger.impl.SolidHomeBadger { <init>(...); }
 -keep class com.onesignal.shortcutbadger.impl.SonyHomeBadger { <init>(...); }
 -keep class com.onesignal.shortcutbadger.impl.XiaomiHomeBadger { <init>(...); }
+
+# FireBase
+-keep public class com.google.android.gms.ads.** {
+   public *;
+}
+
+-keep public class com.google.ads.** {
+   public *;
+}
