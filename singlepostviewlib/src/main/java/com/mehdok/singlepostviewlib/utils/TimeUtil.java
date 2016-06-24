@@ -13,7 +13,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 /**
- * Created by mehdok on 5/2/2016.
+ * @author mehdok on 5/2/2016.
+ * <p>Any time format happens here</p>
  */
 public class TimeUtil {
     private SimpleDateFormat dateFormat;

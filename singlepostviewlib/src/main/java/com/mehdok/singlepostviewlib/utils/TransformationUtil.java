@@ -25,6 +25,9 @@ import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 
 import javax.microedition.khronos.opengles.GL10;
 
+/**
+ * used for memory management in glide
+ */
 public final class TransformationUtil {
 
     private TransformationUtil() {

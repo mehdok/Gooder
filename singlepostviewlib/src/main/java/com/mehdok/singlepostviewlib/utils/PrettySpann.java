@@ -19,7 +19,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by mehdok on 4/29/2016.
+ * @author mehdok on 4/29/2016.
+ * <p>All the text parsing happens here.
+ * Godder has many app specific contract for showing text in different styled.
+ * This class convert all of the contract to a showable format for android {@link android.widget.TextView}</p>
  */
 public class PrettySpann {
     public enum TagType {

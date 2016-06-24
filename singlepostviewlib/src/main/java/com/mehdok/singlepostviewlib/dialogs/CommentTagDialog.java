@@ -22,7 +22,10 @@ import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 import com.mehdok.singlepostviewlib.views.PostEditText;
 
 /**
- * Created by mehdok on 6/4/2016.
+ * @author mehdok on 6/4/2016.
+ * <p>This class extends a {@link DialogFragment} to make mentioning easier.
+ * User can select mention type and press paste button.</p>
+ *
  */
 public class CommentTagDialog extends DialogFragment {
     public static final String ET_HINT = "hint";

@@ -9,7 +9,8 @@ import android.graphics.Typeface;
 import android.util.LruCache;
 
 /**
- * Created by mehdok on 4/11/2016.
+ * @author mehdok on 4/11/2016.
+ * <p>using a LurCache to store {@link Typeface} used in views</p>
  */
 public class TypefaceUtil {
     LruCache<String, Typeface> typefaceLruCache;

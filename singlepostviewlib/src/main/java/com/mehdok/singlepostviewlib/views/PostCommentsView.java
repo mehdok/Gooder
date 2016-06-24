@@ -14,7 +14,8 @@ import com.mehdok.singlepostviewlib.models.PostComment;
 import java.util.ArrayList;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * <p>comments view</p>
  */
 public class PostCommentsView extends LinearLayout {
     public PostCommentsView(Context context) {

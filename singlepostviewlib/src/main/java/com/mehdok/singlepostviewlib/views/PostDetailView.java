@@ -25,7 +25,8 @@ import com.mehdok.singlepostviewlib.utils.GlideHelper;
 import com.mehdok.singlepostviewlib.utils.TimeUtil;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * <p>A Compound view responsible for showing post detail like author name and photo and some functions</p>
  */
 public class PostDetailView extends LinearLayout implements View.OnClickListener {
     public enum More {POST, COMMENT, NOTIFICATION, NOTHING}

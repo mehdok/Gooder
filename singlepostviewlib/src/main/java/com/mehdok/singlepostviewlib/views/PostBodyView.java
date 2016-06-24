@@ -17,7 +17,8 @@ import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.utils.httpimage.GlideGetter;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * <p>A Compound View for showing body, it will use {@link PrettySpann} to get pretty string</p>
  */
 public class PostBodyView extends LinearLayout {
     private PostTextView tvBody;

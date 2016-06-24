@@ -10,11 +10,18 @@ import android.content.ClipboardManager;
 import android.content.Context;
 
 /**
- * Created by mehdok on 5/21/2016.
+ * @author mehdok  on 5/21/2016.
+ * <p>This class is responsible for copy/past texts into/from clipboard</p>
  */
 public class ClipBoardUtil {
     private static final String TAG = "Gooder";
 
+    /**
+     * copy some text into the clipboard
+     *
+     * @param ctx          {@link Context}
+     * @param charSequence text to put in clipboard
+     */
     public static void copyText(Context ctx, CharSequence charSequence) {
         android.content.ClipboardManager cm =
                 (android.content.ClipboardManager) ctx.getSystemService(
@@ -22,6 +29,11 @@ public class ClipBoardUtil {
         cm.setPrimaryClip(ClipData.newPlainText(TAG, charSequence));
     }
 
+    /**
+     * get a {@link String} from clipboard and return it
+     * @param ctx {@link Context}
+     * @return first string in clicpboard
+     */
     public static String pasteText(Context ctx) {
         ClipboardManager clipboard =
                 (ClipboardManager) ctx.getSystemService(Context.CLIPBOARD_SERVICE);

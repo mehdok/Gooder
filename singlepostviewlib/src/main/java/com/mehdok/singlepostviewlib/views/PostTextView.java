@@ -15,7 +15,7 @@ import com.mehdok.singlepostviewlib.R;
 import com.mehdok.singlepostviewlib.utils.TypefaceUtil;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
  */
 public class PostTextView extends AppCompatTextView {
     public PostTextView(Context context) {

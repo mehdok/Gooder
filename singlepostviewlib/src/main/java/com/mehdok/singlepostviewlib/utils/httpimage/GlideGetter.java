@@ -26,6 +26,9 @@ import java.util.WeakHashMap;
 
 /**
  * Created by mehdok on 5/7/2016.
+ * <p>This class is responsible to load image inside of {@link TextView} with Glide library</p>
+ * <p> * @see <a https://github.com/floating-cat/S1-Next/blob/master/app/src/main/java/cl/monsoon/s1next/widget/GlideImageGetter.java">Link</a>
+ </p>
  */
 public class GlideGetter
         implements Html.ImageGetter, View.OnAttachStateChangeListener, Drawable.Callback {

@@ -19,7 +19,8 @@ import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.utils.httpimage.URLImageParser;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * <p>Single comment view</p>
  */
 public class PostCommentView extends LinearLayout implements CommentMoreListener {
 

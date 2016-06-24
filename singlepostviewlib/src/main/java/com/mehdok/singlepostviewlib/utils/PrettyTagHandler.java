@@ -12,7 +12,9 @@ import android.text.style.StrikethroughSpan;
 import org.xml.sax.XMLReader;
 
 /**
- * Created by mehdok on 5/27/2016.
+ * @author mehdok on 5/27/2016.
+ * <p>This class is responsible for handling tag in {@link android.widget.TextView}
+ * BUT it is for normal tags, not gooder tags</p>
  */
 public class PrettyTagHandler implements Html.TagHandler {
 

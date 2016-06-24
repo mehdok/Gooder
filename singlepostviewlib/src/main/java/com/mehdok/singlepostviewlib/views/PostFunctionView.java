@@ -17,7 +17,8 @@ import com.mehdok.singlepostviewlib.interfaces.FunctionButtonClickListener;
 import com.mehdok.singlepostviewlib.models.PostFunction;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * <p>A Compound view for showing and handling posy function eg. like share star ....</p>
  */
 public class PostFunctionView extends RelativeLayout implements View.OnClickListener {
 

@@ -20,7 +20,8 @@ import com.mehdok.singlepostviewlib.dialogs.CommentTagDialog;
 import com.mehdok.singlepostviewlib.interfaces.SendCommentClickListener;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * <p>A compound View for handling adding new comment</p>
  */
 public class AddCommentView extends RelativeLayout implements View.OnClickListener, TextWatcher {
     private ImageButton btnSend;

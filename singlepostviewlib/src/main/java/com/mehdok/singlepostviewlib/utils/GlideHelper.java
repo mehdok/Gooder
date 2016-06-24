@@ -16,7 +16,11 @@ import com.bumptech.glide.request.target.BitmapImageViewTarget;
 import com.mehdok.singlepostviewlib.R;
 
 /**
- * Created by mehdok on 5/20/2016.
+ * @author mehdok on 5/20/2016.
+ *
+ * <p>This class used to have unified glide setting whenever it needed.
+ * anywhere there is need of using glide this class must used.
+ * DO NOT USE GLIDE DIRECTLY</p>
  */
 public class GlideHelper {
     public static void loadProfileImage(final Context ctx, String url, final ImageView imageView,

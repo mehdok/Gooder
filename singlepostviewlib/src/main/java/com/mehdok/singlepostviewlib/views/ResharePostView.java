@@ -18,7 +18,8 @@ import com.mehdok.singlepostviewlib.utils.PrettySpann;
 import com.mehdok.singlepostviewlib.utils.TimeUtil;
 
 /**
- * Created by mehdok on 6/8/2016.
+ * @author mehdok on 6/8/2016.
+ * A Custom vire for showing shared items
  */
 public class ResharePostView extends LinearLayout implements View.OnClickListener {
 

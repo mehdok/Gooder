@@ -20,7 +20,8 @@ import com.mehdok.singlepostviewlib.utils.ClipBoardUtil;
 import java.util.ArrayList;
 
 /**
- * Created by mehdok on 5/4/2016.
+ * @author mehdok on 5/4/2016.
+ * A Custom view for showing single post item
  */
 public class SinglePostView extends RelativeLayout implements PostMoreListener {
     private PostDetailView postDetailView;
