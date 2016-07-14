@@ -74,7 +74,7 @@ public class ReshareUtil {
                                            PrettySpann.TagClickListener tagClickListener,
                                            UserProfileClickListener userProfileClickListener,
                                            ReshareBodyClickListener reshareBodyClickListener) {
-        if (rootLayout.getChildCount() == 1) { // there is already an item
+        //        if (rootLayout.getChildCount() <= 0) { // there is already an item, don't recreate views
             for (int i = 0; i < reshareChain.size(); i++) {
                 ResharePostView resharePostView =
                         new ResharePostView(rootLayout.getContext(), reshareChain.get(i).getTime(),
@@ -98,6 +98,6 @@ public class ReshareUtil {
 
                 rootLayout.addView(resharePostView);
             }
-        }
+        //        }
     }
 }

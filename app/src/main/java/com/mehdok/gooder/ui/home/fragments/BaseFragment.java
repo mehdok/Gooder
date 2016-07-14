@@ -161,6 +161,8 @@ public abstract class BaseFragment extends Fragment implements InfiniteScrollLis
 
     public void refreshData() {
         reachEndOfPosts = false;
+        //        int index = ((LinearLayoutManager)mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        //        mRecyclerView.smoothScrollToPosition(index);
         mPosts.clear();
         getData();
     }

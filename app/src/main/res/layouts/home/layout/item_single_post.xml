@@ -65,6 +65,15 @@
                 android:layout_marginBottom="@dimen/mini_padding"
                 />
 
+            <LinearLayout
+                android:id="@+id/body_reshare_root"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <View

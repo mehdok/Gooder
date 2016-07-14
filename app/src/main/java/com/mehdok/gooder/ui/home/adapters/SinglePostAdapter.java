@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,11 +116,15 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             holder.readButton.setImageResource(R.drawable.tick_empty);
         }
 
+        holder.reshareRoot.removeAllViews();
         if (mPosts.get(position).getReshareChains() != null &&
                 mPosts.get(position).getReshareChains().size() > 0) {
-            ReshareUtil.getReshareChainView(holder.bodyRoot,
+            holder.reshareRoot.setVisibility(View.VISIBLE);
+            ReshareUtil.getReshareChainView(holder.reshareRoot,
                     mPosts.get(position).getReshareChains(), MehdokTextUtil.BODY_COUNT, this,
                     userProfileClickListener, this);
+        } else {
+            holder.reshareRoot.setVisibility(View.GONE);
         }
     }
 
@@ -153,6 +158,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
         public ImageButton shareButton;
         public ImageButton readButton;
         public LinearLayout bodyRoot;
+        public LinearLayout reshareRoot;
 
         // Transitions
         public PostTextView authorName;
@@ -175,6 +181,7 @@ public class SinglePostAdapter extends RecyclerView.Adapter<SinglePostAdapter.It
             shareButton = (ImageButton) view.findViewById(R.id.share_button);
             readButton = (ImageButton) view.findViewById(R.id.read_button);
             bodyRoot = (LinearLayout) view.findViewById(R.id.body_root_layout);
+            reshareRoot = (LinearLayout) view.findViewById(R.id.body_reshare_root);
 
             view.setOnClickListener(this);
             likeButton.setOnClickListener(this);
