@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity implements
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .add(R.id.base_fragment_layout, FriendsItemFragment.getInstance())
+                .replace(R.id.base_fragment_layout, FriendsItemFragment.getInstance())
                 .commit();
     }
 
